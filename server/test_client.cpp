@@ -14,7 +14,7 @@
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread/thread.hpp>
-#include "chat_message.hpp"
+#include "test_message.hpp"
 
 using boost::asio::ip::tcp;
 

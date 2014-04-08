@@ -45,8 +45,21 @@ public:
   void join(chat_participant_ptr participant)
   {
     participants_.insert(participant);
+
+    string welcome = "Welcome!";
+
+    char *a = new char[welcome.length() + 1];
+
+    std::strcpy(a, welcome.c_str());
+
+
+    chat_participant::deliver(participant, a);
+
+    /*
     std::for_each(recent_msgs_.begin(), recent_msgs_.end(),
-        boost::bind(&chat_participant::deliver, participant, _1));
+        boost::bind(&chat_participant::deliver, participant, _1));*/
+
+    delete[] a;
   }
 
   void leave(chat_participant_ptr participant)
