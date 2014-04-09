@@ -20,3 +20,6 @@ C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetG
 C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SpreadsheetGUI.csproj.GenerateResource.Cache
 C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SpreadsheetGUI.exe
 C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SpreadsheetGUI.pdb
+C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\SpreadsheetGUI.exe.config
+C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SpreadsheetGUI.exe
+C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SpreadsheetGUI.pdb
