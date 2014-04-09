@@ -12,7 +12,7 @@ namespace SS
 {
     public class SpreadsheetClient
     {
-                // The socket used to communicate with the server.  If no connection has been
+        // The socket used to communicate with the server.  If no connection has been
         // made yet, this is null.
         private StringSocket socket;
 
