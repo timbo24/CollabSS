@@ -1,0 +1,10 @@
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\Spreadsheet.dll
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\Spreadsheet.pdb
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\Spreadsheet.XML
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\DependencyGraph.dll
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\Formula.dll
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\DependencyGraph.xml
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\Formula.xml
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\obj\x86\Debug\Spreadsheet.csprojResolveAssemblyReference.cache
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\obj\x86\Debug\Spreadsheet.dll
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\obj\x86\Debug\Spreadsheet.pdb

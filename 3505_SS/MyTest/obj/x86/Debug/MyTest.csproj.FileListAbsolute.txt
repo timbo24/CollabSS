@@ -1,0 +1,13 @@
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\bin\x86\Debug\MyTest.exe.config
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\bin\x86\Debug\MyTest.exe
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\bin\x86\Debug\MyTest.pdb
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\bin\x86\Debug\DependencyGraph.dll
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\bin\x86\Debug\Formula.dll
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\bin\x86\Debug\Spreadsheet.dll
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\bin\x86\Debug\Spreadsheet.pdb
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\bin\x86\Debug\Spreadsheet.xml
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\bin\x86\Debug\DependencyGraph.xml
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\bin\x86\Debug\Formula.xml
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.csprojResolveAssemblyReference.cache
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.exe
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.pdb
