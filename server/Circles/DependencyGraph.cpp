@@ -149,6 +149,7 @@ void DependencyGraph::AddDependency(string s, string t)
   {
     //if so attempt to add the pair, if it was added flip the boolean
     bool tempBool = (((*graphHash)[s])->addDependent(t));
+    cout << tempBool << endl;
     if (tempBool)
     {
       wasAdded = true;
@@ -180,7 +181,8 @@ void DependencyGraph::AddDependency(string s, string t)
   {
     //if so attempt to add the pair, if it was added flip the boolean
     bool tempBool = (((*graphHash)[t])->addDependee(s));
-      if (tempBool)
+    cout << tempBool << endl;
+    if (tempBool)
     {
       wasAdded = true;
     }

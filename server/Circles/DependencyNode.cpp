@@ -81,7 +81,7 @@ bool DependencyNode::addDependee(std::string newDependee)
     //if the element is not int the list, add it and return true
                 if ((got == this->_dependeeList->end()))
                 {
-                    this->_dependentList->insert(newDependee);
+                    this->_dependeeList->insert(newDependee);
                     return true;
                 }
                 //if not return false as no change was made
