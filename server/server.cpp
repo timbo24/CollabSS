@@ -32,7 +32,7 @@ class chat_participant
 {
 public:
   virtual ~chat_participant() {}
-  virtual void deliver(const chat_message& msg) = 0;
+  virtual void deliver(const std::string ) = 0;
 };
 
 typedef boost::shared_ptr<chat_participant> chat_participant_ptr;
@@ -46,20 +46,16 @@ public:
   {
     participants_.insert(participant);
 
-    string welcome = "Welcome!";
-
-    char *a = new char[welcome.length() + 1];
-
-    std::strcpy(a, welcome.c_str());
+    std::string welcome = "Welcome!";
 
 
-    chat_participant::deliver(participant, a);
+
+    participant->deliver(welcome);
 
     /*
     std::for_each(recent_msgs_.begin(), recent_msgs_.end(),
         boost::bind(&chat_participant::deliver, participant, _1));*/
 
-    delete[] a;
   }
 
   void leave(chat_participant_ptr participant)
@@ -69,12 +65,13 @@ public:
 
   void deliver(const chat_message& msg)
   {
+	  /*
     recent_msgs_.push_back(msg);
     while (recent_msgs_.size() > max_recent_msgs)
       recent_msgs_.pop_front();
 
     std::for_each(participants_.begin(), participants_.end(),
-        boost::bind(&chat_participant::deliver, _1, boost::ref(msg)));
+        boost::bind(&chat_participant::deliver, _1, boost::ref(msg)));*/
   }
 
 private:
@@ -111,15 +108,17 @@ public:
           boost::asio::placeholders::error));
   }
 
-  void deliver(const chat_message& msg)
+  void deliver(const std::string msg)
   {
     bool write_in_progress = !write_msgs_.empty();
-    write_msgs_.push_back(msg);
+
+    char *a = new char[msg.length() + 1];
+
+    std::strcpy(a, msg.c_str());
+
     if (!write_in_progress)
     {
-      boost::asio::async_write(socket_,
-          boost::asio::buffer(write_msgs_.front().data(),
-            write_msgs_.front().length()),
+      boost::asio::async_write(socket_, boost::asio::buffer(a, msg.length()),
           boost::bind(&chat_session::handle_write, shared_from_this(),
             boost::asio::placeholders::error));
     }
@@ -211,11 +210,7 @@ public:
   {
     chat_session_ptr new_session(new chat_session(io_service_, room_));
     acceptor_.async_accept(new_session->socket(),
-        boost::bind(&chat_server::handle_accept, this, new_session,
-          boost::asio::placeholders::error));
-  }
-
-  void handle_accept(chat_session_ptr session,
+        boost::bind(&chat_server::handle_accept, this, new_session, boost::asio::placeholders::error)); } void handle_accept(chat_session_ptr session,
       const boost::system::error_code& error)
   {
     if (!error)

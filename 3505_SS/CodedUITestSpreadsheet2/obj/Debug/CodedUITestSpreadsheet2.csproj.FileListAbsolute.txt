@@ -1,0 +1,5 @@
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\CodedUITestSpreadsheet2\bin\Debug\CodedUITestSpreadsheet2.dll
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\CodedUITestSpreadsheet2\bin\Debug\CodedUITestSpreadsheet2.pdb
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\CodedUITestSpreadsheet2\obj\Debug\CodedUITestSpreadsheet2.csprojResolveAssemblyReference.cache
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\CodedUITestSpreadsheet2\obj\Debug\CodedUITestSpreadsheet2.dll
+C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\CodedUITestSpreadsheet2\obj\Debug\CodedUITestSpreadsheet2.pdb
