@@ -35,7 +35,7 @@ void StringSocket::BeginSend(std::string s,
 	boost::asio::async_write(socket_,
                                  boost::asio::buffer(s, s.length()),
                                  boost::bind(&StringSocket::BytesSent, 
-				           shared_from_this(),
+				           this,
 				           boost::asio::placeholders::error,
 				           boost::asio::placeholders::bytes_transferred));
 	mutex_.unlock();
