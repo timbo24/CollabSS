@@ -48,10 +48,10 @@ class DependencyGraph
   void RemoveDependency(string s, string t);
 
   //Removes all existing ordered pairs (s,r) and replaced them with (s,t)
-  void ReplaceDependents(string s, std::unordered_set<std::string> newDependents);
+  void ReplaceDependents(string s, const std::unordered_set<std::string>& newDependents);
   
   //Removes all ordered pairs (r,s) and replaces them with (r,t)
-  void ReplaceDependees(string s, std::unordered_set<std::string> newDependees);
+  void ReplaceDependees(string s, const std::unordered_set<std::string>& newDependees);
 
 
 

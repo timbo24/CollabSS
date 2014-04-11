@@ -149,7 +149,7 @@ void DependencyGraph::AddDependency(string s, string t)
   {
     //if so attempt to add the pair, if it was added flip the boolean
     bool tempBool = (((*graphHash)[s])->addDependent(t));
-    cout << tempBool << endl;
+    
     if (tempBool)
     {
       wasAdded = true;
@@ -181,7 +181,7 @@ void DependencyGraph::AddDependency(string s, string t)
   {
     //if so attempt to add the pair, if it was added flip the boolean
     bool tempBool = (((*graphHash)[t])->addDependee(s));
-    cout << tempBool << endl;
+    
     if (tempBool)
     {
       wasAdded = true;
@@ -220,6 +220,8 @@ void DependencyGraph::RemoveDependency(string s, string t)
   //bool to track if something was removed
   bool wasRemoved = false;
 
+  cout << "Started Remove" << endl;
+
   //check to see if "s" is in the table
   std::map<std::string, DependencyNode::DependencyNode*>::const_iterator got = graphHash->find (s);
 
@@ -242,7 +244,7 @@ void DependencyGraph::RemoveDependency(string s, string t)
   if (gott != this->graphHash->end())
   {
     //if so try to remove dependee s
-    bool tempBool = (((*graphHash)[s])->removeDependee(s));
+    bool tempBool = (((*graphHash)[t])->removeDependee(s));
     if (tempBool)
     {
       wasRemoved = true;
@@ -257,10 +259,11 @@ void DependencyGraph::RemoveDependency(string s, string t)
   {
     keyValCount--;
   }
+  cout << "ended remove" << endl;
 }
 
   //Removes all existing ordered pairs (s,r) and replaced them with (s,t)
-void DependencyGraph::ReplaceDependents(string s, std::unordered_set<std::string> newDependents)
+void DependencyGraph::ReplaceDependents(string s, const std::unordered_set<std::string>& newDependents)
 {
   //check to see if "s" is in the table
   std::map<std::string, DependencyNode::DependencyNode*>::const_iterator got = graphHash->find (s);
@@ -296,7 +299,7 @@ void DependencyGraph::ReplaceDependents(string s, std::unordered_set<std::string
 }
   
   //Removes all ordered pairs (r,s) and replaces them with (r,t)
-void DependencyGraph::ReplaceDependees(string s, std::unordered_set<std::string> newDependees)
+void DependencyGraph::ReplaceDependees(string s, const std::unordered_set<std::string>& newDependees)
 {
   //check to see if "s" is in the table
   std::map<std::string, DependencyNode::DependencyNode*>::const_iterator got = graphHash->find (s);
@@ -305,12 +308,15 @@ void DependencyGraph::ReplaceDependees(string s, std::unordered_set<std::string>
   {
     //temp copy of the new list
     //std::unordered_set<std::string> *tempSet = new std::unordered_set<std::string>(newDependents);
-
+    cout << "Started removing" << endl;
     //remove all the dependees
     for (auto killIt = (((*graphHash)[s])->_dependeeList)->begin() ; killIt != (((*graphHash)[s])->_dependeeList)->end() ; ++killIt )
     {
+      //segfault might have to do with  (((*graphHash)[s])->_dependeeList)->end() no longer existing because graphhash[s] has been killed, try with numbered steps instead of "end" 
       RemoveDependency(*killIt, s);
+cout << "Ran once with " << " s= " << s << " " << *killIt << endl;
     }
+cout << "Started adding" << endl;
     //add the new ones
     for (auto addIt = (newDependees).begin() ; addIt != (newDependees).end() ; ++addIt )
     {
@@ -323,6 +329,7 @@ void DependencyGraph::ReplaceDependees(string s, std::unordered_set<std::string>
   //if s isn't in the table just add all the new pairs
   else
   {
+    cout << "entered the else" << endl;
      for (auto addIt = (newDependees).begin() ; addIt != (newDependees).end() ; ++addIt )
     {
       AddDependency(*addIt, s);
