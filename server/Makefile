@@ -7,3 +7,9 @@ client:
 
 clean:
 	rm -rf *.out Client Server
+
+SS:
+	g++ -o SSTesting StringSocket.cpp SS_Tester.cpp -lboost_system-mt
+
+Simple:
+	g++ -o SimpleServer Simple_Test_Server.cpp -lboost_system-mt -lboost_thread-mt
