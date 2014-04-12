@@ -220,7 +220,6 @@ void DependencyGraph::RemoveDependency(string s, string t)
   //bool to track if something was removed
   bool wasRemoved = false;
 
-  cout << "Started Remove" << endl;
 
   //check to see if "s" is in the table
   std::map<std::string, DependencyNode::DependencyNode*>::const_iterator got = graphHash->find (s);
@@ -259,7 +258,7 @@ void DependencyGraph::RemoveDependency(string s, string t)
   {
     keyValCount--;
   }
-  cout << "ended remove" << endl;
+
 }
 
   //Removes all existing ordered pairs (s,r) and replaced them with (s,t)
@@ -274,7 +273,7 @@ void DependencyGraph::ReplaceDependents(string s, const std::unordered_set<std::
     //std::unordered_set<std::string> *tempSet = new std::unordered_set<std::string>(newDependents);
 
     //remove all the dependents
-    for (auto killIt = (((*graphHash)[s])->_dependentList)->begin() ; killIt != (((*graphHash)[s])->_dependentList)->end() ; ++killIt )
+    for (auto killIt = (((*graphHash)[s])->_dependentList)->begin() ; this->HasDependents(s) &&  killIt != (((*graphHash)[s])->_dependentList)->end() ; ++killIt )
     {
       RemoveDependency(s, *killIt);
     }
@@ -308,15 +307,15 @@ void DependencyGraph::ReplaceDependees(string s, const std::unordered_set<std::s
   {
     //temp copy of the new list
     //std::unordered_set<std::string> *tempSet = new std::unordered_set<std::string>(newDependents);
-    cout << "Started removing" << endl;
+
     //remove all the dependees
-    for (auto killIt = (((*graphHash)[s])->_dependeeList)->begin() ; killIt != (((*graphHash)[s])->_dependeeList)->end() ; ++killIt )
+    for (auto killIt = (((*graphHash)[s])->_dependeeList)->begin() ; this->HasDependees(s) && killIt != (((*graphHash)[s])->_dependeeList)->end() ; ++killIt )
     {
-      //segfault might have to do with  (((*graphHash)[s])->_dependeeList)->end() no longer existing because graphhash[s] has been killed, try with numbered steps instead of "end" 
+      
       RemoveDependency(*killIt, s);
-cout << "Ran once with " << " s= " << s << " " << *killIt << endl;
+
     }
-cout << "Started adding" << endl;
+
     //add the new ones
     for (auto addIt = (newDependees).begin() ; addIt != (newDependees).end() ; ++addIt )
     {
