@@ -16,7 +16,7 @@
 
 using namespace std;
 
-class DependencyNode
+class DependencyGraph
 {
  public:
   //map to hold the graph
@@ -31,7 +31,8 @@ class DependencyNode
   //takes the place of a C# property for size
   int Size();
   //indexer for dependencygraph, dg["a"] should return the size of a's dependees
-  int this[std::string s];
+  // int this[std::string s];
+  int operator [](const std::string &s);
 
   //reports if dependents/ees is empty
   bool HasDependents(std::string s);
@@ -46,13 +47,21 @@ class DependencyNode
   //removes the ordered pair (s,t)
   void RemoveDependency(string s, string t);
 
+  //Removes all existing ordered pairs (s,r) and replaced them with (s,t)
+  void ReplaceDependents(string s, const std::unordered_set<std::string>& newDependents);
   
+  //Removes all ordered pairs (r,s) and replaces them with (r,t)
+  void ReplaceDependees(string s, const std::unordered_set<std::string>& newDependees);
 
 
 
  private:
 
-  //internal method for 
+  //internal method for removing a key with no depentents and dependees.  This method does not 
+  //decriment the count.  Only use it inside another function that does
+  void KillKeyValPair(string s);
+
+  
 
 };
 
