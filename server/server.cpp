@@ -1,12 +1,3 @@
-//
-// server.cpp
-// ~~~~~~~~~~~~~~~
-//
-// Copyright (c) 2003-2013 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-//
-// Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
 
 #include <algorithm>
 #include <cstdlib>
@@ -28,6 +19,8 @@ typedef std::deque<std::string> message_queue;
 
 //----------------------------------------------------------------------
 
+/* virtual class represents a participant in a spreadsheet
+ * */
 class participant
 {
 	public:
@@ -39,6 +32,10 @@ typedef boost::shared_ptr<participant> participant_ptr;
 
 //----------------------------------------------------------------------
 
+/* class represents an editing session in a spreadsheet
+ * containts a list of participants who are able to 
+ * make changes to a spreadsheet
+ * */
 class spreadsheet_session
 {
 	public:
@@ -68,10 +65,13 @@ class spreadsheet_session
 		std::set<participant_ptr> participants_;
 		enum { max_recent_msgs = 100 };
 		message_queue recent_msgs_;
-		//chat_message_queue recent_msgs_;
 };
 //----------------------------------------------------------------------
 
+/* class represents a client who is connected to the server and 
+ * editing a spreadsheet, this allows for reading from the client
+ * and writing to the client asynchronously
+ * */
 class spreadsheet_editor
 	: public participant,
 	  public boost::enable_shared_from_this<spreadsheet_editor>
@@ -171,9 +171,6 @@ class spreadsheet_editor
 								    boost::asio::placeholders::error,
 								    boost::asio::placeholders::bytes_transferred));
 
-
-
-
 			}
 			else
 			{
@@ -212,16 +209,15 @@ class spreadsheet_editor
 		message_queue write_msgs_;
 		size_t message_buffer_size;
 
-		/*
-		chat_message read_msg_;
-		chat_message_queue write_msgs_;
-		*/
 };
 
 typedef boost::shared_ptr<spreadsheet_editor> spreadsheet_editor_ptr;
 
 //----------------------------------------------------------------------
 
+/* server class establishes a connection to a port, and begins accepting
+ * connections from clients
+ * */
 class server
 {
 public:
@@ -295,16 +291,6 @@ int main(int argc, char* argv[])
 
     server_ptr svr(new server(io_service, endpoint));
 
-    /*
-    server_list servers;
-    for (int i = 1; i < argc; ++i)
-    {
-      using namespace std; // For atoi.
-      tcp::endpoint endpoint(tcp::v4(), atoi(argv[i]));
-      server_ptr server(new server(io_service, endpoint));
-      servers.push_back(server);
-    }
-    */
     std::cout<<"Server up and running..."<<std::endl;
 
     io_service.run();
