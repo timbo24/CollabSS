@@ -13,7 +13,8 @@ namespace SS
     public partial class FormLogin : Form
     {
         private SpreadsheetClient model;
-
+        private string host = "localhost";
+        private int port = 2000;
         /// <summary>
         /// For synchronizing receives
         /// </summary>
@@ -48,9 +49,7 @@ namespace SS
         /// <param name="e"></param>
         private void ConnectButton_Click(object sender, EventArgs e)
         {
-            // The default hostname
-            string host = "localhost";
-
+            
             // Change default if they provided a hostname
             if (IPAddrBox.Text != "")
                 host = IPAddrBox.Text;
@@ -124,7 +123,7 @@ namespace SS
                 // Start an application context and run one form inside it
                 DemoApplicationContext appContext = DemoApplicationContext.getAppContext();
                 
-                appContext.RunForm(new Form1());
+                appContext.RunForm(new Form1(host, port));
                 Application.Run(appContext);
 
                 

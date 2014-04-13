@@ -31,15 +31,15 @@ namespace SS
         private Spreadsheet sheet;
 
         //Helper boolean
-        private bool connected = false;
+       // private bool connected = false;
 
-        private string IpAddress = "lab1-9.eng.utah.edu";
-        private int port=2000;
+        private string IpAddress;
+        private int port;
 
         /// <summary>
         /// Constructior for the empty form.
         /// </summary>
-        public Form1()
+        public Form1(string ipaddress, int _port)
         {
             InitializeComponent();
 
@@ -57,7 +57,8 @@ namespace SS
             Thread.Sleep(2000);
           //  if (!connected)
           //  {
-                
+            IpAddress = ipaddress;
+            port = _port;
                 model.Connect(IpAddress, port, "password");
            //     connected = true;
            // }
@@ -261,7 +262,7 @@ namespace SS
         {
             // Tell the application context to run the form on the same
             // thread as the other forms.
-            DemoApplicationContext.getAppContext().RunForm(new Form1());
+            DemoApplicationContext.getAppContext().RunForm(new Form1(IpAddress, port));
         }
 
         /// <summary>
