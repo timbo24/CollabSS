@@ -4,6 +4,8 @@
 #include <netdb.h>      // Needed for the socket functions
 #include <arpa/inet.h> 	// for inet_ntop function
 #include <pthread.h>
+//#include <list>
+//#include <iterator>
 #include <sstream>
 #include <stdio.h>
 #include <errno.h>
@@ -150,7 +152,8 @@ void pass_received(int new_sd)
       incomming_data_buffer[bytes_received] = '\0';
       std::cout << incomming_data_buffer << std::endl;
 
-       if((incomming_data_buffer[9]=='p')&&(incomming_data_buffer[10]=='a')&&(incomming_data_buffer[11]=='s')&&(incomming_data_buffer[12]=='s'))
+:s
+:x
 	  server_send(new_sd, "CONNECTED\r\n");
        else 
 	 {
