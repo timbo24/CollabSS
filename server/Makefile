@@ -1,7 +1,7 @@
 
 
 server:
-	g++ -o Server Server.cpp -lboost_thread-mt -lboost_system-mt
+	g++ -o Server server.cpp /usr/local/stow/boost/boost_1_53_0/lib/libboost_*.a -I/usr/local/stow/boost/boost_1_53_0/include/ -lboost_thread-mt -lboost_system-mt
 client:
 	g++ -o Client test_client.cpp -lboost_thread-mt -lboost_system-mt
 

@@ -18,7 +18,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
-#include "test_message.hpp"
 
 using boost::asio::ip::tcp;
 
@@ -82,7 +81,8 @@ class spreadsheet_editor
 		 * */
 		spreadsheet_editor(boost::asio::io_service& io_service, spreadsheet_session& session)
 			: socket_(io_service),
-			  session_(session)
+			  session_(session),
+			  message_buffer_size(1)
 		{
 			
 		}
@@ -178,8 +178,7 @@ class spreadsheet_editor
 			else
 			{
 
-				std::cout<<"well fuck"<<std::endl;
-				std::cout << error.message() << "fucking a" << std::endl;
+				std::cout << error.message() << std::endl;
 				session_.leave(shared_from_this());
 			}
 		}
@@ -211,7 +210,7 @@ class spreadsheet_editor
 		std::string final_msg_;
 		std::string partial_msg_;
 		message_queue write_msgs_;
-		size_t message_buffer_size = 1;
+		size_t message_buffer_size;
 
 		/*
 		chat_message read_msg_;
