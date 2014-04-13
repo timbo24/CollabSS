@@ -35,11 +35,23 @@ int main(int argc, char* argv[])
 		StringSocket SS(io_service, iterator);
 
 
-		std::string message = "test";
+		std::string message = "TESTING\n hello there";
 
 
 		void (*test)(void *payload);
 		test = &MessageReceivedd;
+
+		SS.BeginSend(message, 
+			      test,
+			      NULL);
+
+		SS.BeginSend(message, 
+			      test,
+			      NULL);
+
+		SS.BeginSend(message, 
+			      test,
+			      NULL);
 
 		SS.BeginSend(message, 
 			      test,
