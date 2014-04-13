@@ -4,8 +4,6 @@
 #include <netdb.h>      // Needed for the socket functions
 #include <arpa/inet.h> 	// for inet_ntop function
 #include <pthread.h>
-//#include <list>
-//#include <iterator>
 #include <sstream>
 #include <stdio.h>
 #include <errno.h>
