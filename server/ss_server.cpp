@@ -152,8 +152,7 @@ void pass_received(int new_sd)
       incomming_data_buffer[bytes_received] = '\0';
       std::cout << incomming_data_buffer << std::endl;
 
-:s
-:x
+       if((incomming_data_buffer[9]=='p')&&(incomming_data_buffer[10]=='a')&&(incomming_data_buffer[11]=='s')&&(incomming_data_buffer[12]=='s'))
 	  server_send(new_sd, "CONNECTED\r\n");
        else 
 	 {
