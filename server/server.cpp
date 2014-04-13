@@ -126,6 +126,10 @@ class spreadsheet_editor
 			}
 		}
 
+		/* callback for strings read in from clients
+		 * if there is an error, the client is removed from
+		 * the session
+		 * */
 		void handle_read(const boost::system::error_code& error, 
 				 std::size_t bytes_transferred)
 		{
@@ -133,12 +137,15 @@ class spreadsheet_editor
 
 			if (!error)
 			{
+				//convert the message from char[] to a string
 				std::string temp(read_msg_);
 
-				
-
+				//detect whether there is a newline character
 				std::size_t found = temp.find('\n');
 
+				//if there is a newline, we append the portion ending in a newline to 
+				//the final message, and we append the remainder to the partial message
+				//we then deliver the final message to all users in the session
 				if (found != std::string::npos)
 				{
 					final_msg_ += partial_msg_ + temp.substr(0,found);
