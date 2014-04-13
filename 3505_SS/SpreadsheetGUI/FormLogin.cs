@@ -118,7 +118,7 @@ namespace SS
         {
             if (!(line == null))
             {
-                model.Quit();               
+                //model.Quit();               
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 // Start an application context and run one form inside it

@@ -33,6 +33,9 @@ namespace SS
         //Helper boolean
         private bool connected = false;
 
+        private string IpAddress = "lab1-9.eng.utah.edu";
+        private int port=2000;
+
         /// <summary>
         /// Constructior for the empty form.
         /// </summary>
@@ -55,7 +58,7 @@ namespace SS
           //  if (!connected)
           //  {
                 
-                model.Connect("localhost", 2000, "PASSWORD");
+                model.Connect(IpAddress, port, "password");
            //     connected = true;
            // }
         }
