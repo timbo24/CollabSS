@@ -39,6 +39,8 @@ typedef boost::shared_ptr<participant> participant_ptr;
 class spreadsheet_session
 {
 	public:
+		/* add a participlant to a session
+		 * */
 		void join(participant_ptr prt)
 		{
 			participants_.insert(prt);
@@ -46,11 +48,15 @@ class spreadsheet_session
 				boost::bind(&participant::deliver, prt, _1));
 		}
 
+		/* remove a participant from the session
+		 * */
 		void leave(participant_ptr prt)
 		{
 			participants_.erase(prt);
 		}
 
+		/* delivers messages to clients in the session
+		 * */
 		void deliver(const std::string& msg)
 		{
 			recent_msgs_.push_back(msg);
@@ -180,6 +186,9 @@ class spreadsheet_editor
 			}
 		}
 
+		/* callback function after a write to a client, pops messages from the message_queue
+		 * and calls asyncwrite again if there are more messages
+		 * */
 		void handle_write(const boost::system::error_code& error)
 		{
 			if (!error)
@@ -234,7 +243,7 @@ public:
 	}
 
 
-	/* creates a new editor object, 
+	/* callback creates a new editor object, 
 	 * as well as begins accepting connections from clients
 	 * */
 	void begin_accept()
@@ -248,7 +257,7 @@ public:
 	} 
 		
 	/* The callback method when a connection comes in if there
-	 * is no error, the editor will start will call begin_accept again
+	 * is no error,  will call begin_accept again
 	 * so that other editors can connect
 	 * */
 	void handle_accept(spreadsheet_editor_ptr editor,
