@@ -14,7 +14,6 @@ using boost::asio::ip::tcp;
 
 //----------------------------------------------------------------------
 
-//typedef std::deque<chat_message> chat_message_queue;
 typedef std::deque<std::string> message_queue;
 
 //----------------------------------------------------------------------
@@ -284,32 +283,36 @@ typedef std::list<server_ptr> server_list;
 
 int main(int argc, char* argv[])
 {
-  try
-  {
-    if (argc < 2)
-    {
-      std::cerr << "Usage: server <port>\n";
-      return 1;
-    }
+	try
+	{
+		if (argc < 2)
+		{
+			std::cerr << "Usage: server <port>\n";
+			return 1;
+		}
 
-    boost::asio::io_service io_service;
+		//io_service helps manage different thread to handle async calls 
+		boost::asio::io_service io_service;
 
-    using namespace std;
+		using namespace std;
 
-    tcp::endpoint endpoint(tcp::v4(), atoi(argv[1]));
+		//endpoint for establishing a connection for the server, using the command arg as the port#
+		tcp::endpoint endpoint(tcp::v4(), atoi(argv[1]));
 
-    server_ptr svr(new server(io_service, endpoint));
+		//start the server
+		server_ptr svr(new server(io_service, endpoint));
 
-    std::cout<<"Server up and running..."<<std::endl;
+		std::cout<<"Server up and running..."<<std::endl;
 
-    io_service.run();
-  }
-  catch (std::exception& e)
-  {
-    std::cerr << "Exception: " << e.what() << "\n";
-  }
+		//being the io_service
+		io_service.run();
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << "Exception: " << e.what() << "\n";
+	}
 
-  return 0;
+	return 0;
 }
 
 
