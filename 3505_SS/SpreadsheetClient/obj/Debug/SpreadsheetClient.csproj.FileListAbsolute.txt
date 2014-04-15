@@ -10,3 +10,9 @@ C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetC
 C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetClient\obj\Debug\SpreadsheetClient.csprojResolveAssemblyReference.cache
 C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetClient\obj\Debug\SpreadsheetClient.dll
 C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetClient\obj\Debug\SpreadsheetClient.pdb
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetClient\bin\Debug\SpreadsheetClient.dll
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetClient\bin\Debug\SpreadsheetClient.pdb
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetClient\bin\Debug\StringSocket.dll
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetClient\obj\Debug\SpreadsheetClient.csprojResolveAssemblyReference.cache
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetClient\obj\Debug\SpreadsheetClient.dll
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetClient\obj\Debug\SpreadsheetClient.pdb
