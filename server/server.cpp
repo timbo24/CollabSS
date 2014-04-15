@@ -104,14 +104,12 @@ class spreadsheet_editor
 		 * */	
 		void start()
 		{
-			std::cout<<"starting a session"<<std::endl;
 			session_.join(shared_from_this());
 			boost::asio::async_read(socket_,
 						boost::asio::buffer(read_msg_, message_buffer_size),
 						boost::bind(&spreadsheet_editor::handle_read, 
 						        shared_from_this(),
-						        boost::asio::placeholders::error,
-							boost::asio::placeholders::bytes_transferred));
+						        boost::asio::placeholders::error));
 		}
 
 		/* called to write to a client
@@ -135,8 +133,7 @@ class spreadsheet_editor
 		 * if there is an error, the client is removed from
 		 * the session
 		 * */
-		void handle_read(const boost::system::error_code& error, 
-				 std::size_t bytes_transferred)
+		void handle_read(const boost::system::error_code& error);
 		{
 
 
@@ -173,8 +170,7 @@ class spreadsheet_editor
 								            message_buffer_size),
 							boost::bind(&spreadsheet_editor::handle_read, 
 								    shared_from_this(), 
-								    boost::asio::placeholders::error,
-								    boost::asio::placeholders::bytes_transferred));
+								    boost::asio::placeholders::error));
 
 			}
 			else
