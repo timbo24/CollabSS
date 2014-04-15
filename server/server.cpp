@@ -71,6 +71,28 @@ class spreadsheet_session
 		enum { max_recent_msgs = 100 };
 		message_queue recent_msgs_;
 };
+
+
+
+
+class controller
+{
+	public:
+		incoming_message(const std::string& message)
+		{
+			std::string delimiter = " ";
+			std::string token = s.substr(0, message.find(delimiter));
+
+			switch (token)
+			{
+				case "PASSWORD"
+			}
+
+
+
+
+
+};
 //----------------------------------------------------------------------
 
 /* class represents a client who is connected to the server and 
@@ -133,7 +155,7 @@ class spreadsheet_editor
 		 * if there is an error, the client is removed from
 		 * the session
 		 * */
-		void handle_read(const boost::system::error_code& error);
+		void handle_read(const boost::system::error_code& error)
 		{
 
 
