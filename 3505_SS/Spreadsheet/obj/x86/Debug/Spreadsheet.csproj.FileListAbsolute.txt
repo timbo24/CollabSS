@@ -8,3 +8,13 @@ C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\
 C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\obj\x86\Debug\Spreadsheet.csprojResolveAssemblyReference.cache
 C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\obj\x86\Debug\Spreadsheet.dll
 C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\Spreadsheet\obj\x86\Debug\Spreadsheet.pdb
+X:\Documents\CS3505\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\Spreadsheet.dll
+X:\Documents\CS3505\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\Spreadsheet.pdb
+X:\Documents\CS3505\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\Spreadsheet.XML
+X:\Documents\CS3505\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\DependencyGraph.dll
+X:\Documents\CS3505\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\Formula.dll
+X:\Documents\CS3505\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\DependencyGraph.xml
+X:\Documents\CS3505\Malloc\3505_SS\Spreadsheet\bin\x86\Debug\Formula.xml
+X:\Documents\CS3505\Malloc\3505_SS\Spreadsheet\obj\x86\Debug\Spreadsheet.csprojResolveAssemblyReference.cache
+X:\Documents\CS3505\Malloc\3505_SS\Spreadsheet\obj\x86\Debug\Spreadsheet.dll
+X:\Documents\CS3505\Malloc\3505_SS\Spreadsheet\obj\x86\Debug\Spreadsheet.pdb

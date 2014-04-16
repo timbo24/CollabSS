@@ -181,7 +181,7 @@ namespace SS
                       row = Int32.Parse("" + m.Groups[2]) - 1;
                   }
 
-                       // this.spreadsheetPanel1.SetValue(col, row, part2);
+                        //this.spreadsheetPanel1.SetValue(col, row, part2);
 
 
                         List<String> names = new List<String>(); //list of names of a cell's dependents

@@ -57,10 +57,10 @@ X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\SpreadsheetClien
 X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\DependencyGraph.xml
 X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\Formula.xml
 X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\Spreadsheet.pdb
-X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\Spreadsheet.xml
 X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\SpreadsheetPanel.xml
 X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SpreadsheetGUI.csprojResolveAssemblyReference.cache
 X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SS.Form1.resources
 X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SS.FormLogin.resources
 X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SS.Properties.Resources.resources
 X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SpreadsheetGUI.csproj.GenerateResource.Cache
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\Spreadsheet.xml
