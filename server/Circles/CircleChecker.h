@@ -13,7 +13,7 @@
 #include <unordered_set>
 #include <map>
 #include <queue>
-#include <regex>
+#include <boost/xpressive/xpressive.hpp>
 #include "DependencyGraph.h"
 using namespace std;
 class CircleChecker
