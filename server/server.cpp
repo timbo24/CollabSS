@@ -13,6 +13,9 @@
 #include <functional> 
 #include <cctype>
 #include <locale>
+#include <mutex>
+
+
 
 using boost::asio::ip::tcp;
 
@@ -111,7 +114,7 @@ class spreadsheet_editor
 		spreadsheet_editor(boost::asio::io_service& io_service, spreadsheet_session& session)
 			: socket_(io_service),
 			  session_(session),
-			  message_buffer_size(1)
+			  message_buffer_size(10)
 		{
 			
 		}
@@ -166,11 +169,12 @@ class spreadsheet_editor
 				//convert the message from char[] to a string
 				std::string temp(read_msg_);
 
-				cout<<"TEMP: " << temp << std::endl;
+				std::cout<<"TEMP: "<<temp<<std::endl;
 
 				//detect whether there is a newline character
 				std::size_t found = temp.find('\n');
 
+				mtx.lock();
 				//if there is a newline, we append the portion ending in a newline to 
 				//the final message, and we append the remainder to the partial message
 				//we then deliver the final message to all users in the session
@@ -186,6 +190,8 @@ class spreadsheet_editor
 				{
 					partial_msg_ += temp;
 				}
+
+				mtx.unlock();
 
 
 				boost::asio::async_read(socket_,
@@ -262,7 +268,7 @@ class spreadsheet_editor
 			{
 				outm = "OKENTER " + message + "\r\n";
 				std::cout<<"outgoing: " << outm << std::endl;
-				deliver(outm);;
+				session_.deliver(outm);;
 			}
 
 
@@ -274,11 +280,12 @@ class spreadsheet_editor
 	private:
 		tcp::socket socket_;
 		spreadsheet_session& session_;
-		char read_msg_[1];
+		char read_msg_[10];
 		std::string final_msg_;
 		std::string partial_msg_;
 		message_queue write_msgs_;
 		size_t message_buffer_size;
+		std::mutex mtx;
 };
 
 typedef boost::shared_ptr<spreadsheet_editor> spreadsheet_editor_ptr;
