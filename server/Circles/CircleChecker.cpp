@@ -8,7 +8,11 @@
 #include <string>
 #include <iostream>
 #include "CircleChecker.h"
+
+using namespace boost::xpressive;
 using namespace std;
+
+
 /*Circular dependency checker.  Contains a dependency graph and 
 *a public function for checking if a cell change would cause a 
 *circular dependency in that graph.  All other functions are 
@@ -92,7 +96,12 @@ CircleChecker::~CircleChecker()
 		return TheGraph->GetDependents(s);
 	}
 	
-	//helper method for parsing a formula string into individual variables
+        /*helper method for parsing a formula string into individual variables, returns an empty queue if 
+	 *the string is not a formula or if there are no variables.
+	 *
+	 *Regex code modeled after Boost library example:
+	 *http://boost-sandbox.sourceforge.net/libs/xpressive/doc/html/boost_xpressive/user_s_guide/examples.html#boost_xpressive.user_s_guide.examples.see_if_a_string_contains_a_sub_string_that_matches_a_regex
+	*/
 	std::queue<std::string> CircleChecker::ParseVar(std::string s)
 	{
 		//store variables as we find them
@@ -105,7 +114,18 @@ CircleChecker::~CircleChecker()
 		}
 
 		//store the variables from the parsed string
-		//____________________________________________________________________
+		smatch allVars;
+		//match the pattern of one or more letters followed by one or more numbers.
+		sregex cellNames = sregex::compile("([[:upper:]])+([[:digit:]])+");
+	        
+		//search for variables and store them all
+		regex_search( s, allVars, cellNames);
+
+		//add them to the return list
+		for (int i = 0 ; i < allVars.size() ; i++)
+		{
+		  toReturn.push(allVars[i]);
+		}
 
 		//return the list at the end
 		return toReturn;

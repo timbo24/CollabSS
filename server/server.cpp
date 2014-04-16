@@ -132,11 +132,10 @@ class spreadsheet_editor
 		void start()
 		{
 			session_.join(shared_from_this());
-			boost::asio::async_read(socket_,
-						boost::asio::buffer(read_msg_, message_buffer_size),
-						boost::bind(&spreadsheet_editor::handle_read, 
-						        shared_from_this(),
-						        boost::asio::placeholders::error));
+			socket_.async_read_some(boost::asio::buffer(read_msg_, message_buffer_size),
+					       boost::bind(&spreadsheet_editor::handle_read, 
+						           shared_from_this(),
+						           boost::asio::placeholders::error));
 		}
 
 		/* called to write to a client
@@ -194,8 +193,7 @@ class spreadsheet_editor
 				mtx.unlock();
 
 
-				boost::asio::async_read(socket_,
-						        boost::asio::buffer(read_msg_, 
+				socket_.async_read_some(boost::asio::buffer(read_msg_, 
 								            message_buffer_size),
 							boost::bind(&spreadsheet_editor::handle_read, 
 								    shared_from_this(), 
