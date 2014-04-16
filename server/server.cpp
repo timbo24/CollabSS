@@ -1,4 +1,5 @@
 
+#include <string>
 #include <algorithm>
 #include <cstdlib>
 #include <deque>
@@ -9,9 +10,28 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
+#include <functional> 
+#include <cctype>
+#include <locale>
 
 using boost::asio::ip::tcp;
 
+// trim from start
+ static inline std::string &ltrim(std::string &s) {
+         s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+	 return s;
+ }
+
+                 // trim from end
+ static inline std::string &rtrim(std::string &s) {
+	 s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+	 return s;
+ }
+
+ // trim from both ends
+ static inline std::string &trim(std::string &s) {
+	 return ltrim(rtrim(s));
+ }
 //----------------------------------------------------------------------
 
 typedef std::deque<std::string> message_queue;
@@ -74,25 +94,29 @@ class spreadsheet_session
 
 
 
-
+/*
 class controller
 {
 	public:
-		incoming_message(const std::string& message)
+		incoming_message(participant_ptr prt, const std::string& message)
 		{
 			std::string delimiter = " ";
 			std::string token = s.substr(0, message.find(delimiter));
 
 			switch (token)
 			{
-				case "PASSWORD"
+				case "PASSWORD":
+					std::string outm = "CONNECTED";
+					boost::bind(&participand::deliver, prt, boost::ref(outm));
+					break;
+				default:
+					std::cout<< "SOMETHING UNEXPECTED"<< std::endl;
+					break;
 			}
-
-
-
-
-
+		}
 };
+
+*/
 //----------------------------------------------------------------------
 
 /* class represents a client who is connected to the server and 
@@ -178,7 +202,7 @@ class spreadsheet_editor
 					std::cout<<final_msg_<<std::endl;
 
 
-					session_.deliver(final_msg_);
+					incoming_message(final_msg_);
 					final_msg_ = "";
 				}
 				else
@@ -226,6 +250,50 @@ class spreadsheet_editor
 			}
 		}
 
+
+		void incoming_message(std::string message)
+		{
+			//trim the endline from the string
+
+			trim(message);
+
+			size_t pos = 0;
+			std::string delimiter = " ";
+
+			pos = message.find(delimiter);
+			std::string token = message.substr(0, pos);
+
+		        message.erase(0, pos + delimiter.length());
+
+			std::cout<<"incoming message... " << std::endl;
+			std::string outm;
+
+			if(token == "PASSWORD")
+			{
+				outm = "CONNECTED\r\n";
+				std::cout<<"outgoing: " << outm << std::endl;
+				deliver(outm);
+
+			}
+			else if(token == "CREATE")
+			{
+				outm = "OPENNEW something\r\n";
+				std::cout<<"outgoing: " << outm << std::endl;
+				deliver(outm);
+			}
+			else if(token == "ENTER")
+			{
+				outm = "OK " + message + "\r\n";
+				std::cout<<"outgoing: " << outm << std::endl;
+				session_.deliver(outm);;
+			}
+
+
+
+
+
+		}
+
 	private:
 		tcp::socket socket_;
 		spreadsheet_session& session_;
@@ -234,7 +302,6 @@ class spreadsheet_editor
 		std::string partial_msg_;
 		message_queue write_msgs_;
 		size_t message_buffer_size;
-
 };
 
 typedef boost::shared_ptr<spreadsheet_editor> spreadsheet_editor_ptr;
