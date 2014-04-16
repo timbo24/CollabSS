@@ -166,6 +166,8 @@ class spreadsheet_editor
 				//convert the message from char[] to a string
 				std::string temp(read_msg_);
 
+				cout<<"TEMP: " << temp << std::endl;
+
 				//detect whether there is a newline character
 				std::size_t found = temp.find('\n');
 
