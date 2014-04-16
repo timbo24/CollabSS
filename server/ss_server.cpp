@@ -166,7 +166,9 @@ void pass_received(int new_sd)
       std::cout << incomming_data_buffer << std::endl;
 
        if((incomming_data_buffer[9]=='P')&&(incomming_data_buffer[10]=='A')&&(incomming_data_buffer[11]=='S')&&(incomming_data_buffer[12]=='S'))
+       {
 	  server_send(new_sd, "CONNECTED\r\n");
+       }
        else 
 	 {
                  server_send(new_sd, "INVALID\r\n");
@@ -222,6 +224,7 @@ void *tcp_server_read(void *arg)
 	    i++;
 	  }
 
+	       std::cout<<buf<<std::endl;
 	
 	if ((buf[0]=='C')&&(buf[1]=='R')&&(buf[2]=='E')&&(buf[3]=='A')&&(buf[4]=='T')&&(buf[5]=='E'))
 	  server_send(rfd, "OPENNEW\r\n");
