@@ -114,7 +114,7 @@ class spreadsheet_editor
 		spreadsheet_editor(boost::asio::io_service& io_service, spreadsheet_session& session)
 			: socket_(io_service),
 			  session_(session),
-			  message_buffer_size(10)
+			  message_buffer_size(1024)
 		{
 			
 		}
@@ -191,6 +191,8 @@ class spreadsheet_editor
 				}
 
 				mtx.unlock();
+
+				memset(read_msg_, 0, 1024);
 
 
 				socket_.async_read_some(boost::asio::buffer(read_msg_, 
@@ -278,7 +280,7 @@ class spreadsheet_editor
 	private:
 		tcp::socket socket_;
 		spreadsheet_session& session_;
-		char read_msg_[10];
+		char read_msg_[1024];
 		std::string final_msg_;
 		std::string partial_msg_;
 		message_queue write_msgs_;
