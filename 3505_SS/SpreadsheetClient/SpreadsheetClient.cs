@@ -60,13 +60,13 @@ namespace SS
                 TcpClient client = new TcpClient(hostname, port);
                 socket = new StringSocket(client.Client, UTF8Encoding.Default);
                 isConnected = true;
-                socket.BeginSend("password " + name + "\n", (e, p) => { }, null);
+                socket.BeginSend("PASSWORD " + name + "\n", (e, p) => { }, null);
                 Thread.Sleep(200);
                 socket.BeginReceive(LineReceived, null);
             }
             else
             {
-                socket.BeginSend("password " + name + "\n", (e, p) => { }, null);
+                socket.BeginSend("PASSWORD " + name + "\n", (e, p) => { }, null);
                 Thread.Sleep(200);
                 socket.BeginReceive(LineReceived, null);
             }
@@ -93,7 +93,7 @@ namespace SS
         {
             if (socket != null)
             {
-                socket.BeginSend("create " +line + "\n", (e, p) => { }, null);
+                socket.BeginSend("CREATE " +line + "\n", (e, p) => { }, null);
             }
         }
 
@@ -105,7 +105,7 @@ namespace SS
         {
             if (socket != null)
             {
-                socket.BeginSend("enter " + line + "\n", (e, p) => { }, null);
+                socket.BeginSend("ENTER " + line + "\n", (e, p) => { }, null);
             }
         }
 

@@ -1,4 +1,5 @@
 
+#include <string>
 #include <algorithm>
 #include <cstdlib>
 #include <deque>
@@ -9,9 +10,28 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
+#include <functional> 
+#include <cctype>
+#include <locale>
 
 using boost::asio::ip::tcp;
 
+// trim from start
+ static inline std::string &ltrim(std::string &s) {
+         s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+	 return s;
+ }
+
+                 // trim from end
+ static inline std::string &rtrim(std::string &s) {
+	 s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+	 return s;
+ }
+
+ // trim from both ends
+ static inline std::string &trim(std::string &s) {
+	 return ltrim(rtrim(s));
+ }
 //----------------------------------------------------------------------
 
 typedef std::deque<std::string> message_queue;
@@ -43,8 +63,9 @@ class spreadsheet_session
 		void join(participant_ptr prt)
 		{
 			participants_.insert(prt);
-			std::for_each(recent_msgs_.begin(), recent_msgs_.end(),
+			/*std::for_each(recent_msgs_.begin(), recent_msgs_.end(),
 				boost::bind(&participant::deliver, prt, _1));
+				*/
 		}
 
 		/* remove a participant from the session
@@ -71,6 +92,9 @@ class spreadsheet_session
 		enum { max_recent_msgs = 100 };
 		message_queue recent_msgs_;
 };
+
+
+
 //----------------------------------------------------------------------
 
 /* class represents a client who is connected to the server and 
@@ -104,14 +128,12 @@ class spreadsheet_editor
 		 * */	
 		void start()
 		{
-			std::cout<<"starting a session"<<std::endl;
 			session_.join(shared_from_this());
 			boost::asio::async_read(socket_,
 						boost::asio::buffer(read_msg_, message_buffer_size),
 						boost::bind(&spreadsheet_editor::handle_read, 
 						        shared_from_this(),
-						        boost::asio::placeholders::error,
-							boost::asio::placeholders::bytes_transferred));
+						        boost::asio::placeholders::error));
 		}
 
 		/* called to write to a client
@@ -135,8 +157,7 @@ class spreadsheet_editor
 		 * if there is an error, the client is removed from
 		 * the session
 		 * */
-		void handle_read(const boost::system::error_code& error, 
-				 std::size_t bytes_transferred)
+		void handle_read(const boost::system::error_code& error)
 		{
 
 
@@ -144,6 +165,8 @@ class spreadsheet_editor
 			{
 				//convert the message from char[] to a string
 				std::string temp(read_msg_);
+
+				cout<<"TEMP: " << temp << std::endl;
 
 				//detect whether there is a newline character
 				std::size_t found = temp.find('\n');
@@ -156,10 +179,7 @@ class spreadsheet_editor
 					final_msg_ += partial_msg_ + temp.substr(0,found);
 					partial_msg_ = temp.substr(found + 1);
 
-					std::cout<<final_msg_<<std::endl;
-
-
-					session_.deliver(final_msg_);
+					incoming_message(final_msg_);
 					final_msg_ = "";
 				}
 				else
@@ -173,8 +193,7 @@ class spreadsheet_editor
 								            message_buffer_size),
 							boost::bind(&spreadsheet_editor::handle_read, 
 								    shared_from_this(), 
-								    boost::asio::placeholders::error,
-								    boost::asio::placeholders::bytes_transferred));
+								    boost::asio::placeholders::error));
 
 			}
 			else
@@ -208,6 +227,50 @@ class spreadsheet_editor
 			}
 		}
 
+
+		void incoming_message(std::string message)
+		{
+			//trim the endline from the string
+			std::cout<<"incoming: " << message<< std::endl;
+
+			trim(message);
+
+			size_t pos = 0;
+			std::string delimiter = " ";
+
+			pos = message.find(delimiter);
+			std::string token = message.substr(0, pos);
+
+		        message.erase(0, pos + delimiter.length());
+
+			std::string outm = "";
+
+			if(token == "PASSWORD")
+			{
+				outm = "CONNECTED\r\n";
+				std::cout<<"outgoing: " << outm << std::endl;
+				deliver(outm);
+
+			}
+			else if(token == "CREATE")
+			{
+				outm = "OPENNEW something\r\n";
+				std::cout<<"outgoing: " << outm << std::endl;
+				deliver(outm);
+			}
+			else if(token == "ENTER")
+			{
+				outm = "OKENTER " + message + "\r\n";
+				std::cout<<"outgoing: " << outm << std::endl;
+				deliver(outm);;
+			}
+
+
+
+
+
+		}
+
 	private:
 		tcp::socket socket_;
 		spreadsheet_session& session_;
@@ -216,7 +279,6 @@ class spreadsheet_editor
 		std::string partial_msg_;
 		message_queue write_msgs_;
 		size_t message_buffer_size;
-
 };
 
 typedef boost::shared_ptr<spreadsheet_editor> spreadsheet_editor_ptr;

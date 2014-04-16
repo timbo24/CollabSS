@@ -42,3 +42,25 @@ C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetG
 C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SS.FormLogin.resources
 C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SS.Properties.Resources.resources
 C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SpreadsheetGUI.csproj.GenerateResource.Cache
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\SpreadsheetGUI.exe.config
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SpreadsheetGUI.exe
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SpreadsheetGUI.pdb
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\SpreadsheetGUI.exe
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\SpreadsheetGUI.pdb
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\DependencyGraph.dll
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\Formula.dll
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\Spreadsheet.dll
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\SpreadsheetClient.dll
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\SpreadsheetPanel.dll
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\StringSocket.dll
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\SpreadsheetClient.pdb
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\DependencyGraph.xml
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\Formula.xml
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\Spreadsheet.pdb
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\SpreadsheetPanel.xml
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SpreadsheetGUI.csprojResolveAssemblyReference.cache
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SS.Form1.resources
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SS.FormLogin.resources
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SS.Properties.Resources.resources
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\obj\x86\Debug\SpreadsheetGUI.csproj.GenerateResource.Cache
+X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetGUI\bin\x86\Debug\Spreadsheet.xml

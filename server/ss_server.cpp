@@ -152,7 +152,7 @@ void pass_received(int new_sd)
       incomming_data_buffer[bytes_received] = '\0';
       std::cout << incomming_data_buffer << std::endl;
 
-       if((incomming_data_buffer[9]=='p')&&(incomming_data_buffer[10]=='a')&&(incomming_data_buffer[11]=='s')&&(incomming_data_buffer[12]=='s'))
+       if((incomming_data_buffer[9]=='P')&&(incomming_data_buffer[10]=='A')&&(incomming_data_buffer[11]=='S')&&(incomming_data_buffer[12]=='S'))
 	  server_send(new_sd, "CONNECTED\r\n");
        else 
 	 {
@@ -210,9 +210,9 @@ void *tcp_server_read(void *arg)
 	  }
 
 	
-	if ((buf[0]=='c')&&(buf[1]=='r')&&(buf[2]=='e')&&(buf[3]=='a')&&(buf[4]=='t')&&(buf[5]=='e'))
+	if ((buf[0]=='C')&&(buf[1]=='R')&&(buf[2]=='E')&&(buf[3]=='A')&&(buf[4]=='T')&&(buf[5]=='E'))
 	  server_send(rfd, "OPENNEW\r\n");
-	else if ((buf[0]=='e')&&(buf[1]=='n')&&(buf[2]=='t')&&(buf[3]=='e')&&(buf[4]=='r'))
+	else if ((buf[0]=='E')&&(buf[1]=='N')&&(buf[2]=='T')&&(buf[3]=='E')&&(buf[4]=='R'))
 	  {
 	  server_send(rfd, "OK"+line+"\r\n");
 

@@ -11,3 +11,16 @@ C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\bin\x
 C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.csprojResolveAssemblyReference.cache
 C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.exe
 C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.pdb
+X:\Documents\CS3505\Malloc\3505_SS\MyTest\bin\x86\Debug\MyTest.exe.config
+X:\Documents\CS3505\Malloc\3505_SS\MyTest\bin\x86\Debug\MyTest.exe
+X:\Documents\CS3505\Malloc\3505_SS\MyTest\bin\x86\Debug\MyTest.pdb
+X:\Documents\CS3505\Malloc\3505_SS\MyTest\bin\x86\Debug\DependencyGraph.dll
+X:\Documents\CS3505\Malloc\3505_SS\MyTest\bin\x86\Debug\Formula.dll
+X:\Documents\CS3505\Malloc\3505_SS\MyTest\bin\x86\Debug\Spreadsheet.dll
+X:\Documents\CS3505\Malloc\3505_SS\MyTest\bin\x86\Debug\Spreadsheet.pdb
+X:\Documents\CS3505\Malloc\3505_SS\MyTest\bin\x86\Debug\Spreadsheet.xml
+X:\Documents\CS3505\Malloc\3505_SS\MyTest\bin\x86\Debug\DependencyGraph.xml
+X:\Documents\CS3505\Malloc\3505_SS\MyTest\bin\x86\Debug\Formula.xml
+X:\Documents\CS3505\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.csprojResolveAssemblyReference.cache
+X:\Documents\CS3505\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.exe
+X:\Documents\CS3505\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.pdb
