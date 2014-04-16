@@ -2,4 +2,4 @@
 #mark smith
 
 IHateCircles:
-	g++ -std=c++0x DependencyNode.cpp DependencyGraph.cpp tester.cpp
+	g++ -std=c++0x DependencyNode.cpp DependencyGraph.cpp CircleChecker.cpp  tester.cpp
