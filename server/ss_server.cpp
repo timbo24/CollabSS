@@ -9,6 +9,14 @@
 #include <sstream>
 #include <stdio.h>
 #include <errno.h>
+#include <mysql/mysql.h> 
+
+// DB definitions
+#define SERVER "atr.eng.utah.edu"
+#define USER "cs4540_tpayne"
+#define PASSWORD "502365727"
+#define DATABASE "cs4540_tpayne"
+// Compiling with: mysql - g++ ss_server.cpp -pthread `mysql_config --cflags --libs`
 
 int server_start_listen() ;
 int server_establish_connection(int server_fd);
@@ -33,6 +41,11 @@ pthread_mutex_t mutex_state = PTHREAD_MUTEX_INITIALIZER;
 
 int main()
 {
+	int dbres = db_example();
+    if (dbres == 1)
+      {
+	return 1;
+      }
 
 int server_fd = server_start_listen() ;
     if (server_fd == -1)
@@ -288,7 +301,99 @@ pthread_t threads[MAXFD]; //create 15  handles for threads.
     }
 }
 
+/**
+ * Example code on how to connect with and use the database
+ */
+int db_example()
+{
+    MYSQL *con;
+    con = mysql_init(NULL);
 
+    if (!con)
+    {
+        std::cout << "Mysql Initialization Failed";
+        return 1;
+    }
+    
+    // See definitions at beggining of file for values of SERVER, USER, PASSWORD, DATABASE
+    con = mysql_real_connect(con, SERVER, USER, PASSWORD, DATABASE, 0,NULL,0);
+
+    if (con)
+    {
+        std::cout << "DB Connection Succeeded\n";
+    }
+    else
+    {
+        std::cout << "DB Connection Failed\n";
+    }
+
+    MYSQL_RES *res_set;
+    MYSQL_ROW row;
+
+    // Creating an INSERT statement
+    std::string ss_name = "ss5"; // ***If this spreadsheet name already exists, the insert will fail***
+    std::string sql_insert  = "INSERT INTO Spreadsheet VALUES ('" + ss_name + "')";
+
+    // Returns 0 on success
+    if ( mysql_query (con, sql_insert.c_str()) )
+      {
+	std::cout << mysql_error(con) << std::endl;
+	mysql_close (con);
+	std::cout << "Database connection closed." << std::endl;
+	return 1 ;
+      }
+
+    // The number of rows affected
+    int rows_inserted = mysql_affected_rows(con);
+    std::cout << "Inserted " << rows_inserted << " rows" << std::endl;
+
+
+    // Now we will do a SELECT statement
+    std::string sql_query  = "SELECT * FROM Spreadsheet";
+    
+    if ( mysql_query (con, sql_query.c_str()) )
+      {
+	std::cout << mysql_error(con) << std::endl;
+	mysql_close (con);
+	std::cout << "Database connection closed." << std::endl;
+	return 1 ;
+      }
+
+    // Get the result of the query
+    res_set = mysql_store_result(con);
+    int numrows = mysql_num_rows(res_set);
+
+    int i = 0;
+    std::cout << "Spreadsheets in the database:" << std::endl;
+     while (((row = mysql_fetch_row(res_set)) != NULL))
+    {
+        std::cout << row[i] << std::endl;
+    }
+
+    // Creating an UPDATE statement
+    ss_name = "ss1";
+    std::string cell_content = "Hello";
+    std::string sql_update  = "UPDATE Cell SET contents = '" + cell_content + "' WHERE ssname = '" + ss_name + "' AND cell = 'A2'";
+
+    // Returns 0 on success
+    if ( mysql_query (con, sql_update.c_str()) )
+      {
+	std::cout << mysql_error(con) << std::endl;
+	mysql_close (con);
+	std::cout << "Database connection closed." << std::endl;
+	return 1 ;
+      }
+
+    // The number of rows affected
+    int rows_updated = mysql_affected_rows(con);
+    std::cout << "Inserted " << rows_updated << " rows" << std::endl;
+
+    // Close the connection!
+    mysql_close (con);
+    std::cout << "Database connection closed." << std::endl;
+
+    return 0;
+}
     
 
 

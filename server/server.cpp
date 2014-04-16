@@ -63,8 +63,9 @@ class spreadsheet_session
 		void join(participant_ptr prt)
 		{
 			participants_.insert(prt);
-			std::for_each(recent_msgs_.begin(), recent_msgs_.end(),
+			/*std::for_each(recent_msgs_.begin(), recent_msgs_.end(),
 				boost::bind(&participant::deliver, prt, _1));
+				*/
 		}
 
 		/* remove a participant from the session
@@ -94,29 +95,6 @@ class spreadsheet_session
 
 
 
-/*
-class controller
-{
-	public:
-		incoming_message(participant_ptr prt, const std::string& message)
-		{
-			std::string delimiter = " ";
-			std::string token = s.substr(0, message.find(delimiter));
-
-			switch (token)
-			{
-				case "PASSWORD":
-					std::string outm = "CONNECTED";
-					boost::bind(&participand::deliver, prt, boost::ref(outm));
-					break;
-				default:
-					std::cout<< "SOMETHING UNEXPECTED"<< std::endl;
-					break;
-			}
-		}
-};
-
-*/
 //----------------------------------------------------------------------
 
 /* class represents a client who is connected to the server and 
@@ -188,6 +166,8 @@ class spreadsheet_editor
 				//convert the message from char[] to a string
 				std::string temp(read_msg_);
 
+				cout<<"TEMP: " << temp << std::endl;
+
 				//detect whether there is a newline character
 				std::size_t found = temp.find('\n');
 
@@ -198,9 +178,6 @@ class spreadsheet_editor
 				{
 					final_msg_ += partial_msg_ + temp.substr(0,found);
 					partial_msg_ = temp.substr(found + 1);
-
-					std::cout<<final_msg_<<std::endl;
-
 
 					incoming_message(final_msg_);
 					final_msg_ = "";
@@ -254,6 +231,7 @@ class spreadsheet_editor
 		void incoming_message(std::string message)
 		{
 			//trim the endline from the string
+			std::cout<<"incoming: " << message<< std::endl;
 
 			trim(message);
 
@@ -265,8 +243,7 @@ class spreadsheet_editor
 
 		        message.erase(0, pos + delimiter.length());
 
-			std::cout<<"incoming message... " << std::endl;
-			std::string outm;
+			std::string outm = "";
 
 			if(token == "PASSWORD")
 			{
@@ -283,9 +260,9 @@ class spreadsheet_editor
 			}
 			else if(token == "ENTER")
 			{
-				outm = "OK " + message + "\r\n";
+				outm = "OKENTER " + message + "\r\n";
 				std::cout<<"outgoing: " << outm << std::endl;
-				session_.deliver(outm);;
+				deliver(outm);;
 			}
 
 
