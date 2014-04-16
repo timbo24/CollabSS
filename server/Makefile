@@ -4,7 +4,7 @@ server:
 	g++ -o server ss_server.cpp -pthread
 
 2server:
-	g++ -o Server server.cpp /usr/local/stow/boost/boost_1_53_0/lib/libboost_*.a -I/usr/local/stow/boost/boost_1_53_0/include/ -lboost_thread-mt -lboost_system-mti -std=gnu++0x
+	g++ -o Server server.cpp /usr/local/stow/boost/boost_1_53_0/lib/libboost_*.a -I/usr/local/stow/boost/boost_1_53_0/include/ -lboost_thread-mt -lboost_system-mt -std=gnu++0x
 
 3server:
 	g++ -o Server server.cpp -lboost_thread-mt -lboost_system-mt
