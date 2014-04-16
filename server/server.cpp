@@ -111,7 +111,7 @@ class spreadsheet_editor
 		spreadsheet_editor(boost::asio::io_service& io_service, spreadsheet_session& session)
 			: socket_(io_service),
 			  session_(session),
-			  message_buffer_size(1)
+			  message_buffer_size(1024)
 		{
 			
 		}
@@ -129,7 +129,7 @@ class spreadsheet_editor
 		void start()
 		{
 			session_.join(shared_from_this());
-			boost::asio::async_read(socket_,
+			socket_.async_read_some(
 						boost::asio::buffer(read_msg_, message_buffer_size),
 						boost::bind(&spreadsheet_editor::handle_read, 
 						        shared_from_this(),
@@ -166,7 +166,7 @@ class spreadsheet_editor
 				//convert the message from char[] to a string
 				std::string temp(read_msg_);
 
-				cout<<"TEMP: " << temp << std::endl;
+				std::cout<<"TEMP: " << temp << std::endl;
 
 				//detect whether there is a newline character
 				std::size_t found = temp.find('\n');
@@ -188,7 +188,7 @@ class spreadsheet_editor
 				}
 
 
-				boost::asio::async_read(socket_,
+				socket_.async_read_some(
 						        boost::asio::buffer(read_msg_, 
 								            message_buffer_size),
 							boost::bind(&spreadsheet_editor::handle_read, 
