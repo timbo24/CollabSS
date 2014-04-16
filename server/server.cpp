@@ -13,6 +13,9 @@
 #include <functional> 
 #include <cctype>
 #include <locale>
+#include <mutex>
+
+
 
 using boost::asio::ip::tcp;
 
@@ -129,11 +132,10 @@ class spreadsheet_editor
 		void start()
 		{
 			session_.join(shared_from_this());
-			socket_.async_read_some(
-						boost::asio::buffer(read_msg_, message_buffer_size),
-						boost::bind(&spreadsheet_editor::handle_read, 
-						        shared_from_this(),
-						        boost::asio::placeholders::error));
+			socket_.async_read_some(boost::asio::buffer(read_msg_, message_buffer_size),
+					       boost::bind(&spreadsheet_editor::handle_read, 
+						           shared_from_this(),
+						           boost::asio::placeholders::error));
 		}
 
 		/* called to write to a client
@@ -166,11 +168,12 @@ class spreadsheet_editor
 				//convert the message from char[] to a string
 				std::string temp(read_msg_);
 
-				std::cout<<"TEMP: " << temp << std::endl;
+				std::cout<<"TEMP: "<<temp<<std::endl;
 
 				//detect whether there is a newline character
 				std::size_t found = temp.find('\n');
 
+				mtx.lock();
 				//if there is a newline, we append the portion ending in a newline to 
 				//the final message, and we append the remainder to the partial message
 				//we then deliver the final message to all users in the session
@@ -187,9 +190,12 @@ class spreadsheet_editor
 					partial_msg_ += temp;
 				}
 
+				mtx.unlock();
 
-				socket_.async_read_some(
-						        boost::asio::buffer(read_msg_, 
+				memset(read_msg_, 0, 1024);
+
+
+				socket_.async_read_some(boost::asio::buffer(read_msg_, 
 								            message_buffer_size),
 							boost::bind(&spreadsheet_editor::handle_read, 
 								    shared_from_this(), 
@@ -262,7 +268,7 @@ class spreadsheet_editor
 			{
 				outm = "OKENTER " + message + "\r\n";
 				std::cout<<"outgoing: " << outm << std::endl;
-				deliver(outm);;
+				session_.deliver(outm);;
 			}
 
 
@@ -274,11 +280,12 @@ class spreadsheet_editor
 	private:
 		tcp::socket socket_;
 		spreadsheet_session& session_;
-		char read_msg_[1];
+		char read_msg_[1024];
 		std::string final_msg_;
 		std::string partial_msg_;
 		message_queue write_msgs_;
 		size_t message_buffer_size;
+		std::mutex mtx;
 };
 
 typedef boost::shared_ptr<spreadsheet_editor> spreadsheet_editor_ptr;
