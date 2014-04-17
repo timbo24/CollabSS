@@ -15,7 +15,7 @@
 #include <locale>
 #include <mutex>
 
-#include <mysql/mysql.h>
+//#include <mysql/mysql.h>
 #define SERVER "atr.eng.utah.edu"
 #define USER "cs4540_tpayne"
 #define PASSWORD "502365727"
@@ -32,6 +32,8 @@ using boost::asio::ip::tcp;
 /**
  * Example code on how to connect with and use the database
  */
+
+/*
 int db_example()
 {
     MYSQL *con;
@@ -122,6 +124,8 @@ int db_example()
 
     return 0;
 }
+
+*/
 
 // trim from start
  static inline std::string &ltrim(std::string &s) {
@@ -476,11 +480,13 @@ int main(int argc, char* argv[])
 		}
 
 		//run the DB code
+		/*
 		int dbres = db_example();
 		if (dbres == 1)
 		{
 			return 1;
 		}
+		*/
 
 		//io_service helps manage different thread to handle async calls 
 		boost::asio::io_service io_service;
