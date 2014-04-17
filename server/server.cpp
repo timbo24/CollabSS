@@ -15,9 +15,113 @@
 #include <locale>
 #include <mutex>
 
+#include <mysql/mysql.h>
+#define SERVER "atr.eng.utah.edu"
+#define USER "cs4540_tpayne"
+#define PASSWORD "502365727"
+#define DATABASE "cs4540_tpayne"
+
 
 
 using boost::asio::ip::tcp;
+
+
+
+
+
+/**
+ * Example code on how to connect with and use the database
+ */
+int db_example()
+{
+    MYSQL *con;
+    con = mysql_init(NULL);
+
+    if (!con)
+    {
+        std::cout << "Mysql Initialization Failed";
+        return 1;
+    }
+    
+    // See definitions at beggining of file for values of SERVER, USER, PASSWORD, DATABASE
+    con = mysql_real_connect(con, SERVER, USER, PASSWORD, DATABASE, 0,NULL,0);
+
+    if (con)
+    {
+        std::cout << "DB Connection Succeeded\n";
+    }
+    else
+    {
+        std::cout << "DB Connection Failed\n";
+    }
+
+    MYSQL_RES *res_set;
+    MYSQL_ROW row;
+
+    // Creating an INSERT statement
+    std::string ss_name = "ss5"; // ***If this spreadsheet name already exists, the insert will fail***
+    std::string sql_insert  = "INSERT INTO Spreadsheet VALUES ('" + ss_name + "')";
+
+    // Returns 0 on success
+    if ( mysql_query (con, sql_insert.c_str()) )
+      {
+	std::cout << mysql_error(con) << std::endl;
+	mysql_close (con);
+	std::cout << "Database connection closed." << std::endl;
+	return 1 ;
+      }
+
+    // The number of rows affected
+    int rows_inserted = mysql_affected_rows(con);
+    std::cout << "Inserted " << rows_inserted << " rows" << std::endl;
+
+
+    // Now we will do a SELECT statement
+    std::string sql_query  = "SELECT * FROM Spreadsheet";
+    
+    if ( mysql_query (con, sql_query.c_str()) )
+      {
+	std::cout << mysql_error(con) << std::endl;
+	mysql_close (con);
+	std::cout << "Database connection closed." << std::endl;
+	return 1 ;
+      }
+
+    // Get the result of the query
+    res_set = mysql_store_result(con);
+    int numrows = mysql_num_rows(res_set);
+
+    int i = 0;
+    std::cout << "Spreadsheets in the database:" << std::endl;
+     while (((row = mysql_fetch_row(res_set)) != NULL))
+    {
+        std::cout << row[i] << std::endl;
+    }
+
+    // Creating an UPDATE statement
+    ss_name = "ss1";
+    std::string cell_content = "Hello";
+    std::string sql_update  = "UPDATE Cell SET contents = '" + cell_content + "' WHERE ssname = '" + ss_name + "' AND cell = 'A2'";
+
+    // Returns 0 on success
+    if ( mysql_query (con, sql_update.c_str()) )
+      {
+	std::cout << mysql_error(con) << std::endl;
+	mysql_close (con);
+	std::cout << "Database connection closed." << std::endl;
+	return 1 ;
+      }
+
+    // The number of rows affected
+    int rows_updated = mysql_affected_rows(con);
+    std::cout << "Inserted " << rows_updated << " rows" << std::endl;
+
+    // Close the connection!
+    mysql_close (con);
+    std::cout << "Database connection closed." << std::endl;
+
+    return 0;
+}
 
 // trim from start
  static inline std::string &ltrim(std::string &s) {
@@ -251,6 +355,7 @@ class spreadsheet_editor
 
 			std::string outm = "";
 
+			//resquest a login by providing a password
 			if(token == "PASSWORD")
 			{
 				outm = "CONNECTED\r\n";
@@ -258,12 +363,22 @@ class spreadsheet_editor
 				deliver(outm);
 
 			}
+			//Open SS request, if one does not exist, error is sent back
+			else if(token == "OPEN")
+			{
+				outm = "OPENNEW something\r\n";
+				std::cout<<"outgoing: " << outm << std::endl;
+				deliver(outm);
+			}
+			//client asks to create a new SS, if if the name doesn't exist
+			//create a new SS, if it does user gets an error back
 			else if(token == "CREATE")
 			{
 				outm = "OPENNEW something\r\n";
 				std::cout<<"outgoing: " << outm << std::endl;
 				deliver(outm);
 			}
+			//
 			else if(token == "ENTER")
 			{
 				outm = "OKENTER " + message + "\r\n";
@@ -357,6 +472,13 @@ int main(int argc, char* argv[])
 		if (argc < 2)
 		{
 			std::cerr << "Usage: server <port>\n";
+			return 1;
+		}
+
+		//run the DB code
+		int dbres = db_example();
+		if (dbres == 1)
+		{
 			return 1;
 		}
 
