@@ -14,7 +14,7 @@ namespace SS
     {
         private SpreadsheetClient model;
         private string host = "localhost";
-        private int port = 2000;
+        private int port = 2500;
         /// <summary>
         /// For synchronizing receives
         /// </summary>
@@ -57,7 +57,7 @@ namespace SS
             // Try connecting
             try
             {
-                model.Connect(host, 2000, NameTextBox.Text);
+                model.Connect(host, port, NameTextBox.Text);
             }
             catch
             {
@@ -74,6 +74,17 @@ namespace SS
         /// <param name="e"></param>
         private void EnterWordButton_Click(object sender, EventArgs e)
         {
+
+            // Try connecting
+            try
+            {
+                model.Connect(host, port, NameTextBox.Text);
+            }
+            catch
+            {
+                // TODO
+                IPAddrBox.Invoke(new Action(() => { IPAddrBox.Text = "Invalid hostname\r\n"; }));
+            }
             // Send the word
             model.SendMessage(EnterWordTextBox.Text);
 
@@ -117,7 +128,7 @@ namespace SS
         {
             if (!(line == null))
             {
-                //model.Quit();               
+                model.Quit();               
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 // Start an application context and run one form inside it
