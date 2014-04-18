@@ -105,7 +105,7 @@ namespace SS
             this.cellValue.Text = sheet.GetCellValue("A1").ToString();
             this.cellContent.Text = sheet.GetCellContents("A1").ToString();
 
-            model.Connect("localhost", 2000, "PASSWORD");
+            model.Connect(IpAddress, port, "PASSWORD");
 
         }
 
