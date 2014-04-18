@@ -73,7 +73,7 @@ namespace SS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EnterWordButton_Click(object sender, EventArgs e)
+        private void EnterNew_Click(object sender, EventArgs e)
         {
 
             // Try connecting
@@ -87,10 +87,10 @@ namespace SS
                 IPAddrBox.Invoke(new Action(() => { IPAddrBox.Text = "Invalid hostname\r\n"; }));
             }
             // Send the word
-            model.SendMessage(EnterWordTextBox.Text);
+            model.SendMessage(OpenNew.Text);
 
             // Clear the textbox
-            EnterWordTextBox.Text = "";
+            OpenNew.Text = "";
         }
 
         /// <summary>
@@ -106,12 +106,29 @@ namespace SS
                   BigTextBox.Invoke(new Action(() => { BigTextBox.Visible=true; }));
                   BigTextBox.Invoke(new Action(() => { BigTextBox.Text = "Entered password is invalid. Please try again." + "\r\n"; }));
                 }
-                else if (line.StartsWith("CONNECTED"))
+                else if (line.StartsWith("FILELIST"))
                 {
                     BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = false; }));
-                    EnterWordTextBox.Invoke(new Action(() => { EnterWordTextBox.Visible = true; }));
+                    SSList.Invoke(new Action(() => { SSList.Visible = true; }));
                     label2.Invoke(new Action(() => { label2.Visible = true; }));
-                    EnterWordButton.Invoke(new Action(() => { EnterWordButton.Visible = true; }));
+                    EnterNew.Invoke(new Action(() => { EnterNew.Visible = true; }));
+                    OpenNew.Invoke(new Action(() => { OpenNew.Visible = true; }));
+                    label6.Invoke(new Action(() => { label6.Visible = true; }));
+                    OpenExisting.Invoke(new Action(() => { OpenExisting.Visible = true; }));
+                    EnterExisting.Invoke(new Action(() => { EnterExisting.Visible = true; }));
+                    
+                    String files = "";
+                    for (int i = 10; i < line.Length; i++)
+                    {
+                        if (line[i].Equals('\\'))
+                        {
+                            files += "\r\n";
+                            i++;
+                        }
+                        else files += line[i];
+                    }
+
+                    SSList.Text = files;
                 }
                    
                // Thread.Sleep(500); 
