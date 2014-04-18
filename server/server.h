@@ -33,8 +33,7 @@ private:
 	boost::asio::io_service& io_service_;
 	tcp::acceptor acceptor_;
 	MYSQL *connection_;
-	std::set<spreadsheet_session_ptr> sessions_;
-
+	std::set<spreadsheet_session> sessions_;
 };
 
 typedef boost::shared_ptr<server> server_ptr;

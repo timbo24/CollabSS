@@ -200,7 +200,7 @@ void server::populate_sessions()
 	while (((row = mysql_fetch_row(res_set)) != NULL))
 	{
 		std::cout << row[i] << std::endl;
-		std::shared_ptr<spreadsheet_session> s(row[i]);
+		spreadsheet_session s(row[i]);
 		sessions_.insert(s);
 
 	}
