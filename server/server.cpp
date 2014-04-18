@@ -15,11 +15,12 @@
 #include <locale>
 #include <mutex>
 
-//#include <mysql/mysql.h>
+#include <mysql/mysql.h>
 #define SERVER "atr.eng.utah.edu"
 #define USER "cs4540_tpayne"
-#define PASSWORD "502365727"
+#define PASSWORD "Malloc"
 #define DATABASE "cs4540_tpayne"
+
 
 
 
@@ -442,6 +443,7 @@ public:
 						   new_editor,
 						   boost::asio::placeholders::error)); 
 	} 
+
 		
 	/* The callback method when a connection comes in if there
 	 * is no error,  will call begin_accept again
