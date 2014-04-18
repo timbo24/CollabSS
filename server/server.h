@@ -11,6 +11,7 @@
 
 using boost::asio::ip::tcp;
 
+typedef boost::shared_ptr<spreadsheet_session> spreadsheet_session_ptr;
 
 /* server class establishes a connection to a port, and begins accepting
  * connections from clients
@@ -32,7 +33,7 @@ private:
 	boost::asio::io_service& io_service_;
 	tcp::acceptor acceptor_;
 	MYSQL *connection_;
-	std::set<spreadsheet_session> sessions_;
+	std::set<spreadsheet_session_ptr> sessions_;
 
 };
 

@@ -14,6 +14,7 @@ typedef boost::shared_ptr<participant> participant_ptr;
  * make changes to a spreadsheet
  * */
 class spreadsheet_session
+	  :public boost::enable_shared_from_this<spreadsheet_session>
 {
 	public:
 		spreadsheet_session(std::string name);
@@ -27,5 +28,6 @@ class spreadsheet_session
 		message_queue recent_msgs_;
 		std::string name_;
 };
+
 
 #endif
