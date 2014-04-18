@@ -18,7 +18,7 @@ void mainloop(int server_fd) ;
 void pass_received(int new_sd);
 
 //server constants
-const  char * PORT = "2000" ; 
+const  char * PORT = "2500" ; 
 const int MAXLEN = 1024 ;   // Max lenhgt of a message.
 const int MAXFD = 15 ;       // Maximum file descriptors to use. Equals maximum clients.
 const int BACKLOG = 15 ;     // Number of connections that can wait in que before they be accept()ted
@@ -118,7 +118,7 @@ int server_establish_connection(int server_fd)
     }
 
     pass_received(new_sd);
-
+ 
        
     getpeername(new_sd, (struct sockaddr*)&their_addr, &addr_size);
 

@@ -54,6 +54,7 @@ namespace SS
             if (IPAddrBox.Text != "")
                 host = IPAddrBox.Text;
 
+            
             // Try connecting
             try
             {
