@@ -222,8 +222,7 @@ class spreadsheet_editor
 		 * */
 		spreadsheet_editor(boost::asio::io_service& io_service, spreadsheet_session& session)
 			: socket_(io_service),
-			  session_(session),
-			  message_buffer_size(1024)
+			  session_(session)
 		{
 			
 		}
@@ -241,10 +240,7 @@ class spreadsheet_editor
 		void start()
 		{
 			session_.join(shared_from_this());
-			socket_.async_read_some(boost::asio::buffer(read_msg_, message_buffer_size),
-					       boost::bind(&spreadsheet_editor::handle_read, 
-						           shared_from_this(),
-						           boost::asio::placeholders::error));
+			boost::asio::async_read_until(socket_, input_buffer_, '\n', boost::bind(&spreadsheet_editor::handle_read, shared_from_this(), boost::asio::placeholders::error));
 		}
 
 		/* called to write to a client
@@ -274,6 +270,18 @@ class spreadsheet_editor
 
 			if (!error)
 			{
+				mtx.lock();
+				std::istream is(&input_buffer_);
+				std::getline(is, read_msg_);
+
+
+				incoming_message(read_msg_);
+
+				mtx.unlock();
+
+				boost::asio::async_read_until(socket_, input_buffer_, '\n', boost::bind(&spreadsheet_editor::handle_read, shared_from_this(), boost::asio::placeholders::error));
+
+				/*
 				//convert the message from char[] to a string
 				std::string temp(read_msg_);
 
@@ -309,6 +317,7 @@ class spreadsheet_editor
 							boost::bind(&spreadsheet_editor::handle_read, 
 								    shared_from_this(), 
 								    boost::asio::placeholders::error));
+								    */
 
 			}
 			else
@@ -400,11 +409,9 @@ class spreadsheet_editor
 	private:
 		tcp::socket socket_;
 		spreadsheet_session& session_;
-		char read_msg_[1024];
-		std::string final_msg_;
-		std::string partial_msg_;
+		boost::asio::streambuf input_buffer_;
+		std::string read_msg_;
 		message_queue write_msgs_;
-		size_t message_buffer_size;
 		std::mutex mtx;
 };
 
