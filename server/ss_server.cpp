@@ -26,7 +26,7 @@ void mainloop(int server_fd) ;
 void pass_received(int new_sd);
 
 //server constants
-const  char * PORT = "2000" ; 
+const  char * PORT = "2500" ; 
 const int MAXLEN = 1024 ;   // Max lenhgt of a message.
 const int MAXFD = 15 ;       // Maximum file descriptors to use. Equals maximum clients.
 const int BACKLOG = 15 ;     // Number of connections that can wait in que before they be accept()ted
@@ -41,11 +41,12 @@ pthread_mutex_t mutex_state = PTHREAD_MUTEX_INITIALIZER;
 
 int main()
 {
-	int dbres = db_example();
+/*	int dbres = db_example();
     if (dbres == 1)
       {
 	return 1;
       }
+      */
 
 int server_fd = server_start_listen() ;
     if (server_fd == -1)
@@ -307,6 +308,8 @@ pthread_t threads[MAXFD]; //create 15  handles for threads.
 /**
  * Example code on how to connect with and use the database
  */
+
+/*
 int db_example()
 {
     MYSQL *con;
@@ -397,7 +400,7 @@ int db_example()
 
     return 0;
 }
-    
+   */ 
 
 
      
