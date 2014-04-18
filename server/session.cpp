@@ -23,6 +23,10 @@
  * make changes to a spreadsheet
  * */
 
+spreadsheet_session::spreadsheet_session(std::string name)
+	: name_(name)
+{
+}
 
 /* add a participlant to a session
  * */

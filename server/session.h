@@ -16,6 +16,7 @@ typedef boost::shared_ptr<participant> participant_ptr;
 class spreadsheet_session
 {
 	public:
+		spreadsheet_session(std::string name);
 		void join(participant_ptr prt);
 		void leave(participant_ptr prt);
 		void deliver(const std::string& msg);
@@ -24,6 +25,7 @@ class spreadsheet_session
 		std::set<participant_ptr> participants_;
 		enum { max_recent_msgs = 100 };
 		message_queue recent_msgs_;
+		std::string name_;
 };
 
 #endif

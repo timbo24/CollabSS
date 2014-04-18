@@ -7,6 +7,7 @@
 #include <boost/asio.hpp>
 #include "session.h"
 #include "editor.h"
+#include <mysql/mysql.h>
 
 using boost::asio::ip::tcp;
 
@@ -18,7 +19,8 @@ class server
 {
 public:
 	server(boost::asio::io_service& io_service,
-		    const tcp::endpoint& endpoint);
+		    const tcp::endpoint& endpoint,
+		    MYSQL * con);
 	void populate_sessions();
 	void begin_accept();
 	void handle_accept(spreadsheet_editor_ptr editor,
@@ -28,8 +30,11 @@ public:
 	void add_session();
 private:
 	boost::asio::io_service& io_service_;
-	spreadsheet_session session_;
 	tcp::acceptor acceptor_;
+	spreadsheet_session session_;
+	MYSQL connection_;
+	std::set<spreadsheet_session> sessions_;
+
 };
 
 typedef boost::shared_ptr<server> server_ptr;

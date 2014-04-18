@@ -162,7 +162,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		if (message == PASSWORD)
 		{
-			outm = "CONNECTED\r\n";
+			outm = "FILELIST\r\n";
 			std::cout<<"outgoing: " << outm << std::endl;
 			deliver(outm);
 		}

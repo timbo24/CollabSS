@@ -18,10 +18,10 @@
 #include "session.h"
 #include "server.h"
 
-//#include <mysql/mysql.h>
+#include <mysql/mysql.h>
 #define SERVER "atr.eng.utah.edu"
 #define USER "cs4540_tpayne"
-#define PASSWORD "Malloc"
+#define PASSWORD "502365727"
 #define DATABASE "cs4540_tpayne"
 
 
@@ -37,7 +37,6 @@ using boost::asio::ip::tcp;
  * Example code on how to connect with and use the database
  */
 
-/*
 int db_example()
 {
     MYSQL *con;
@@ -65,7 +64,7 @@ int db_example()
     MYSQL_ROW row;
 
     // Creating an INSERT statement
-    std::string ss_name = "ss5"; // ***If this spreadsheet name already exists, the insert will fail***
+    std::string ss_name = "ss6"; // ***If this spreadsheet name already exists, the insert will fail***
     std::string sql_insert  = "INSERT INTO Spreadsheet VALUES ('" + ss_name + "')";
 
     // Returns 0 on success
@@ -128,7 +127,6 @@ int db_example()
 
     return 0;
 }
-*/
 
 // trim from start
  static inline std::string &ltrim(std::string &s) {
@@ -154,11 +152,23 @@ int db_example()
  * begins to accept connections from clients
  * */	
 server::server(boost::asio::io_service& io_service,
-	    const tcp::endpoint& endpoint)
+	       const tcp::endpoint& endpoint,
+	       MYSQL *con)
 : io_service_(io_service),
-  acceptor_(io_service, endpoint)
+  acceptor_(io_service, endpoint),
+  connection_(con);
 {
+	// See definitions at beggining of file for values of SERVER, USER, PASSWORD, DATABASE
+	conection_ = mysql_real_connect(connection_, SERVER, USER, PASSWORD, DATABASE, 0,NULL,0);
 	populate_sessions();
+	if (connection_)
+	{
+		std::cout << "DB Connection Succeeded\n";
+	}
+	else
+	{
+		std::cout << "DB Connection Failed\n";
+	}
 
 	begin_accept();
 }
@@ -168,7 +178,29 @@ server::server(boost::asio::io_service& io_service,
 void server::populate_sessions()
 {
 	//TODO
-	//add DB interface MySQL code to pull all available spreadsheets
+	MYSQL_RES *res_set;
+	MYSQL_ROW row;
+
+	// Now we will do a SELECT statement
+	std::string sql_query  = "SELECT * FROM Spreadsheet";
+
+	if ( mysql_query (connection_, sql_query.c_str()) )
+	{
+		std::cout << mysql_error(connection_) << std::endl;
+		mysql_close (connection_);
+		std::cout << "Database connection closed." << std::endl;
+	}
+
+	// Get the result of the query
+	res_set = mysql_store_result(connection_);
+	int numrows = mysql_num_rows(res_set);
+
+	int i = 0;
+	std::cout << "Spreadsheets in the database:" << std::endl;
+	while (((row = mysql_fetch_row(res_set)) != NULL))
+	{
+		std::cout << row[i] << std::endl;
+	}
 }
 
 
@@ -235,13 +267,14 @@ int main(int argc, char* argv[])
 		}
 
 		//run the DB code
-		/*
-		int dbres = db_example();
-		if (dbres == 1)
+		MYSQL *con;
+		con = mysql_init(NULL);
+
+		if (!con)
 		{
+			std::cout << "Mysql Initialization Failed";
 			return 1;
 		}
-		*/
 
 		//io_service helps manage different thread to handle async calls 
 		boost::asio::io_service io_service;
@@ -252,7 +285,7 @@ int main(int argc, char* argv[])
 		tcp::endpoint endpoint(tcp::v4(), atoi(argv[1]));
 
 		//start the server
-		server_ptr svr(new server(io_service, endpoint));
+		server_ptr svr(new server(io_service, endpoint, con));
 
 		std::cout<<"Server up and running..."<<std::endl;
 
