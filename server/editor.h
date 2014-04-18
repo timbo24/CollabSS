@@ -21,10 +21,11 @@
 #include <mutex>
 
 #include "session.h"
-
+#include "server.h"
 using boost::asio::ip::tcp;
 
 class spreadsheet_session;
+class server;
 
 typedef std::deque<std::string> message_queue;
 
@@ -36,6 +37,7 @@ class participant
 };
 
 typedef boost::shared_ptr<participant> participant_ptr;
+typedef boost::shared_ptr<server> server_ptr;
 
 /* class represents a client who is connected to the server and 
  * editing a spreadsheet, this allows for reading from the client
@@ -46,7 +48,7 @@ class spreadsheet_editor
 	  public boost::enable_shared_from_this<spreadsheet_editor>
 {
 	public:
-		spreadsheet_editor(boost::asio::io_service& io_service);
+		spreadsheet_editor(boost::asio::io_service& io_service, server_ptr server);
 		tcp::socket& socket();
 		void start();
 		void deliver(const std::string& msg);
@@ -60,6 +62,7 @@ class spreadsheet_editor
 		std::string read_msg_;
 		message_queue write_msgs_;
 		std::mutex mtx;
+		server_ptr server_;
 };
 
 typedef boost::shared_ptr<spreadsheet_editor> spreadsheet_editor_ptr;

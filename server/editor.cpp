@@ -42,8 +42,10 @@
  * editing a spreadsheet, this allows for reading from the client
  * and writing to the client asynchronously
  * */
-spreadsheet_editor::spreadsheet_editor(boost::asio::io_service& io_service)
-	: socket_(io_service)
+spreadsheet_editor::spreadsheet_editor(boost::asio::io_service& io_service,
+		                       server_ptr server)
+	: socket_(io_service),
+	  server_(server)
 {
 }
 
@@ -161,7 +163,14 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		if (message == PASSWORD)
 		{
-			outm = "FILELIST\r\n";
+			outm = "FILELIST ";
+			std::set<spreadsheet_session_ptr> sessions= server_->get_spreadsheets();
+
+			std::cout<<"List of spreadsheets: "<<std::endl;
+			for (auto i = sessions.begin(); i != sessions.end(); ++i)
+			{
+			//	std::cout<<(*i)->get_name()<<std::endl;
+			}
 			std::cout<<"outgoing: " << outm << std::endl;
 			deliver(outm);
 		}

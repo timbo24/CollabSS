@@ -14,14 +14,13 @@ typedef boost::shared_ptr<participant> participant_ptr;
  * make changes to a spreadsheet
  * */
 class spreadsheet_session
-	  :public boost::enable_shared_from_this<spreadsheet_session>
 {
 	public:
 		spreadsheet_session(std::string name);
 		void join(participant_ptr prt);
 		void leave(participant_ptr prt);
 		void deliver(const std::string& msg);
-
+		std::string get_name();
 	private:
 		std::set<participant_ptr> participants_;
 		enum { max_recent_msgs = 100 };

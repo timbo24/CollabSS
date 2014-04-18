@@ -11,12 +11,17 @@
 
 using boost::asio::ip::tcp;
 
+class spreadsheet_editor;
+class spreadsheet_session;
+
 typedef boost::shared_ptr<spreadsheet_session> spreadsheet_session_ptr;
+typedef boost::shared_ptr<spreadsheet_editor> spreadsheet_editor_ptr;
 
 /* server class establishes a connection to a port, and begins accepting
  * connections from clients
  * */
 class server
+: boost::enable_shared_from_this<server>
 {
 public:
 	server(boost::asio::io_service& io_service,
@@ -24,6 +29,7 @@ public:
 		    MYSQL * con);
 	void populate_sessions();
 	void begin_accept();
+	std::set<spreadsheet_session_ptr> get_spreadsheets();
 	void handle_accept(spreadsheet_editor_ptr editor,
 			   const boost::system::error_code& error);
 	void join_session(std::string session);

@@ -28,6 +28,11 @@ spreadsheet_session::spreadsheet_session(std::string name)
 {
 }
 
+std::string spreadsheet_session::get_name()
+{
+	return name_;
+}
+
 /* add a participlant to a session
  * */
 void spreadsheet_session::join(participant_ptr prt)

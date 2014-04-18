@@ -213,7 +213,7 @@ void server::populate_sessions()
  * */
 void server::begin_accept()
 {
-	spreadsheet_editor_ptr new_editor(new spreadsheet_editor(io_service_));
+	spreadsheet_editor_ptr new_editor(new spreadsheet_editor(io_service_, shared_from_this()));
 	acceptor_.async_accept(new_editor->socket(),
 			       boost::bind(&server::handle_accept,
 					   this,
@@ -245,6 +245,11 @@ void server::join_session(std::string session)
 bool server::session_exists(std:: string session)
 {
 	return false;
+}
+
+std::set<spreadsheet_session_ptr> server::get_spreadsheets()
+{
+	return sessions_;
 }
 
 /* adds a session to the set of spreadsheet sessions
