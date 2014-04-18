@@ -46,7 +46,7 @@ class spreadsheet_editor
 	  public boost::enable_shared_from_this<spreadsheet_editor>
 {
 	public:
-		spreadsheet_editor(boost::asio::io_service& io_service, spreadsheet_session& session);
+		spreadsheet_editor(boost::asio::io_service& io_service);
 		tcp::socket& socket();
 		void start();
 		void deliver(const std::string& msg);
@@ -55,7 +55,7 @@ class spreadsheet_editor
 		void incoming_message(std::string message);
 	private:
 		tcp::socket socket_;
-		spreadsheet_session& session_;
+		spreadsheet_session* session_;
 		boost::asio::streambuf input_buffer_;
 		std::string read_msg_;
 		message_queue write_msgs_;

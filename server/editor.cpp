@@ -42,9 +42,8 @@
  * editing a spreadsheet, this allows for reading from the client
  * and writing to the client asynchronously
  * */
-spreadsheet_editor::spreadsheet_editor(boost::asio::io_service& io_service, spreadsheet_session& session)
-	: socket_(io_service),
-	  session_(session)
+spreadsheet_editor::spreadsheet_editor(boost::asio::io_service& io_service)
+	: socket_(io_service)
 {
 }
 
@@ -60,7 +59,7 @@ tcp::socket& spreadsheet_editor::socket()
  * */	
 void spreadsheet_editor::start()
 {
-	session_.join(shared_from_this());
+	//session_.join(shared_from_this());
 	boost::asio::async_read_until(socket_, 
 				      input_buffer_, 
 				      '\n', 
@@ -111,7 +110,7 @@ void spreadsheet_editor::handle_read(const boost::system::error_code& error)
 	{
 
 		std::cout << error.message() << std::endl;
-		session_.leave(shared_from_this());
+		//session_.leave(shared_from_this());
 	}
 }
 
@@ -135,7 +134,7 @@ void spreadsheet_editor::handle_write(const boost::system::error_code& error)
 	}
 	else
 	{
-		session_.leave(shared_from_this());
+		//session_.leave(shared_from_this());
 	}
 }
 
@@ -196,7 +195,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		outm = "OKENTER " + message + "\r\n";
 		std::cout<<"outgoing: " << outm << std::endl;
-		session_.deliver(outm);;
+		deliver(outm);
 	}
 
 

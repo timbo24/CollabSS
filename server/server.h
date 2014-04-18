@@ -31,8 +31,7 @@ public:
 private:
 	boost::asio::io_service& io_service_;
 	tcp::acceptor acceptor_;
-	spreadsheet_session session_;
-	MYSQL connection_;
+	MYSQL *connection_;
 	std::set<spreadsheet_session> sessions_;
 
 };

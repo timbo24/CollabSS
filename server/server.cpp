@@ -155,11 +155,11 @@ server::server(boost::asio::io_service& io_service,
 	       const tcp::endpoint& endpoint,
 	       MYSQL *con)
 : io_service_(io_service),
-  acceptor_(io_service, endpoint),
-  connection_(con);
+  acceptor_(io_service, endpoint)
 {
+	connection_ = con;
 	// See definitions at beggining of file for values of SERVER, USER, PASSWORD, DATABASE
-	conection_ = mysql_real_connect(connection_, SERVER, USER, PASSWORD, DATABASE, 0,NULL,0);
+	connection_ = mysql_real_connect(connection_, SERVER, USER, PASSWORD, DATABASE, 0,NULL,0);
 	populate_sessions();
 	if (connection_)
 	{
@@ -210,7 +210,7 @@ void server::populate_sessions()
  * */
 void server::begin_accept()
 {
-	spreadsheet_editor_ptr new_editor(new spreadsheet_editor(io_service_, session_));
+	spreadsheet_editor_ptr new_editor(new spreadsheet_editor(io_service_));
 	acceptor_.async_accept(new_editor->socket(),
 			       boost::bind(&server::handle_accept,
 					   this,
