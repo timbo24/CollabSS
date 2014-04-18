@@ -298,10 +298,10 @@ class spreadsheet_editor
 					partial_msg_ += temp;
 				}
 
-				mtx.unlock();
 
 				memset(read_msg_, 0, 1024);
 
+				mtx.unlock();
 
 				socket_.async_read_some(boost::asio::buffer(read_msg_, 
 								            message_buffer_size),
