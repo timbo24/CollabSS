@@ -93,7 +93,7 @@ namespace SS
         {
             if (socket != null)
             {
-                socket.BeginSend("CREATE " +line + "\n", (e, p) => { }, null);
+                socket.BeginSend("CREATE\\e" +line + "\n", (e, p) => { }, null);
             }
         }
 
@@ -126,7 +126,7 @@ namespace SS
                 return;
             }
 
-            if (s.StartsWith("CONNECTED"))
+            if (s.StartsWith("FILELIST"))
             {
                 //StartLineEvent(board, opponentName);
                 IncomingLineEvent(s);

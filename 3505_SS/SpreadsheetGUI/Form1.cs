@@ -30,20 +30,19 @@ namespace SS
         /// </summary>
         private Spreadsheet sheet;
 
-        //Helper boolean
-       // private bool connected = false;
-
-        private string IpAddress;
-        private int port;
+       
+        private string IpAddress="localhost";
+        private int port=2500;
+        public int version;
 
         /// <summary>
         /// Constructior for the empty form.
         /// </summary>
-        public Form1(string ipaddress, int _port)
+        public Form1(string ipaddress, int _port, SpreadsheetClient _model)
         {
             InitializeComponent();
-
-            model = new SpreadsheetClient();
+            model = _model;
+         //   model = new SpreadsheetClient();
             model.IncomingLineEvent += MessageReceived;
             model.EditLineEvent += MessageReceived;
            // model.OpenNewLineEvent += OpenNewSS;
@@ -57,9 +56,10 @@ namespace SS
             Thread.Sleep(2000);
           //  if (!connected)
           //  {
-            IpAddress = ipaddress;
-            port = _port;
-                model.Connect(IpAddress, port, "password");
+        //    IpAddress = ipaddress;
+        //    port = _port;
+            version = 0;
+        //        model.Connect(IpAddress, port, "password");
            //     connected = true;
            // }
         }
@@ -262,7 +262,7 @@ namespace SS
         {
             // Tell the application context to run the form on the same
             // thread as the other forms.
-            DemoApplicationContext.getAppContext().RunForm(new Form1(IpAddress, port));
+            DemoApplicationContext.getAppContext().RunForm(new Form1(IpAddress, port, model));
         }
 
         /// <summary>
