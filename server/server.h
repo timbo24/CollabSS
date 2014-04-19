@@ -21,12 +21,14 @@ typedef boost::shared_ptr<spreadsheet_editor> spreadsheet_editor_ptr;
  * connections from clients
  * */
 class server
-: boost::enable_shared_from_this<server>
+: public boost::enable_shared_from_this<server>
 {
 public:
+
 	server(boost::asio::io_service& io_service,
 		    const tcp::endpoint& endpoint,
 		    MYSQL * con);
+	boost::shared_ptr<server> get_shared();
 	void populate_sessions();
 	void begin_accept();
 	std::set<spreadsheet_session_ptr> get_spreadsheets();

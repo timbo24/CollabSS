@@ -169,8 +169,15 @@ server::server(boost::asio::io_service& io_service,
 	{
 		std::cout << "DB Connection Failed\n";
 	}
+	std::cout<<"WE GOT HERE 3"<<std::endl;
 
 	begin_accept();
+}
+
+
+boost::shared_ptr<server> server::get_shared()
+{
+	return shared_from_this();
 }
 
 /* method populates sessions_ with all available spreadsheets from the DB
@@ -199,11 +206,13 @@ void server::populate_sessions()
 	std::cout << "Spreadsheets in the database:" << std::endl;
 	while (((row = mysql_fetch_row(res_set)) != NULL))
 	{
-		std::cout << row[i] << std::endl;
 		spreadsheet_session_ptr new_session(new spreadsheet_session(row[i]));
 
 		sessions_.insert(new_session);
 	}
+
+	std::cout<<"WE GOT HERE 4"<<std::endl;
+
 }
 
 
@@ -213,12 +222,18 @@ void server::populate_sessions()
  * */
 void server::begin_accept()
 {
-	spreadsheet_editor_ptr new_editor(new spreadsheet_editor(io_service_, shared_from_this()));
+	std::cout<<"WE GOT HERE 7"<<std::endl;
+	spreadsheet_editor_ptr new_editor(new spreadsheet_editor(io_service_, this));
+
+	
+	std::cout<<"WE GOT HERE 6"<<std::endl;
 	acceptor_.async_accept(new_editor->socket(),
 			       boost::bind(&server::handle_accept,
 					   this,
 					   new_editor,
 					   boost::asio::placeholders::error)); 
+
+	std::cout<<"WE GOT HERE 5"<<std::endl;
 } 
 
 	
