@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
+#include <boost/thread.hpp>
 #include <functional> 
 #include <cctype>
 #include <locale>
@@ -306,7 +307,28 @@ std::string server::load(std::string name)
 	return load_msg.substr(0, load_msg.size() -1);
 }
 
+/* Function to get input from command line
+ */
+void server::getInput()
+{
+  std::string input;
+  std::cin >> input;
 
+  // Keep looping until we get the command to quit
+  while (input != "quit")
+    {
+        std::cin >> input;
+    }
+
+  mysql_close (this->connection_);
+  std::cout << "Database connection closed." << std::endl;
+  std::cout<<"Closing server"<<std::endl;
+
+  // Exits the program
+  std::exit(EXIT_SUCCESS);
+
+  return;
+}
 
 
 //----------------------------------------------------------------------
@@ -343,6 +365,9 @@ int main(int argc, char* argv[])
 		server_ptr svr(new server(io_service, endpoint, con));
 
 		std::cout<<"Server up and running..."<<std::endl;
+
+		//boost::thread* inputThread = new boost::thread(boost::bind(&server::getInput, svr));
+		boost::thread inputThread(&server::getInput, svr);
 
 		//being the io_service
 		io_service.run();

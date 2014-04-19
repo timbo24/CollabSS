@@ -39,6 +39,7 @@ public:
 	void add_session();
 	spreadsheet_session* get_spreadsheet(std::string name);
 	std::string load(std::string name);
+	void getInput();
 private:
 	boost::asio::io_service& io_service_;
 	tcp::acceptor acceptor_;
