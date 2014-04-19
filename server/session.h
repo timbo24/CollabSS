@@ -20,12 +20,13 @@ class spreadsheet_session
 		void join(participant_ptr prt);
 		void leave(participant_ptr prt);
 		void deliver(const std::string& msg);
-
+		std::string get_name();
 	private:
 		std::set<participant_ptr> participants_;
 		enum { max_recent_msgs = 100 };
 		message_queue recent_msgs_;
 		std::string name_;
 };
+
 
 #endif

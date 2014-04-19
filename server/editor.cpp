@@ -42,9 +42,11 @@
  * editing a spreadsheet, this allows for reading from the client
  * and writing to the client asynchronously
  * */
-spreadsheet_editor::spreadsheet_editor(boost::asio::io_service& io_service)
-	: socket_(io_service)
+spreadsheet_editor::spreadsheet_editor(boost::asio::io_service& io_service, server* server)
+	: socket_(io_service),
+	  server_(server)
 {
+	std::cout<<"WE GOT HERE 8"<<std::endl;
 }
 
 /* returns member socket
@@ -66,6 +68,7 @@ void spreadsheet_editor::start()
 				      boost::bind(&spreadsheet_editor::handle_read, 
 						  shared_from_this(), 
 						  boost::asio::placeholders::error));
+	std::cout<<"WE GET HERE 2"<<std::endl;
 }
 
 /* called to write to a client
@@ -147,7 +150,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 	trim(message);
 
 	size_t pos = 0;
-	std::string delimiter = " ";
+	std::string delimiter = "\\e";
 
 	pos = message.find(delimiter);
 	std::string token = message.substr(0, pos);
@@ -161,7 +164,20 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		if (message == PASSWORD)
 		{
-			outm = "FILELIST\r\n";
+			outm = "FILELIST\\e";
+
+			std::set<spreadsheet_session_ptr> sessions = server_->get_spreadsheets();
+
+			std::cout<<"List of spreadsheets: "<<std::endl;
+			
+			for (auto i = sessions.begin(); i != sessions.end(); ++i)
+			{
+				outm += (*i)->get_name() + "\\e";
+				std::cout<<(*i)->get_name()<<std::endl;
+			}
+
+			outm += "\r\n";
+			
 			std::cout<<"outgoing: " << outm << std::endl;
 			deliver(outm);
 		}
