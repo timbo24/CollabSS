@@ -306,8 +306,8 @@ std::string server::load(std::string name)
 		load_msg += col1 + "\\e" + col2 + "\\e";
 	}
 
-	//we don't want the last \\e so return the length -1
-	return load_msg.substr(0, load_msg.size() -1);
+	//we don't want the last \\e so return the length -2
+	return load_msg.substr(0, load_msg.size() -2);
 }
 
 /* Function to get input from command line
