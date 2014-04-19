@@ -279,13 +279,16 @@ std::string server::load(std::string name)
 	std::string load_msg = "";
 
 	//first append the version #
-	load_msg += sessions_[name]->get_version() + "\\e";
+//	load_msg += std::to_string(sessions_[name]->get_version()) + "\\e";
+
+	int i = 0;
+	load_msg += "0\\e";
 
 	MYSQL_RES *res_set;
 	MYSQL_ROW row;
 
 	//select statement to get all cell values for a given spreadsheet
-	std::string sql_query  = "SELECT cell, contents FROM Cell WHERE ssname = " + name;
+	std::string sql_query  = "SELECT cell, contents FROM Cell WHERE ssname = \"" + name+ "\"";
 	if ( mysql_query (connection_, sql_query.c_str()) )
 	{
 		std::cout << mysql_error(connection_) << std::endl;

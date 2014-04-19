@@ -176,20 +176,20 @@ void spreadsheet_editor::incoming_message(std::string message)
 				std::cout<<i->first<<std::endl;
 			}
 
-			outm += "\r\n";
+			outm += "\n";
 			
 			std::cout<<"outgoing: " << outm << std::endl;
 			deliver(outm);
 		}
 		else
 		{
-			outm = "INVALID\r\n";
+			outm = "INVALID\n";
 			std::cout<<"outgoing: " << outm << std::endl;
 			deliver(outm);
 		}
 	}
 	//Open SS request, if one does not exist, error is sent back
-	else if(token == "OPEN")
+	else if(token == "CREATE")
 	{
 
 		if (server_->spreadsheet_exists(message))
@@ -201,11 +201,11 @@ void spreadsheet_editor::incoming_message(std::string message)
 			session_->join(shared_from_this());
 
 			//load the current spreadsheet
-			outm += server_->load(message) + "\r\n";
+			outm += server_->load(message) + "\n";
 		}
 		else
 		{
-			outm = "ERROR\r\n";
+			outm = "ERROR\n";
 		}
 
 		std::cout<<"outgoing: " << outm << std::endl;
@@ -214,16 +214,16 @@ void spreadsheet_editor::incoming_message(std::string message)
 	}
 	//client asks to create a new SS, if if the name doesn't exist
 	//create a new SS, if it does user gets an error back
-	else if(token == "CREATE")
+	else if(token == "OPEN")
 	{
-		outm = "OPENNEW something\r\n";
+		outm = "OPENNEW something\n";
 		std::cout<<"outgoing: " << outm << std::endl;
 		deliver(outm);
 	}
 	//
 	else if(token == "ENTER")
 	{
-		outm = "OKENTER " + message + "\r\n";
+		outm = "OKENTER " + message + "\n";
 		std::cout<<"outgoing: " << outm << std::endl;
 		deliver(outm);
 	}
