@@ -7,7 +7,7 @@ server:
 	g++ -o Server server.cpp session.cpp editor.cpp /usr/local/stow/boost/boost_1_53_0/lib/libboost_*.a -I/usr/local/stow/boost/boost_1_53_0/include/ -lboost_thread-mt -lboost_system-mt -std=gnu++0x `mysql_config --cflags --libs`
 
 3server:
-	g++ -o Server server.cpp session.cpp editor.cpp -lboost_thread-mt -lboost_system-mt -std=gnu++0x
+	g++ -o Server server.cpp session.cpp editor.cpp -lboost_thread-mt -lboost_system-mt -std=gnu++0x `mysql_config --cflags --libs`
 
 client:
 	g++ -o Client test_client.cpp -lboost_thread-mt -lboost_system-mt

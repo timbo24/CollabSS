@@ -150,7 +150,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 	trim(message);
 
 	size_t pos = 0;
-	std::string delimiter = " ";
+	std::string delimiter = "\e";
 
 	pos = message.find(delimiter);
 	std::string token = message.substr(0, pos);
@@ -164,9 +164,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		if (message == PASSWORD)
 		{
-			outm = "FILELIST ";
-
-			std::cout<<"WE GOT HER"<<std::endl;
+			outm = "FILELIST\e";
 
 			std::set<spreadsheet_session_ptr> sessions = server_->get_spreadsheets();
 
@@ -174,8 +172,11 @@ void spreadsheet_editor::incoming_message(std::string message)
 			
 			for (auto i = sessions.begin(); i != sessions.end(); ++i)
 			{
+				outm += (*i)->get_name() + "\e";
 				std::cout<<(*i)->get_name()<<std::endl;
 			}
+
+			outm += "\r\n"
 			
 			std::cout<<"outgoing: " << outm << std::endl;
 			deliver(outm);
