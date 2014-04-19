@@ -6,7 +6,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
 #include "session.h"
-#include "editor.h"#include <mysql/mysql.h>
+#include "editor.h"
+#include <mysql/mysql.h>
 
 using boost::asio::ip::tcp;
 
@@ -30,12 +31,14 @@ public:
 	boost::shared_ptr<server> get_shared();
 	void populate_sessions();
 	void begin_accept();
-	std::set<spreadsheet_session_ptr> get_spreadsheets();
+	std::map<std::string, spreadsheet_session_ptr> get_spreadsheets();
 	void handle_accept(spreadsheet_editor_ptr editor,
 			   const boost::system::error_code& error);
 	void join_session(std::string session);
-	bool session_exists(std:: string session);
+	bool spreadsheet_exists(std:: string session);
 	void add_session();
+	spreadsheet_session* get_spreadsheet(std::string name);
+	std::string load(std::string name);
 private:
 	boost::asio::io_service& io_service_;
 	tcp::acceptor acceptor_;

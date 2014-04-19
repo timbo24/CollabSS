@@ -192,20 +192,21 @@ void spreadsheet_editor::incoming_message(std::string message)
 	else if(token == "OPEN")
 	{
 
-		if (server->spreadsheet_exists(message))
+		if (server_->spreadsheet_exists(message))
 		{
 			outm = "UPDATE\\e";
 
 			//set the session for this editor
-			session_ = server->get_spreadsheet(message);
-			session_.join(shared_from_this());
+			session_ = server_->get_spreadsheet(message);
+			session_->join(shared_from_this());
 
 			//load the current spreadsheet
-			outm += server->load(message) + "\r\n";
+			outm += server_->load(message) + "\r\n";
 		}
 		else
 		{
 			outm = "ERROR\r\n";
+		}
 
 		std::cout<<"outgoing: " << outm << std::endl;
 

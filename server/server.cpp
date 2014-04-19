@@ -297,7 +297,9 @@ std::string server::load(std::string name)
 
 	while (((row = mysql_fetch_row(res_set)) != NULL))
 	{
-		load_msg += row[0] + "\\e" + row[1] + "\\e";
+		std::string col1(row[0]);
+		std::string col2(row[1]);
+		load_msg += col1 + "\\e" + col2 + "\\e";
 	}
 
 	//we don't want the last \\e so return the length -1
