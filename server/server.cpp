@@ -184,7 +184,6 @@ boost::shared_ptr<server> server::get_shared()
  */
 void server::populate_sessions()
 {
-	//TODO
 	MYSQL_RES *res_set;
 	MYSQL_ROW row;
 
@@ -202,16 +201,13 @@ void server::populate_sessions()
 	res_set = mysql_store_result(connection_);
 	int numrows = mysql_num_rows(res_set);
 
-	int i = 0;
-	std::cout << "Spreadsheets in the database:" << std::endl;
 	while (((row = mysql_fetch_row(res_set)) != NULL))
 	{
-		spreadsheet_session_ptr new_session(new spreadsheet_session(row[i]));
+		spreadsheet_session_ptr new_session(new spreadsheet_session());
 
-		sessions_.insert(new_session);
+		sessions_.insert( std::pair<std::string, spreadsheet_session_ptr>(row[0],new_session));
 	}
 
-	std::cout<<"WE GOT HERE 4"<<std::endl;
 
 }
 
@@ -222,18 +218,13 @@ void server::populate_sessions()
  * */
 void server::begin_accept()
 {
-	std::cout<<"WE GOT HERE 7"<<std::endl;
 	spreadsheet_editor_ptr new_editor(new spreadsheet_editor(io_service_, this));
 
-	
-	std::cout<<"WE GOT HERE 6"<<std::endl;
 	acceptor_.async_accept(new_editor->socket(),
 			       boost::bind(&server::handle_accept,
 					   this,
 					   new_editor,
 					   boost::asio::placeholders::error)); 
-
-	std::cout<<"WE GOT HERE 5"<<std::endl;
 } 
 
 	
@@ -257,21 +248,60 @@ void server::join_session(std::string session)
 
 }
 
-bool server::session_exists(std:: string session)
-{
-	return false;
-}
-
-std::set<spreadsheet_session_ptr> server::get_spreadsheets()
+std::map<std::string,spreadsheet_session_ptr> server::get_spreadsheets()
 {
 	return sessions_;
 }
+
+bool server::spreadsheet_exists(std::string name)
+{
+	if(sessions_.find(name) != sessions_.end())
+		return true;
+	return false;
+}
+
+spreadsheet_session* server::get_spreadsheet(std::string name)
+{
+	sessions_[name].get();
+}
+
 
 /* adds a session to the set of spreadsheet sessions
  * */
 void server::add_session()
 {
 	//TODO
+}
+
+std::string server::load(std::string name)
+{
+	std::string load_msg = "";
+
+	//first append the version #
+	load_msg += sessions_[name]->get_version() + "\\e";
+
+	MYSQL_RES *res_set;
+	MYSQL_ROW row;
+
+	//select statement to get all cell values for a given spreadsheet
+	std::string sql_query  = "SELECT cell, contents FROM Cell WHERE ssname = " + name;
+	if ( mysql_query (connection_, sql_query.c_str()) )
+	{
+		std::cout << mysql_error(connection_) << std::endl;
+		mysql_close (connection_);
+		std::cout << "Database connection closed." << std::endl;
+	}
+
+	res_set = mysql_store_result(connection_);
+	int numrows = mysql_num_rows(res_set);
+
+	while (((row = mysql_fetch_row(res_set)) != NULL))
+	{
+		load_msg += row[0] + "\\e" + row[1] + "\\e";
+	}
+
+	//we don't want the last \\e so return the length -1
+	return load_msg.substr(0, load_msg.size() -1);
 }
 
 

@@ -166,14 +166,14 @@ void spreadsheet_editor::incoming_message(std::string message)
 		{
 			outm = "FILELIST\\e";
 
-			std::set<spreadsheet_session_ptr> sessions = server_->get_spreadsheets();
+			std::map<std::string, spreadsheet_session_ptr> sessions = server_->get_spreadsheets();
 
 			std::cout<<"List of spreadsheets: "<<std::endl;
 			
 			for (auto i = sessions.begin(); i != sessions.end(); ++i)
 			{
-				outm += (*i)->get_name() + "\\e";
-				std::cout<<(*i)->get_name()<<std::endl;
+				outm += i->first + "\\e";
+				std::cout<<i->first<<std::endl;
 			}
 
 			outm += "\r\n";
@@ -191,10 +191,23 @@ void spreadsheet_editor::incoming_message(std::string message)
 	//Open SS request, if one does not exist, error is sent back
 	else if(token == "OPEN")
 	{
-		outm = "OPENNEW " + message + "\r\n";
-		std::cout<<"outgoing: " << outm << std::endl;
 
-		//assign the session to the editor so he can commuticate his changes to other users
+		if (server->spreadsheet_exists(message))
+		{
+			outm = "UPDATE\\e";
+
+			//set the session for this editor
+			session_ = server->get_spreadsheet(message);
+			session_.join(shared_from_this());
+
+			//load the current spreadsheet
+			outm += server->load(message) + "\r\n";
+		}
+		else
+		{
+			outm = "ERROR\r\n";
+
+		std::cout<<"outgoing: " << outm << std::endl;
 
 		deliver(outm);
 	}

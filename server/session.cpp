@@ -23,15 +23,18 @@
  * make changes to a spreadsheet
  * */
 
-spreadsheet_session::spreadsheet_session(std::string name)
-	: name_(name)
+spreadsheet_session::spreadsheet_session()
+	: version_(0)
 {
 }
 
-std::string spreadsheet_session::get_name()
+/* get current version for a spreadseet
+ * */
+int spreadsheet_session::get_version()
 {
-	return name_;
+	return version_;
 }
+
 
 /* add a participlant to a session
  * */

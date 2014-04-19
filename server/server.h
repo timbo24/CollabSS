@@ -6,8 +6,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
 #include "session.h"
-#include "editor.h"
-#include <mysql/mysql.h>
+#include "editor.h"#include <mysql/mysql.h>
 
 using boost::asio::ip::tcp;
 
@@ -41,7 +40,7 @@ private:
 	boost::asio::io_service& io_service_;
 	tcp::acceptor acceptor_;
 	MYSQL *connection_;
-	std::set<spreadsheet_session_ptr> sessions_;
+	std::map<std::string, spreadsheet_session_ptr> sessions_;
 };
 
 typedef boost::shared_ptr<server> server_ptr;
