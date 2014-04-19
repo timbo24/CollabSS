@@ -36,6 +36,7 @@ public:
 	void join_session(std::string session);
 	bool session_exists(std:: string session);
 	void add_session();
+	void getInput();
 private:
 	boost::asio::io_service& io_service_;
 	tcp::acceptor acceptor_;
