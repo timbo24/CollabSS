@@ -258,10 +258,11 @@ void spreadsheet_editor::incoming_message(std::string message)
 		//Circular dependency check
 		if (session_->circular_check(cell, message))
 		{
-			server_->update(session_->get_name(), cell, message);
 
 			outm = "UPDATE\\e" + boost::lexical_cast<std::string>(session_->get_version()) + "\\e" +
 					     cell + "\\e" + message + "\n";
+
+			server_->update(session_->get_name(), cell, message);
 
 			std::cout<<"outgoing: " << outm << std::endl;
 			session_->deliver(outm);
