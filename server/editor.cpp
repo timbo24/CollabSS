@@ -147,13 +147,11 @@ void spreadsheet_editor::incoming_message(std::string message)
 {
 	//trim the endline from the string
 	std::cout<<"incoming: " << message<< std::endl;
-	char e = 27;
-	std::string ESC(1,e);
 
 	trim(message);
 
 	size_t pos = 0;
-	std::string delimiter = ESC;
+	std::string delimiter = "\\e";
 
 	pos = message.find(delimiter);
 	std::string token = message.substr(0, pos);
@@ -167,7 +165,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		if (message == PASSWORD)
 		{
-			outm = "FILELIST" + ESC;
+			outm = "FILELIST";
 
 			std::map<std::string, spreadsheet_session_ptr> sessions = server_->get_spreadsheets();
 
@@ -175,7 +173,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 			
 			for (auto i = sessions.begin(); i != sessions.end(); ++i)
 			{
-				outm += i->first + ESC;
+				outm += "\\e" + i->first;
 				std::cout<<i->first<<std::endl;
 			}
 
@@ -197,7 +195,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 
 		if (server_->spreadsheet_exists(message))
 		{
-			outm = "UPDATE"+ ESC;
+			outm = "UPDATE\\e";
 
 			//set the session for this editor
 			session_ = server_->get_spreadsheet(message);
@@ -225,7 +223,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 		}
 		else
 		{
-			outm = "UPDATE" + ESC;
+			outm = "UPDATE\\e";
 
 			//add the spreadsheet and set is the member spreadsheet
 			session_ = server_->add_spreadsheet(message);
@@ -245,7 +243,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 		
 
 		size_t pos = 0;
-		std::string delimiter = ESC;
+		std::string delimiter = "\\e";
 
 		pos = message.find(delimiter);
 
@@ -262,15 +260,15 @@ void spreadsheet_editor::incoming_message(std::string message)
 		{
 			server_->update(session_->get_name(), cell, message);
 
-			outm = "UPDATE" + ESC + boost::lexical_cast<std::string>(session_->get_version()) + ESC +
-					     cell + ESC + message + ESC;
+			outm = "UPDATE\\e" + boost::lexical_cast<std::string>(session_->get_version()) + "\\e" +
+					     cell + "\\e" + message + "\n";
 
 			std::cout<<"outgoing: " << outm << std::endl;
 			session_->deliver(outm);
 		}
 		else 
 		{
-			outm = "ERROR" + ESC + circular dependency\n";
+			outm = "ERROR\\ecircular dependency\n";
 			std::cout<<"outgoing: " << outm << std::endl;
 
 			deliver(outm);

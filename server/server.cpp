@@ -171,9 +171,6 @@ std::string server::load(std::string name)
 {
 	std::string load_msg = "";
 
-	char e = 27;
-	std::string ESC(1,e);
-
 	//first append the version #
 	std::string version = boost::lexical_cast<std::string>(sessions_[name]->get_version());
 	load_msg += version;
@@ -197,7 +194,7 @@ std::string server::load(std::string name)
 	{
 		std::string col1(row[0]);
 		std::string col2(row[1]);
-		load_msg += ESC + col1 + ESC + col2;
+		load_msg += "\\e" + col1 + "\\e" + col2;
 	}
 
 	//we don't want the last \\e so return the length -2
