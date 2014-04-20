@@ -147,11 +147,13 @@ void spreadsheet_editor::incoming_message(std::string message)
 {
 	//trim the endline from the string
 	std::cout<<"incoming: " << message<< std::endl;
+	char e = 27;
+	std::string ESC(1,e);
 
 	trim(message);
 
 	size_t pos = 0;
-	std::string delimiter = "\\e";
+	std::string delimiter = ESC;
 
 	pos = message.find(delimiter);
 	std::string token = message.substr(0, pos);
@@ -165,7 +167,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		if (message == PASSWORD)
 		{
-			outm = "FILELIST\\e";
+			outm = "FILELIST" + ESC;
 
 			std::map<std::string, spreadsheet_session_ptr> sessions = server_->get_spreadsheets();
 
@@ -173,7 +175,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 			
 			for (auto i = sessions.begin(); i != sessions.end(); ++i)
 			{
-				outm += i->first + "\\e";
+				outm += i->first + ESC;
 				std::cout<<i->first<<std::endl;
 			}
 
@@ -195,7 +197,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 
 		if (server_->spreadsheet_exists(message))
 		{
-			outm = "UPDATE\\e";
+			outm = "UPDATE"+ ESC;
 
 			//set the session for this editor
 			session_ = server_->get_spreadsheet(message);
@@ -223,7 +225,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 		}
 		else
 		{
-			outm = "UPDATE\\e";
+			outm = "UPDATE" + ESC;
 
 			//add the spreadsheet and set is the member spreadsheet
 			session_ = server_->add_spreadsheet(message);
@@ -237,16 +239,20 @@ void spreadsheet_editor::incoming_message(std::string message)
 
 		deliver(outm);
 	}
-	//
 	else if(token == "ENTER")
 	{
 		//TODO add circular check
 		
 
 		size_t pos = 0;
-		std::string delimiter = "\\e";
+		std::string delimiter = ESC;
 
 		pos = message.find(delimiter);
+
+		message.erase(0, pos + delimiter.length());
+
+		pos = message.find(delimiter);
+
 		std::string cell = message.substr(0, pos);
 
 		message.erase(0, pos + delimiter.length());
@@ -256,14 +262,16 @@ void spreadsheet_editor::incoming_message(std::string message)
 		{
 			server_->update(session_->get_name(), cell, message);
 
-			outm = "UPDATE\\e" + boost::lexical_cast<std::string>(session_->get_version()) + "\\e" +
-					     cell + "\e" + message + "\e\n";
+			outm = "UPDATE" + ESC + boost::lexical_cast<std::string>(session_->get_version()) + ESC +
+					     cell + ESC + message + ESC;
 
+			std::cout<<"outgoing: " << outm << std::endl;
 			session_->deliver(outm);
 		}
 		else 
 		{
-			outm = "ERROR\\ecircular dependency\n";
+			outm = "ERROR" + ESC + circular dependency\n";
+			std::cout<<"outgoing: " << outm << std::endl;
 
 			deliver(outm);
 		}

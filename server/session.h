@@ -3,9 +3,11 @@
 #define SESSION_H
 
 #include "editor.h"
+#include "server.h"
 #include "Circles/CircleChecker.h"
 
 class participant;
+class server;
 
 typedef std::deque<std::string> message_queue;
 typedef boost::shared_ptr<participant> participant_ptr;
@@ -17,7 +19,7 @@ typedef boost::shared_ptr<participant> participant_ptr;
 class spreadsheet_session
 {
 	public:
-		spreadsheet_session(std::string name);
+		spreadsheet_session(std::string name, server* server);
 		void join(participant_ptr prt);
 		void leave(participant_ptr prt);
 		void deliver(const std::string& msg);
@@ -25,14 +27,18 @@ class spreadsheet_session
 		void increment_version();
 		std::string get_name();
 		bool circular_check(std::string cell, std::string contents);
+		std::string undo(std::string version);
+		void registerOld(std::set<std::string> cells, std::string sheet);
 	private:
 		std::set<participant_ptr> participants_;
+
+		server* server_;
 		enum { max_recent_msgs = 100 };
 		message_queue recent_msgs_;
 		int version_;
 		std::string name_;
 		CircleChecker checker_;
-
+		std::stack<std::string> *UndoStack;
 };
 
 

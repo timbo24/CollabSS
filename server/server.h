@@ -21,7 +21,6 @@ typedef boost::shared_ptr<spreadsheet_editor> spreadsheet_editor_ptr;
  * connections from clients
  * */
 class server
-: public boost::enable_shared_from_this<server>
 {
 public:
 
@@ -34,15 +33,16 @@ public:
 	std::map<std::string, spreadsheet_session_ptr> get_spreadsheets();
 	void handle_accept(spreadsheet_editor_ptr editor,
 			   const boost::system::error_code& error);
-	void join_session(std::string session);
 	bool spreadsheet_exists(std:: string session);
 	void add_session();
 	spreadsheet_session* get_spreadsheet(std::string name);
 	std::string load(std::string name);
 	void getInput();
+	
 	void update(std::string ssname, std::string cell, std::string contents);
-
+	std::string get_old(std::string sheet, std::string cellname);
 	spreadsheet_session* add_spreadsheet(std::string name);
+
 private:
 	boost::asio::io_service& io_service_;
 	tcp::acceptor acceptor_;

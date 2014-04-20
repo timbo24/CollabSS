@@ -25,109 +25,7 @@
 #define PASSWORD "502365727"
 #define DATABASE "cs4540_tpayne"
 
-
-
-
 using boost::asio::ip::tcp;
-
-
-
-
-
-/**
- * Example code on how to connect with and use the database
- */
-
-int db_example()
-{
-    MYSQL *con;
-    con = mysql_init(NULL);
-
-    if (!con)
-    {
-        std::cout << "Mysql Initialization Failed";
-        return 1;
-    }
-    
-    // See definitions at beggining of file for values of SERVER, USER, PASSWORD, DATABASE
-    con = mysql_real_connect(con, SERVER, USER, PASSWORD, DATABASE, 0,NULL,0);
-
-    if (con)
-    {
-        std::cout << "DB Connection Succeeded\n";
-    }
-    else
-    {
-        std::cout << "DB Connection Failed\n";
-    }
-
-    MYSQL_RES *res_set;
-    MYSQL_ROW row;
-
-    // Creating an INSERT statement
-    std::string ss_name = "ss6"; // ***If this spreadsheet name already exists, the insert will fail***
-    std::string sql_insert  = "INSERT INTO Spreadsheet VALUES ('" + ss_name + "')";
-
-    // Returns 0 on success
-    if ( mysql_query (con, sql_insert.c_str()) )
-      {
-	std::cout << mysql_error(con) << std::endl;
-	mysql_close (con);
-	std::cout << "Database connection closed." << std::endl;
-	return 1 ;
-      }
-
-    // The number of rows affected
-    int rows_inserted = mysql_affected_rows(con);
-    std::cout << "Inserted " << rows_inserted << " rows" << std::endl;
-
-
-    // Now we will do a SELECT statement
-    std::string sql_query  = "SELECT * FROM Spreadsheet";
-    
-    if ( mysql_query (con, sql_query.c_str()) )
-      {
-	std::cout << mysql_error(con) << std::endl;
-	mysql_close (con);
-	std::cout << "Database connection closed." << std::endl;
-	return 1 ;
-      }
-
-    // Get the result of the query
-    res_set = mysql_store_result(con);
-    int numrows = mysql_num_rows(res_set);
-
-    int i = 0;
-    std::cout << "Spreadsheets in the database:" << std::endl;
-     while (((row = mysql_fetch_row(res_set)) != NULL))
-    {
-        std::cout << row[i] << std::endl;
-    }
-
-    // Creating an UPDATE statement
-    ss_name = "ss1";
-    std::string cell_content = "Hello";
-    std::string sql_update  = "UPDATE Cell SET contents = '" + cell_content + "' WHERE ssname = '" + ss_name + "' AND cell = 'A2'";
-
-    // Returns 0 on success
-    if ( mysql_query (con, sql_update.c_str()) )
-      {
-	std::cout << mysql_error(con) << std::endl;
-	mysql_close (con);
-	std::cout << "Database connection closed." << std::endl;
-	return 1 ;
-      }
-
-    // The number of rows affected
-    int rows_updated = mysql_affected_rows(con);
-    std::cout << "Inserted " << rows_updated << " rows" << std::endl;
-
-    // Close the connection!
-    mysql_close (con);
-    std::cout << "Database connection closed." << std::endl;
-
-    return 0;
-}
 
 // trim from start
  static inline std::string &ltrim(std::string &s) {
@@ -176,11 +74,6 @@ server::server(boost::asio::io_service& io_service,
 }
 
 
-boost::shared_ptr<server> server::get_shared()
-{
-	return shared_from_this();
-}
-
 /* method populates sessions_ with all available spreadsheets from the DB
  */
 void server::populate_sessions()
@@ -204,7 +97,7 @@ void server::populate_sessions()
 
 	while (((row = mysql_fetch_row(res_set)) != NULL))
 	{
-		spreadsheet_session_ptr new_session(new spreadsheet_session(row[0]));
+		spreadsheet_session_ptr new_session(new spreadsheet_session(row[0], this));
 
 		sessions_.insert( std::pair<std::string, spreadsheet_session_ptr>(row[0],new_session));
 	}
@@ -244,16 +137,17 @@ void server::handle_accept(spreadsheet_editor_ptr editor,
 	begin_accept();
 }
 
-void server::join_session(std::string session)
-{
-
-}
-
+/* returns the spreadsheet map
+ * */
 std::map<std::string,spreadsheet_session_ptr> server::get_spreadsheets()
 {
 	return sessions_;
 }
 
+
+/* returns true if the spreadsheet already exists
+ * in sessions_ and false otherwise
+ * */
 bool server::spreadsheet_exists(std::string name)
 {
 	if(sessions_.find(name) != sessions_.end())
@@ -261,20 +155,28 @@ bool server::spreadsheet_exists(std::string name)
 	return false;
 }
 
+/* return the pointer to a spreadsheet with the given
+ * name
+ * */
 spreadsheet_session* server::get_spreadsheet(std::string name)
 {
 	sessions_[name].get();
 }
 
+
+/* called in order to load an existing spreadsheet
+ * and create an update commant for a client
+ * */
 std::string server::load(std::string name)
 {
 	std::string load_msg = "";
 
+	char e = 27;
+	std::string ESC(1,e);
+
 	//first append the version #
-
-
 	std::string version = boost::lexical_cast<std::string>(sessions_[name]->get_version());
-	load_msg += version + "\\e";
+	load_msg += version;
 
 	MYSQL_RES *res_set;
 	MYSQL_ROW row;
@@ -295,18 +197,19 @@ std::string server::load(std::string name)
 	{
 		std::string col1(row[0]);
 		std::string col2(row[1]);
-		load_msg += col1 + "\\e" + col2 + "\\e";
+		load_msg += ESC + col1 + ESC + col2;
 	}
 
 	//we don't want the last \\e so return the length -2
-	return load_msg.substr(0, load_msg.size() -2);
+	return load_msg;
 }
 
 
-
+/* create and add a new spreadsheet to sessions_
+ * and return the spreadsheet_session
+ * */
 spreadsheet_session* server::add_spreadsheet(std::string name)
 {
-
 	//Insert the new name into the Data Base
 	std::string sql_update  = "INSERT into Spreadsheet (ssname) VALUES (\"" + name + "\")";
 
@@ -318,7 +221,7 @@ spreadsheet_session* server::add_spreadsheet(std::string name)
 	}
 
 	//add this sessions to the list
-	spreadsheet_session_ptr new_session(new spreadsheet_session(name));
+	spreadsheet_session_ptr new_session(new spreadsheet_session(name, this));
 
 	sessions_.insert( std::pair<std::string, spreadsheet_session_ptr>(name, new_session));
 
@@ -326,6 +229,9 @@ spreadsheet_session* server::add_spreadsheet(std::string name)
 }
 
 
+/* handles updating the DB with a new value, aswell as incrementing the
+ * session version to reflect the update
+ * */
 void server::update(std::string ssname, std::string cell, std::string contents)
 {
 	//update the database with new cell contents
@@ -342,6 +248,45 @@ void server::update(std::string ssname, std::string cell, std::string contents)
 	}
 
 	sessions_[ssname]->increment_version();
+}
+
+/*
+ * used to get the current contents of a spreadsheet cell from the DB
+ * in order to save them for an undo
+ * */
+std::string server::get_old(std::string sheet, std::string cellname)
+{
+    std::string undo_query = "SELECT contents FROM cell WHERE ssname = '" + sheet + "' AND cell = '" + cellname + "'";
+
+    //variable to store the old cell contents
+    std::string contents = "";
+
+    //if there was an error, do something
+    if ( mysql_query (connection_, undo_query.c_str()) )
+    {
+		std::cout << mysql_error(connection_) << std::endl;
+		mysql_close (connection_);
+		std::cout << "Database connection closed." << std::endl;
+	    //TODO fill in if query fails or DB disconnect
+    }
+
+    MYSQL_RES *cellCon;
+    MYSQL_ROW resultRow;
+
+    // Get the result of the query
+    cellCon = mysql_store_result(connection_);
+    int foundCell = mysql_num_rows(cellCon);
+
+    //if the cell was there, save the contents
+    if (foundCell == 1)
+    {
+      if (((resultRow = mysql_fetch_row(cellCon)) != NULL))
+	{
+	  contents = resultRow[0];
+	}
+    }
+
+    return contents;
 }
 
 
