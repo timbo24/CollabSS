@@ -110,6 +110,18 @@ namespace SS
         }
 
         /// <summary>
+        /// Send a line of text to the server.
+        /// </summary>
+        /// <param name="line"></param>
+        public void SendMessageSync(String line)
+        {
+            if (socket != null)
+            {
+                socket.BeginSend(line + "\n", (e, p) => { }, null);
+            }
+        }
+
+        /// <summary>
         /// Deal with an arriving line of text.
         /// </summary>
         private void LineReceived(String s, Exception e, object p)

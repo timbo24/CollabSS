@@ -43,7 +43,7 @@ namespace SS
             InitializeComponent();
             model = _model;
          //   model = new SpreadsheetClient();
-            model.IncomingLineEvent += MessageReceived;
+         //   model.IncomingLineEvent += MessageReceived;
             model.EditLineEvent += MessageReceived;
            // model.OpenNewLineEvent += OpenNewSS;
 
@@ -148,44 +148,73 @@ namespace SS
                // cellValue.Invoke(new Action(() => { cellValue.Text = line + "\r\n"; }));
                 if (line.StartsWith("UPDATE"))
                 {
-                    string part1="";
-                    string part2="";
-                    bool escape=false;
-                  
-                   for (int i=8; i<line.Length-1; i++)
-                   { 
-                       if ((!(line[i].Equals('\\')))&&(!escape))
-                           part1+=line[i];
-                       else if (line[i].Equals('\\'))
-                       {
-                           escape=true;
-                           
-                       }
-                       else
-                       {
-                           part2+=line[i];
-                       }
+                    int vnum = 0;
+                    string vnumber = "";
+                    int j = 7;
+                    while (!(line[j].Equals((char)27)))
+                    {
+                        vnumber += line[j];
+                        j++;
+                    }
+                    
+                   
+                    try
+                    {
+                        vnum = Convert.ToInt32(vnumber);
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Input string for a version number is not a sequence of digits.");
+                    }
 
-                   }
-                  // cellValue.Invoke(new Action(() => { cellValue.Text = part1+part2 + "\r\n"; }));
-                  //  sheet.SetContentsOfCell(part1, part2);
+                    //Check the version number.
+                    if (version != vnum - 1)
+                        model.SendMessageSync("RESYNC");
 
-                     Regex r = new Regex("^([a-zA-Z])([1-9][0-9]?)$");
-                Match m;
-                int col=0, row=0;
+                    //If the version number is as expected:
+                    else
+                    {
+                        string part1 = "";
+                        string part2 = "";
+                        bool escape = false;
 
-                  m = r.Match(part1);
-                  if (m.Success)
-                  {
-                      col = colName.IndexOf("" + m.Groups[1], 0);
-                      row = Int32.Parse("" + m.Groups[2]) - 1;
-                  }
+                        j++;
+                        while (j<line.Length-1)
+                        {
+                          if ((!(line[j].Equals((char)27)) && (!escape)))
+                                part1 += line[j];
+                            else if (line[j].Equals((char)27))
+                            {
+                                escape = true;
+
+                            }
+                            else
+                            {
+                                part2 += line[j];
+                            }
+
+                          j++;
+
+                        }
+                        // cellValue.Invoke(new Action(() => { cellValue.Text = part1+part2 + "\r\n"; }));
+                        //  sheet.SetContentsOfCell(part1, part2);
+
+                        Regex r = new Regex("^([a-zA-Z])([1-9][0-9]?)$");
+                        Match m;
+                        int col = 0, row = 0;
+
+                        m = r.Match(part1);
+                        if (m.Success)
+                        {
+                            col = colName.IndexOf("" + m.Groups[1], 0);
+                            row = Int32.Parse("" + m.Groups[2]) - 1;
+                        }
 
                         //this.spreadsheetPanel1.SetValue(col, row, part2);
 
 
                         List<String> names = new List<String>(); //list of names of a cell's dependents
-                       
+
                         try
                         {
                             //Setting contents of a cell and adding all its dependents to the names list.
@@ -248,9 +277,9 @@ namespace SS
                             cellValue.Text = ex.Message;
                         }
 
-
+                    }
                 }
-                // Thread.Sleep(500);
+                
             }
         }
 
