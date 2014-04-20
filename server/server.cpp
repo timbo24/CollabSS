@@ -14,7 +14,7 @@
 #include <cctype>
 #include <locale>
 #include <mutex>
-
+#include <boost/lexical_cast.hpp>
 #include "editor.h"
 #include "session.h"
 #include "server.h"
@@ -204,7 +204,7 @@ void server::populate_sessions()
 
 	while (((row = mysql_fetch_row(res_set)) != NULL))
 	{
-		spreadsheet_session_ptr new_session(new spreadsheet_session());
+		spreadsheet_session_ptr new_session(new spreadsheet_session(row[0]));
 
 		sessions_.insert( std::pair<std::string, spreadsheet_session_ptr>(row[0],new_session));
 	}
@@ -266,23 +266,15 @@ spreadsheet_session* server::get_spreadsheet(std::string name)
 	sessions_[name].get();
 }
 
-
-/* adds a session to the set of spreadsheet sessions
- * */
-void server::add_session()
-{
-	//TODO
-}
-
 std::string server::load(std::string name)
 {
 	std::string load_msg = "";
 
 	//first append the version #
-//	load_msg += std::to_string(sessions_[name]->get_version()) + "\\e";
 
-	int i = 0;
-	load_msg += "0\\e";
+
+	std::string version = boost::lexical_cast<std::string>(sessions_[name]->get_version());
+	load_msg += version + "\\e";
 
 	MYSQL_RES *res_set;
 	MYSQL_ROW row;
@@ -309,6 +301,49 @@ std::string server::load(std::string name)
 	//we don't want the last \\e so return the length -2
 	return load_msg.substr(0, load_msg.size() -2);
 }
+
+
+
+spreadsheet_session* server::add_spreadsheet(std::string name)
+{
+
+	//Insert the new name into the Data Base
+	std::string sql_update  = "INSERT into Spreadsheet (ssname) VALUES (\"" + name + "\")";
+
+	if ( mysql_query (connection_, sql_update.c_str()) )
+	{
+		std::cout << mysql_error(connection_) << std::endl;
+		mysql_close (connection_);
+		std::cout << "Database connection closed." << std::endl;
+	}
+
+	//add this sessions to the list
+	spreadsheet_session_ptr new_session(new spreadsheet_session(name));
+
+	sessions_.insert( std::pair<std::string, spreadsheet_session_ptr>(name, new_session));
+
+	return new_session.get();
+}
+
+
+void server::update(std::string ssname, std::string cell, std::string contents)
+{
+	//update the database with new cell contents
+	std::string sql_update  = "INSERT into Cell (ssname, cell, contents) VALUES ( \"" + ssname +   "\"," + 
+		                                                                     "\"" + cell +     "\"," +
+										     "\"" + contents + "\")" +
+				   "ON DUPLICATE KEY UPDATE contents = \"" + contents + "\"";
+
+	if ( mysql_query (connection_, sql_update.c_str()) )
+	{
+		std::cout << mysql_error(connection_) << std::endl;
+		mysql_close (connection_);
+		std::cout << "Database connection closed." << std::endl;
+	}
+
+	sessions_[ssname]->increment_version();
+}
+
 
 /* Function to get input from command line
  */

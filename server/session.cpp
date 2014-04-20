@@ -23,8 +23,9 @@
  * make changes to a spreadsheet
  * */
 
-spreadsheet_session::spreadsheet_session()
-	: version_(0)
+spreadsheet_session::spreadsheet_session(std::string name)
+	: version_(0),
+	  name_(name)
 {
 }
 
@@ -33,6 +34,11 @@ spreadsheet_session::spreadsheet_session()
 int spreadsheet_session::get_version()
 {
 	return version_;
+}
+
+void spreadsheet_session::increment_version()
+{
+	version_++;
 }
 
 

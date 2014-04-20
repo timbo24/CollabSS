@@ -1,4 +1,5 @@
 
+#include <boost/lexical_cast.hpp>
 #include <string>
 #include <algorithm>
 #include <cstdlib>
@@ -189,7 +190,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 		}
 	}
 	//Open SS request, if one does not exist, error is sent back
-	else if(token == "CREATE")
+	else if(token == "OPEN")
 	{
 
 		if (server_->spreadsheet_exists(message))
@@ -214,10 +215,26 @@ void spreadsheet_editor::incoming_message(std::string message)
 	}
 	//client asks to create a new SS, if if the name doesn't exist
 	//create a new SS, if it does user gets an error back
-	else if(token == "OPEN")
+	else if(token == "CREATE")
 	{
-		outm = "OPENNEW something\n";
+		if (server_->spreadsheet_exists(message))
+		{
+			outm = "ERROR\n";
+		}
+		else
+		{
+			outm = "UPDATE\\e";
+
+			//add the spreadsheet and set is the member spreadsheet
+			session_ = server_->add_spreadsheet(message);
+
+			session_->join(shared_from_this());
+
+			outm += boost::lexical_cast<std::string>(session_->get_version()) + "\n";
+		}
+
 		std::cout<<"outgoing: " << outm << std::endl;
+
 		deliver(outm);
 	}
 	//
