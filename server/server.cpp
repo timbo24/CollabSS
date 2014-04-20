@@ -9,11 +9,12 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
+#include <boost/thread.hpp>
 #include <functional> 
 #include <cctype>
 #include <locale>
 #include <mutex>
-
+#include <boost/lexical_cast.hpp>
 #include "editor.h"
 #include "session.h"
 #include "server.h"
@@ -169,15 +170,21 @@ server::server(boost::asio::io_service& io_service,
 	{
 		std::cout << "DB Connection Failed\n";
 	}
+	std::cout<<"WE GOT HERE 3"<<std::endl;
 
 	begin_accept();
+}
+
+
+boost::shared_ptr<server> server::get_shared()
+{
+	return shared_from_this();
 }
 
 /* method populates sessions_ with all available spreadsheets from the DB
  */
 void server::populate_sessions()
 {
-	//TODO
 	MYSQL_RES *res_set;
 	MYSQL_ROW row;
 
@@ -195,15 +202,14 @@ void server::populate_sessions()
 	res_set = mysql_store_result(connection_);
 	int numrows = mysql_num_rows(res_set);
 
-	int i = 0;
-	std::cout << "Spreadsheets in the database:" << std::endl;
 	while (((row = mysql_fetch_row(res_set)) != NULL))
 	{
-		std::cout << row[i] << std::endl;
-		spreadsheet_session_ptr new_session(new spreadsheet_session(row[i]));
+		spreadsheet_session_ptr new_session(new spreadsheet_session(row[0]));
 
-		sessions_.insert(new_session);
+		sessions_.insert( std::pair<std::string, spreadsheet_session_ptr>(row[0],new_session));
 	}
+
+
 }
 
 
@@ -213,7 +219,8 @@ void server::populate_sessions()
  * */
 void server::begin_accept()
 {
-	spreadsheet_editor_ptr new_editor(new spreadsheet_editor(io_service_, shared_from_this()));
+	spreadsheet_editor_ptr new_editor(new spreadsheet_editor(io_service_, this));
+
 	acceptor_.async_accept(new_editor->socket(),
 			       boost::bind(&server::handle_accept,
 					   this,
@@ -242,24 +249,124 @@ void server::join_session(std::string session)
 
 }
 
-bool server::session_exists(std:: string session)
-{
-	return false;
-}
-
-std::set<spreadsheet_session_ptr> server::get_spreadsheets()
+std::map<std::string,spreadsheet_session_ptr> server::get_spreadsheets()
 {
 	return sessions_;
 }
 
-/* adds a session to the set of spreadsheet sessions
- * */
-void server::add_session()
+bool server::spreadsheet_exists(std::string name)
 {
-	//TODO
+	if(sessions_.find(name) != sessions_.end())
+		return true;
+	return false;
+}
+
+spreadsheet_session* server::get_spreadsheet(std::string name)
+{
+	sessions_[name].get();
+}
+
+std::string server::load(std::string name)
+{
+	std::string load_msg = "";
+
+	//first append the version #
+
+
+	std::string version = boost::lexical_cast<std::string>(sessions_[name]->get_version());
+	load_msg += version + "\\e";
+
+	MYSQL_RES *res_set;
+	MYSQL_ROW row;
+
+	//select statement to get all cell values for a given spreadsheet
+	std::string sql_query  = "SELECT cell, contents FROM Cell WHERE ssname = \"" + name+ "\"";
+	if ( mysql_query (connection_, sql_query.c_str()) )
+	{
+		std::cout << mysql_error(connection_) << std::endl;
+		mysql_close (connection_);
+		std::cout << "Database connection closed." << std::endl;
+	}
+
+	res_set = mysql_store_result(connection_);
+	int numrows = mysql_num_rows(res_set);
+
+	while (((row = mysql_fetch_row(res_set)) != NULL))
+	{
+		std::string col1(row[0]);
+		std::string col2(row[1]);
+		load_msg += col1 + "\\e" + col2 + "\\e";
+	}
+
+	//we don't want the last \\e so return the length -2
+	return load_msg.substr(0, load_msg.size() -2);
 }
 
 
+
+spreadsheet_session* server::add_spreadsheet(std::string name)
+{
+
+	//Insert the new name into the Data Base
+	std::string sql_update  = "INSERT into Spreadsheet (ssname) VALUES (\"" + name + "\")";
+
+	if ( mysql_query (connection_, sql_update.c_str()) )
+	{
+		std::cout << mysql_error(connection_) << std::endl;
+		mysql_close (connection_);
+		std::cout << "Database connection closed." << std::endl;
+	}
+
+	//add this sessions to the list
+	spreadsheet_session_ptr new_session(new spreadsheet_session(name));
+
+	sessions_.insert( std::pair<std::string, spreadsheet_session_ptr>(name, new_session));
+
+	return new_session.get();
+}
+
+
+void server::update(std::string ssname, std::string cell, std::string contents)
+{
+	//update the database with new cell contents
+	std::string sql_update  = "INSERT into Cell (ssname, cell, contents) VALUES ( \"" + ssname +   "\"," + 
+		                                                                     "\"" + cell +     "\"," +
+										     "\"" + contents + "\")" +
+				   "ON DUPLICATE KEY UPDATE contents = \"" + contents + "\"";
+
+	if ( mysql_query (connection_, sql_update.c_str()) )
+	{
+		std::cout << mysql_error(connection_) << std::endl;
+		mysql_close (connection_);
+		std::cout << "Database connection closed." << std::endl;
+	}
+
+	sessions_[ssname]->increment_version();
+}
+
+
+/* Function to get input from command line
+ */
+void server::getInput()
+{
+  std::string input;
+  std::cin >> input;
+
+  // Keep looping until we get the command to quit
+  while (input != "quit")
+    {
+        std::cin >> input;
+    }
+
+  mysql_close (this->connection_);
+  std::cout << "Database connection closed." << std::endl;
+  std::cout<<"Closing server"<<std::endl;
+
+  // Exits the program
+  std::exit(EXIT_SUCCESS);
+
+  return;
+}
 
 
 //----------------------------------------------------------------------
@@ -296,6 +403,9 @@ int main(int argc, char* argv[])
 		server_ptr svr(new server(io_service, endpoint, con));
 
 		std::cout<<"Server up and running..."<<std::endl;
+
+		//boost::thread* inputThread = new boost::thread(boost::bind(&server::getInput, svr));
+		boost::thread inputThread(&server::getInput, svr);
 
 		//being the io_service
 		io_service.run();

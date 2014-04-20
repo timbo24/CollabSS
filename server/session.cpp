@@ -22,16 +22,29 @@
  * containts a list of participants who are able to 
  * make changes to a spreadsheet
  * */
-
 spreadsheet_session::spreadsheet_session(std::string name)
-	: name_(name)
+	: version_(0),
+	  name_(name)
 {
+}
+
+/* get current version for a spreadseet
+ * */
+int spreadsheet_session::get_version()
+{
+	return version_;
+}
+
+void spreadsheet_session::increment_version()
+{
+	version_++;
 }
 
 std::string spreadsheet_session::get_name()
 {
 	return name_;
 }
+
 
 /* add a participlant to a session
  * */

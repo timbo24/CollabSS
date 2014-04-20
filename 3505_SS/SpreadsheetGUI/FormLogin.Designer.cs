@@ -44,6 +44,7 @@
             this.OpenExisting = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.EnterExisting = new System.Windows.Forms.Button();
+            this.connectAgain = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // NameTextBox
@@ -212,12 +213,24 @@
             this.EnterExisting.UseVisualStyleBackColor = true;
             this.EnterExisting.Visible = false;
             // 
+            // connectAgain
+            // 
+            this.connectAgain.Location = new System.Drawing.Point(274, 87);
+            this.connectAgain.Name = "connectAgain";
+            this.connectAgain.Size = new System.Drawing.Size(147, 23);
+            this.connectAgain.TabIndex = 33;
+            this.connectAgain.Text = "Connect to the server";
+            this.connectAgain.UseVisualStyleBackColor = true;
+            this.connectAgain.Visible = false;
+            this.connectAgain.Click += new System.EventHandler(this.connectAgain_Click);
+            // 
             // FormLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.ClientSize = new System.Drawing.Size(721, 420);
+            this.Controls.Add(this.connectAgain);
             this.Controls.Add(this.EnterExisting);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.OpenExisting);
@@ -259,6 +272,7 @@
         private System.Windows.Forms.TextBox OpenExisting;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button EnterExisting;
+        private System.Windows.Forms.Button connectAgain;
     }
 }
 

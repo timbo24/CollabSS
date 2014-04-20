@@ -14,7 +14,8 @@ namespace SS
     {
         private SpreadsheetClient model;
         private string host = "localhost";
-        private int port = 2500;
+        private int port = 3000;
+        
         /// <summary>
         /// For synchronizing receives
         /// </summary>
@@ -59,6 +60,7 @@ namespace SS
             try
             {
                 model.Connect(host, port, NameTextBox.Text);
+                
             }
             catch
             {
@@ -69,28 +71,66 @@ namespace SS
         }
 
         /// <summary>
-        /// Enter a word and send it to the model.
+        /// Enter a name of a new spreadsheet and send it to the model.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EnterNew_Click(object sender, EventArgs e)
         {
+           
+                // Try connecting
+                try
+                {
+                    model.Connect(host, port, NameTextBox.Text);
+                }
+                catch
+                {
+                    
+                    IPAddrBox.Invoke(new Action(() => { IPAddrBox.Text = "Invalid hostname\r\n"; }));
+                }
+                // Send the word
+                model.SendMessage(OpenNew.Text);
 
-            // Try connecting
-            try
-            {
-                model.Connect(host, port, NameTextBox.Text);
-            }
-            catch
-            {
-                // TODO
-                IPAddrBox.Invoke(new Action(() => { IPAddrBox.Text = "Invalid hostname\r\n"; }));
-            }
-            // Send the word
-            model.SendMessage(OpenNew.Text);
 
-            // Clear the textbox
-            OpenNew.Text = "";
+                // Clear the textbox
+               // OpenNew.Text = "";
+
+            //Make all the boxes invisible except for ConnectAgain button.
+                BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = false; }));
+                SSList.Invoke(new Action(() => { SSList.Visible = false; }));
+                label2.Invoke(new Action(() => { label2.Visible = false; }));
+                EnterNew.Invoke(new Action(() => { EnterNew.Visible = false; }));
+                OpenNew.Invoke(new Action(() => { OpenNew.Visible = false; }));
+                label6.Invoke(new Action(() => { label6.Visible = false; }));
+                OpenExisting.Invoke(new Action(() => { OpenExisting.Visible = false; }));
+                EnterExisting.Invoke(new Action(() => { EnterExisting.Visible = false; }));
+                connectAgain.Invoke(new Action(() => { connectAgain.Visible = true; }));
+                NameTextBox.Invoke(new Action(() => { NameTextBox.Visible = false; }));
+                IPAddrBox.Invoke(new Action(() => { IPAddrBox.Visible = false; }));
+                ConnectButton.Invoke(new Action(() => { ConnectButton.Visible = false; }));
+                label1.Invoke(new Action(() => { label1.Visible = false; }));
+                label3.Invoke(new Action(() => { label3.Visible = false; }));
+               
+        }
+
+         /// <summary>
+        /// Click to open a new login form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void connectAgain_Click(object sender, EventArgs e)
+        {
+           
+           //Create a new thread which will open a new login form.
+            LoadForm lform = new LoadForm();
+
+            Thread oThread = new Thread(new ThreadStart(lform.Load));
+
+            // Start the thread
+            oThread.Start();
+
+            //Close the old login form.
+            Close();
         }
 
         /// <summary>
@@ -146,17 +186,32 @@ namespace SS
         {
             if (!(line == null))
             {
-                model.Quit();               
+                int i = 8;
+                int vn=0;
+                string _version="";
+                while (!(line[i].Equals('\\')))
+                    _version+=line[i];
+
+                try
+                {
+                    vn = Convert.ToInt32(_version);
+                }
+                catch 
+                {
+                    Console.WriteLine("Input string for a version number is not a sequence of digits.");
+                }
+
+
+               // model.Quit();               
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 // Start an application context and run one form inside it
                 DemoApplicationContext appContext = DemoApplicationContext.getAppContext();
                 
-                appContext.RunForm(new Form1(host, port));
+                appContext.RunForm(new Form1(host, port, model, vn));
                 Application.Run(appContext);
-
-                
-                
+ 
+                              
             }
         }
 
@@ -170,4 +225,20 @@ namespace SS
             MessageBox.Show("Disconnected from\r\nBoggle Server.");
         }
     }
+
+    public class LoadForm
+    {
+
+        // This method that will be called when the thread is started
+        public void Load()
+        {
+              Application.EnableVisualStyles();
+              Application.SetCompatibleTextRenderingDefault(false);
+            // Start an application context and run one form inside it
+            DemoApplicationContext appContext1 = DemoApplicationContext.getAppContext();
+            appContext1.RunForm(new FormLogin());
+            Application.Run(appContext1);
+        }
+    }
+
 }

@@ -1,4 +1,5 @@
 
+#include <boost/lexical_cast.hpp>
 #include <string>
 #include <algorithm>
 #include <cstdlib>
@@ -42,11 +43,11 @@
  * editing a spreadsheet, this allows for reading from the client
  * and writing to the client asynchronously
  * */
-spreadsheet_editor::spreadsheet_editor(boost::asio::io_service& io_service,
-		                       server_ptr server)
+spreadsheet_editor::spreadsheet_editor(boost::asio::io_service& io_service, server* server)
 	: socket_(io_service),
 	  server_(server)
 {
+	std::cout<<"WE GOT HERE 8"<<std::endl;
 }
 
 /* returns member socket
@@ -68,6 +69,7 @@ void spreadsheet_editor::start()
 				      boost::bind(&spreadsheet_editor::handle_read, 
 						  shared_from_this(), 
 						  boost::asio::placeholders::error));
+	std::cout<<"WE GET HERE 2"<<std::endl;
 }
 
 /* called to write to a client
@@ -149,7 +151,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 	trim(message);
 
 	size_t pos = 0;
-	std::string delimiter = " ";
+	std::string delimiter = "\\e";
 
 	pos = message.find(delimiter);
 	std::string token = message.substr(0, pos);
@@ -163,20 +165,26 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		if (message == PASSWORD)
 		{
-			outm = "FILELIST ";
-			std::set<spreadsheet_session_ptr> sessions= server_->get_spreadsheets();
+			outm = "FILELIST\\e";
+
+			std::map<std::string, spreadsheet_session_ptr> sessions = server_->get_spreadsheets();
 
 			std::cout<<"List of spreadsheets: "<<std::endl;
+			
 			for (auto i = sessions.begin(); i != sessions.end(); ++i)
 			{
-			//	std::cout<<(*i)->get_name()<<std::endl;
+				outm += i->first + "\\e";
+				std::cout<<i->first<<std::endl;
 			}
+
+			outm += "\n";
+			
 			std::cout<<"outgoing: " << outm << std::endl;
 			deliver(outm);
 		}
 		else
 		{
-			outm = "INVALID\r\n";
+			outm = "INVALID\n";
 			std::cout<<"outgoing: " << outm << std::endl;
 			deliver(outm);
 		}
@@ -184,10 +192,24 @@ void spreadsheet_editor::incoming_message(std::string message)
 	//Open SS request, if one does not exist, error is sent back
 	else if(token == "OPEN")
 	{
-		outm = "OPENNEW " + message + "\r\n";
-		std::cout<<"outgoing: " << outm << std::endl;
 
-		//assign the session to the editor so he can commuticate his changes to other users
+		if (server_->spreadsheet_exists(message))
+		{
+			outm = "UPDATE\\e";
+
+			//set the session for this editor
+			session_ = server_->get_spreadsheet(message);
+			session_->join(shared_from_this());
+
+			//load the current spreadsheet
+			outm += server_->load(message) + "\n";
+		}
+		else
+		{
+			outm = "ERROR\n";
+		}
+
+		std::cout<<"outgoing: " << outm << std::endl;
 
 		deliver(outm);
 	}
@@ -195,16 +217,44 @@ void spreadsheet_editor::incoming_message(std::string message)
 	//create a new SS, if it does user gets an error back
 	else if(token == "CREATE")
 	{
-		outm = "OPENNEW something\r\n";
+		if (server_->spreadsheet_exists(message))
+		{
+			outm = "ERROR\n";
+		}
+		else
+		{
+			outm = "UPDATE\\e";
+
+			//add the spreadsheet and set is the member spreadsheet
+			session_ = server_->add_spreadsheet(message);
+
+			session_->join(shared_from_this());
+
+			outm += boost::lexical_cast<std::string>(session_->get_version()) + "\n";
+		}
+
 		std::cout<<"outgoing: " << outm << std::endl;
+
 		deliver(outm);
 	}
 	//
 	else if(token == "ENTER")
 	{
-		outm = "OKENTER " + message + "\r\n";
-		std::cout<<"outgoing: " << outm << std::endl;
-		deliver(outm);
+		//TODO add circular check
+		
+		size_t pos = 0;
+		std::string delimiter = "\\e";
+
+		pos = message.find(delimiter);
+		std::string cell = message.substr(0, pos);
+
+		message.erase(0, pos + delimiter.length());
+
+		server_->update(session_->get_name(), cell, message);
+
+		outm = "UPDATE\\e" + boost::lexical_cast<std::string>(session_->get_version()) + "\\e" +
+			             cell + "\e" + message + "\e\n";
+		session_->deliver(outm);
 	}
 
 

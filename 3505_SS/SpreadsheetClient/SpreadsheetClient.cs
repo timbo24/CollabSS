@@ -93,7 +93,7 @@ namespace SS
         {
             if (socket != null)
             {
-                socket.BeginSend("CREATE " +line + "\n", (e, p) => { }, null);
+                socket.BeginSend("CREATE\\e" +line + "\n", (e, p) => { }, null);
             }
         }
 
@@ -126,17 +126,21 @@ namespace SS
                 return;
             }
 
-            if (s.StartsWith("CONNECTED"))
+            
+
+            if (s.StartsWith("FILELIST"))
             {
                 //StartLineEvent(board, opponentName);
                 IncomingLineEvent(s);
             }
-            else if (s.StartsWith("OPENNEW"))
+            else if (s.StartsWith("UPDATE"))
             {
+                int i = 8;
+                while (!(s[i].Equals('\n')))
+                    i++;
+                if (s[i].Equals('\n'))
                 OpenNewLineEvent(s);
-            }
-            else if (s.StartsWith("OK"))
-            {
+                else 
                 EditLineEvent(s);
             }
 
