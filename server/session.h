@@ -3,6 +3,7 @@
 #define SESSION_H
 
 #include "editor.h"
+#include "Circles/CircleChecker.h"
 
 class participant;
 
@@ -23,12 +24,15 @@ class spreadsheet_session
 		int get_version();
 		void increment_version();
 		std::string get_name();
+		bool circular_check(std::string cell, std::string contents);
 	private:
 		std::set<participant_ptr> participants_;
 		enum { max_recent_msgs = 100 };
 		message_queue recent_msgs_;
 		int version_;
 		std::string name_;
+		CircleChecker checker_;
+
 };
 
 
