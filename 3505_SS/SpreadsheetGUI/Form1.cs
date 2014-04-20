@@ -146,7 +146,7 @@ namespace SS
             if (!(line == null))
             {
                // cellValue.Invoke(new Action(() => { cellValue.Text = line + "\r\n"; }));
-                if (line.StartsWith("OK"))
+                if (line.StartsWith("UPDATE"))
                 {
                     string part1="";
                     string part2="";
@@ -298,7 +298,7 @@ namespace SS
                     
               //  }
                // cellValue.Invoke(new Action(() => { cellValue.Text = col+row + "\r\n"; }));
-                 model.SendMessageEdit(cellName+'\\'+cellContent.Text);
+                 model.SendMessageEdit(version+"\\e"+cellName+"\\e"+cellContent.Text);
             }
         }
 

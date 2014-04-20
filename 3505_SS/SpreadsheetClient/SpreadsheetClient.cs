@@ -105,7 +105,7 @@ namespace SS
         {
             if (socket != null)
             {
-                socket.BeginSend("ENTER " + line + "\n", (e, p) => { }, null);
+                socket.BeginSend("ENTER\\e" + line + "\n", (e, p) => { }, null);
             }
         }
 
@@ -135,10 +135,16 @@ namespace SS
             }
             else if (s.StartsWith("UPDATE"))
             {
-                int i = 8;
-                while (!(s[i].Equals('\n')))
-                    i++;
-                if (s[i].Equals('\n'))
+                bool newss=true;
+                int i = 7;
+                for (i=7; i<s.Length; i++)
+                    if ((s[i].Equals('\\'))&&(s[i+1].Equals('e')))
+                    { 
+                        newss=false;
+                        break;
+                    }
+
+               if(newss)
                 OpenNewLineEvent(s);
                 else 
                 EditLineEvent(s);

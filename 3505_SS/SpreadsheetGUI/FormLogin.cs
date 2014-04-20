@@ -14,7 +14,7 @@ namespace SS
     {
         private SpreadsheetClient model;
         private string host = "localhost";
-        private int port = 3000;
+        private int port = 2000;
         
         /// <summary>
         /// For synchronizing receives
@@ -79,23 +79,22 @@ namespace SS
         {
            
                 // Try connecting
-                try
-                {
-                    model.Connect(host, port, NameTextBox.Text);
-                }
-                catch
-                {
+         //       try
+         //       {
+         //           model.Connect(host, port, NameTextBox.Text);
+         //       }
+         //       catch
+         //       {
                     
-                    IPAddrBox.Invoke(new Action(() => { IPAddrBox.Text = "Invalid hostname\r\n"; }));
-                }
+         //           IPAddrBox.Invoke(new Action(() => { IPAddrBox.Text = "Invalid hostname\r\n"; }));
+          //      }
+
+               
+
                 // Send the word
                 model.SendMessage(OpenNew.Text);
 
-
-                // Clear the textbox
-               // OpenNew.Text = "";
-
-            //Make all the boxes invisible except for ConnectAgain button.
+                //Make all the boxes invisible except for ConnectAgain button.
                 BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = false; }));
                 SSList.Invoke(new Action(() => { SSList.Visible = false; }));
                 label2.Invoke(new Action(() => { label2.Visible = false; }));
@@ -110,6 +109,11 @@ namespace SS
                 ConnectButton.Invoke(new Action(() => { ConnectButton.Visible = false; }));
                 label1.Invoke(new Action(() => { label1.Visible = false; }));
                 label3.Invoke(new Action(() => { label3.Visible = false; }));
+
+                // Clear the textbox
+               // OpenNew.Text = "";
+
+            
                
         }
 
@@ -148,15 +152,7 @@ namespace SS
                 }
                 else if (line.StartsWith("FILELIST"))
                 {
-                    BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = false; }));
-                    SSList.Invoke(new Action(() => { SSList.Visible = true; }));
-                    label2.Invoke(new Action(() => { label2.Visible = true; }));
-                    EnterNew.Invoke(new Action(() => { EnterNew.Visible = true; }));
-                    OpenNew.Invoke(new Action(() => { OpenNew.Visible = true; }));
-                    label6.Invoke(new Action(() => { label6.Visible = true; }));
-                    OpenExisting.Invoke(new Action(() => { OpenExisting.Visible = true; }));
-                    EnterExisting.Invoke(new Action(() => { EnterExisting.Visible = true; }));
-                    
+                                        
                     String files = "";
                     for (int i = 10; i < line.Length; i++)
                     {
@@ -169,6 +165,16 @@ namespace SS
                     }
 
                     SSList.Text = files;
+
+                    BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = false; }));
+                    SSList.Invoke(new Action(() => { SSList.Visible = true; }));
+                    label2.Invoke(new Action(() => { label2.Visible = true; }));
+                    EnterNew.Invoke(new Action(() => { EnterNew.Visible = true; }));
+                    OpenNew.Invoke(new Action(() => { OpenNew.Visible = true; }));
+                    label6.Invoke(new Action(() => { label6.Visible = true; }));
+                    OpenExisting.Invoke(new Action(() => { OpenExisting.Visible = true; }));
+                    EnterExisting.Invoke(new Action(() => { EnterExisting.Visible = true; }));
+
                 }
                    
                // Thread.Sleep(500); 
@@ -186,12 +192,15 @@ namespace SS
         {
             if (!(line == null))
             {
-                int i = 8;
+                int i = 7;
                 int vn=0;
                 string _version="";
-                while (!(line[i].Equals('\\')))
-                    _version+=line[i];
+                for (i = 7; i < line.Length; i++)
+                    if (line[i].Equals('\\'))
+                        break;
+                    else _version += line[i];
 
+                
                 try
                 {
                     vn = Convert.ToInt32(_version);
@@ -204,7 +213,7 @@ namespace SS
 
                // model.Quit();               
                 Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
+               // Application.SetCompatibleTextRenderingDefault(false);
                 // Start an application context and run one form inside it
                 DemoApplicationContext appContext = DemoApplicationContext.getAppContext();
                 
