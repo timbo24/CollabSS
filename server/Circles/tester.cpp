@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "DependencyGraph.h"
+#include "CircleChecker.h"
 
 using namespace std;
 
@@ -10,10 +11,10 @@ int main()
 
   // cout << "" << t->Size() << endl;
 
-  t->AddDependency("a", "b");
-  t->AddDependency("a", "c");
-  t->AddDependency("d", "c");
-  t->AddDependency("d", "c");
+  // t->AddDependency("a", "b");
+  //t->AddDependency("a", "c");
+  //t->AddDependency("d", "c");
+  //t->AddDependency("d", "c");
   //t->RemoveDependency("a", "b");
 
   //cout << "" << t->Size() << endl;
@@ -83,6 +84,7 @@ std::unordered_set<std::string>::const_iterator go = temppSet->find ("x");
 cout << (t->GetDependees("c")).size() << endl;
   */
   
+  /*
   std::unordered_set<std::string> *tempSet = new std::unordered_set<std::string>({"x" , "y", "z"});
   // *tempSet = t->GetDependents("a");
   t->ReplaceDependents("c", *tempSet);
@@ -108,8 +110,46 @@ std::unordered_set<std::string>::const_iterator go = temppSet->find ("x");
 cout << (t->GetDependents("c")).size() << endl;
 
  t->RemoveDependency("q", "u");
+  */
 
+  CircleChecker *c = new CircleChecker();
 
+  std::string one = "A1";
+  std::string two = "=B1";
+
+  //cout <<  << endl;
+  (c->NotCircular(one, two));
+
+  std::string three = "B1";
+  std::string four = "=D1";
+
+  //cout <<  << endl;
+  (c->NotCircular(three, four));
+
+  std::string five = "A1";
+  std::string six = "=3+C1+a1+G1";
+
+  cout << (c->NotCircular(five, six))  << endl;
+
+  std::string seven = "B1";
+  std::string eight = "=3* (Z1)+ F1 + G1";
+
+  cout << (c->NotCircular(seven, eight))  << endl;
+
+  std::string nine = "G1";
+  std::string ten = "=3* (Q1)+ W1 + B1";
+
+  cout << (c->NotCircular(nine, ten))  << endl;
+
+std::string nine1 = "Q1";
+  std::string ten1 = "=3* (G1)+ W1 + Y1";
+
+  cout << (c->NotCircular(nine1, ten1))  << endl;
+  
+
+  
+
+  
   
   return 0;
 }
