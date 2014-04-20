@@ -242,6 +242,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		//TODO add circular check
 		
+
 		size_t pos = 0;
 		std::string delimiter = "\\e";
 
@@ -250,11 +251,22 @@ void spreadsheet_editor::incoming_message(std::string message)
 
 		message.erase(0, pos + delimiter.length());
 
-		server_->update(session_->get_name(), cell, message);
+		//Circular dependency check
+		if (session_->circular_check(cell, message))
+		{
+			server_->update(session_->get_name(), cell, message);
 
-		outm = "UPDATE\\e" + boost::lexical_cast<std::string>(session_->get_version()) + "\\e" +
-			             cell + "\e" + message + "\e\n";
-		session_->deliver(outm);
+			outm = "UPDATE\\e" + boost::lexical_cast<std::string>(session_->get_version()) + "\\e" +
+					     cell + "\e" + message + "\e\n";
+
+			session_->deliver(outm);
+		}
+		else 
+		{
+			outm = "ERROR\\ecircular dependency\n";
+
+			deliver(outm);
+		}
 	}
 
 

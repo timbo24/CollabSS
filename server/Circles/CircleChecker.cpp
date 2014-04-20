@@ -7,6 +7,7 @@
 
 #include <string>
 #include <iostream>
+//#include <boost/regex.hpp>
 #include "CircleChecker.h"
 
 using namespace boost::xpressive;
@@ -116,7 +117,21 @@ CircleChecker::~CircleChecker()
 		//store the variables from the parsed string
 		smatch allVars;
 		//match the pattern of one or more letters followed by one or more numbers.
-		sregex cellNames = sregex::compile("([[:upper:]])+([[:digit:]])+");
+		sregex cellNames = sregex::compile("[[:upper:]]+[[:digit:]]+");
+
+		//iterators to walk the array
+		sregex_iterator cur ( s.begin(), s.end(), cellNames);
+		sregex_iterator end;
+
+		//loop, find, add matches to the expression
+		for ( ; cur != end ; ++cur)
+		{
+		  smatch const &thisVar = *cur;
+		  toReturn.push(thisVar[0]);
+		  //cout << thisVar[0] << endl;
+		}
+
+		/*
 	        
 		//search for variables and store them all
 		regex_search( s, allVars, cellNames);
@@ -124,8 +139,11 @@ CircleChecker::~CircleChecker()
 		//add them to the return list
 		for (int i = 0 ; i < allVars.size() ; i++)
 		{
+		  cout << allVars[i] << endl;
 		  toReturn.push(allVars[i]);
 		}
+
+		*/
 
 		//return the list at the end
 		return toReturn;

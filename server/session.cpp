@@ -1,4 +1,5 @@
 
+#include "Circles/CircleChecker.h"
 #include <string>
 #include <algorithm>
 #include <cstdlib>
@@ -24,7 +25,8 @@
  * */
 spreadsheet_session::spreadsheet_session(std::string name)
 	: version_(0),
-	  name_(name)
+	  name_(name),
+	  checker_()
 {
 }
 
@@ -61,6 +63,11 @@ void spreadsheet_session::join(participant_ptr prt)
 void spreadsheet_session::leave(participant_ptr ptr)
 {
 	participants_.erase(ptr);
+}
+
+bool spreadsheet_session::circular_check(std::string cell, std::string contents)
+{
+	return checker_.NotCircular(cell, contents);
 }
 
 /* delivers messages to clients in the session
