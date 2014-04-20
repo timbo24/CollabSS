@@ -327,7 +327,7 @@ namespace SS
                     
               //  }
                // cellValue.Invoke(new Action(() => { cellValue.Text = col+row + "\r\n"; }));
-                 model.SendMessageEdit(version+"\\e"+cellName+"\\e"+cellContent.Text);
+                model.SendMessageEdit(version + (char)27 + cellName + (char)27 + cellContent.Text);
             }
         }
 
