@@ -38,7 +38,7 @@ namespace SS
         /// <summary>
         /// Constructior for the empty form.
         /// </summary>
-        public Form1(string ipaddress, int _port, SpreadsheetClient _model)
+        public Form1(string ipaddress, int _port, SpreadsheetClient _model, int _version)
         {
             InitializeComponent();
             model = _model;
@@ -58,7 +58,7 @@ namespace SS
           //  {
         //    IpAddress = ipaddress;
         //    port = _port;
-            version = 0;
+            version = _version;
         //        model.Connect(IpAddress, port, "password");
            //     connected = true;
            // }
@@ -262,7 +262,7 @@ namespace SS
         {
             // Tell the application context to run the form on the same
             // thread as the other forms.
-            DemoApplicationContext.getAppContext().RunForm(new Form1(IpAddress, port, model));
+            DemoApplicationContext.getAppContext().RunForm(new Form1(IpAddress, port, model, version));
         }
 
         /// <summary>

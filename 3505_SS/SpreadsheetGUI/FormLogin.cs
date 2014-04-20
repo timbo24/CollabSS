@@ -14,7 +14,7 @@ namespace SS
     {
         private SpreadsheetClient model;
         private string host = "localhost";
-        private int port = 2500;
+        private int port = 3000;
         
         /// <summary>
         /// For synchronizing receives
@@ -85,7 +85,7 @@ namespace SS
                 }
                 catch
                 {
-                    // TODO
+                    
                     IPAddrBox.Invoke(new Action(() => { IPAddrBox.Text = "Invalid hostname\r\n"; }));
                 }
                 // Send the word
@@ -186,13 +186,29 @@ namespace SS
         {
             if (!(line == null))
             {
+                int i = 8;
+                int vn=0;
+                string _version="";
+                while (!(line[i].Equals('\\')))
+                    _version+=line[i];
+
+                try
+                {
+                    vn = Convert.ToInt32(_version);
+                }
+                catch 
+                {
+                    Console.WriteLine("Input string for a version number is not a sequence of digits.");
+                }
+
+
                // model.Quit();               
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 // Start an application context and run one form inside it
                 DemoApplicationContext appContext = DemoApplicationContext.getAppContext();
                 
-                appContext.RunForm(new Form1(host, port, model));
+                appContext.RunForm(new Form1(host, port, model, vn));
                 Application.Run(appContext);
  
                               
