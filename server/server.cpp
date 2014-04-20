@@ -194,7 +194,7 @@ std::string server::load(std::string name)
 	{
 		std::string col1(row[0]);
 		std::string col2(row[1]);
-		load_msg += "\\e" + col1 + "\\e" + col2;
+		load_msg += "\e" + col1 + "\e" + col2;
 	}
 
 	//we don't want the last \\e so return the length -2

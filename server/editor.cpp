@@ -151,7 +151,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 	trim(message);
 
 	size_t pos = 0;
-	std::string delimiter = "\\e";
+	std::string delimiter = "\e";
 
 	pos = message.find(delimiter);
 	std::string token = message.substr(0, pos);
@@ -173,7 +173,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 			
 			for (auto i = sessions.begin(); i != sessions.end(); ++i)
 			{
-				outm += "\\e" + i->first;
+				outm += "\e" + i->first;
 				std::cout<<i->first<<std::endl;
 			}
 
@@ -195,7 +195,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 
 		if (server_->spreadsheet_exists(message))
 		{
-			outm = "UPDATE\\e";
+			outm = "UPDATE\e";
 
 			//set the session for this editor
 			session_ = server_->get_spreadsheet(message);
@@ -223,7 +223,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 		}
 		else
 		{
-			outm = "UPDATE\\e";
+			outm = "UPDATE\e";
 
 			//add the spreadsheet and set is the member spreadsheet
 			session_ = server_->add_spreadsheet(message);
@@ -239,11 +239,8 @@ void spreadsheet_editor::incoming_message(std::string message)
 	}
 	else if(token == "ENTER")
 	{
-		//TODO add circular check
-		
-
 		size_t pos = 0;
-		std::string delimiter = "\\e";
+		std::string delimiter = "\e";
 
 		pos = message.find(delimiter);
 
@@ -259,8 +256,8 @@ void spreadsheet_editor::incoming_message(std::string message)
 		if (session_->circular_check(cell, message))
 		{
 
-			outm = "UPDATE\\e" + boost::lexical_cast<std::string>(session_->get_version()) + "\\e" +
-					     cell + "\\e" + message + "\n";
+			outm = "UPDATE\e" + boost::lexical_cast<std::string>(session_->get_version()) + "\e" +
+					     cell + "\e" + message + "\n";
 
 			server_->update(session_->get_name(), cell, message);
 
@@ -269,7 +266,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 		}
 		else 
 		{
-			outm = "ERROR\\ecircular dependency\n";
+			outm = "ERROR\ecircular dependency\n";
 			std::cout<<"outgoing: " << outm << std::endl;
 
 			deliver(outm);
