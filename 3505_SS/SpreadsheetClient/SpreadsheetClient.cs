@@ -105,7 +105,7 @@ namespace SS
         {
             if (socket != null)
             {
-                socket.BeginSend("ENTER\\e" + line + "\n", (e, p) => { }, null);
+                socket.BeginSend("ENTER"+ (char)27 + line + "\n", (e, p) => { }, null);
             }
         }
 
