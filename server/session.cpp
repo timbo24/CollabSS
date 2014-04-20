@@ -22,7 +22,6 @@
  * containts a list of participants who are able to 
  * make changes to a spreadsheet
  * */
-
 spreadsheet_session::spreadsheet_session(std::string name)
 	: version_(0),
 	  name_(name)
@@ -39,6 +38,11 @@ int spreadsheet_session::get_version()
 void spreadsheet_session::increment_version()
 {
 	version_++;
+}
+
+std::string spreadsheet_session::get_name()
+{
+	return name_;
 }
 
 

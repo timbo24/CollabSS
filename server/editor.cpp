@@ -240,9 +240,21 @@ void spreadsheet_editor::incoming_message(std::string message)
 	//
 	else if(token == "ENTER")
 	{
-		outm = "OKENTER " + message + "\n";
-		std::cout<<"outgoing: " << outm << std::endl;
-		deliver(outm);
+		//TODO add circular check
+		
+		size_t pos = 0;
+		std::string delimiter = "\\e";
+
+		pos = message.find(delimiter);
+		std::string cell = message.substr(0, pos);
+
+		message.erase(0, pos + delimiter.length());
+
+		server_->update(session_->get_name(), cell, message);
+
+		outm = "UPDATE\\e" + boost::lexical_cast<std::string>(session_->get_version()) + "\\e" +
+			             cell + "\e" + message + "\e\n";
+		session_->deliver(outm);
 	}
 
 
