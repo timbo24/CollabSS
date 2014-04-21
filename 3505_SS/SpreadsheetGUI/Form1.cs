@@ -147,7 +147,7 @@ namespace SS
             {
                 string[] tokens = line.Split((Char)27);
                // cellValue.Invoke(new Action(() => { cellValue.Text = line + "\r\n"; }));
-                if (tokens[0] == "UPDATE")
+                if (tokens[0] == "UPDATE" || tokens[0] == "LOAD")
                 {
                     string vnumber = tokens[1];
                     int vnum = 0;
@@ -161,97 +161,98 @@ namespace SS
                         Console.WriteLine("Input string for a version number is not a sequence of digits.");
                     }
 
-                    cellValue.Text = tokens[2] + tokens[3];
-
-                    //Check the version number.
-                    if (false)
-                        model.SendMessageSync("RESYNC");
-                    //If the version number is as expected:
-                    else
+                    for (int k = 2; k < tokens.Length - 1; k += 2)
                     {
-                        string part1 = tokens[2];
-                        string part2 = tokens[3];
-                        // cellValue.Invoke(new Action(() => { cellValue.Text = part1+part2 + "\r\n"; }));
-                        //  sheet.SetContentsOfCell(part1, part2);
-
-                        Regex r = new Regex("^([a-zA-Z])([1-9][0-9]?)$");
-                        Match m;
-                        int col = 0, row = 0;
-
-                        m = r.Match(part1);
-                        if (m.Success)
+                        //Check the version number.
+                        if (false)
+                            model.SendMessageSync("RESYNC");
+                        //If the version number is as expected:
+                        else
                         {
-                            col = colName.IndexOf("" + m.Groups[1], 0);
-                            row = Int32.Parse("" + m.Groups[2]) - 1;
-                        }
+                            string part1 = tokens[k];
+                            string part2 = tokens[k+1];
+                            // cellValue.Invoke(new Action(() => { cellValue.Text = part1+part2 + "\r\n"; }));
+                            //  sheet.SetContentsOfCell(part1, part2);
 
-                        //this.spreadsheetPanel1.SetValue(col, row, part2);
+                            Regex r = new Regex("^([a-zA-Z])([1-9][0-9]?)$");
+                            Match m;
+                            int col = 0, row = 0;
 
-
-                        List<String> names = new List<String>(); //list of names of a cell's dependents
-
-                        try
-                        {
-                            //Setting contents of a cell and adding all its dependents to the names list.
-                            foreach (String s in sheet.SetContentsOfCell("" + colName[col] + (row + 1), part2))
+                            m = r.Match(part1);
+                            if (m.Success)
                             {
-                                names.Add(s);
+                                col = colName.IndexOf("" + m.Groups[1], 0);
+                                row = Int32.Parse("" + m.Groups[2]) - 1;
                             }
 
-                            //Display error message if the value is a FormulaError.
-                            FormulaError er;
-                            if (sheet.GetCellValue("" + colName[col] + (row + 1)) is FormulaError)
-                            {
-                                er = (FormulaError)(sheet.GetCellValue("" + colName[col] + (row + 1)));
-                                cellValue.Text = "Error: " + er.Reason;
-                                //set the cell's value to a FormulaError
-                                this.spreadsheetPanel1.SetValue(col, row, "FormulaError");
-                            }
-                            //Display a cell's value if it is not a FormulaError.
-                            else
-                            {
-                                this.spreadsheetPanel1.SetValue(col, row, (sheet.GetCellValue("" + colName[col] + (row + 1)).ToString()));
+                            //this.spreadsheetPanel1.SetValue(col, row, part2);
 
-                                //Displaying the value of edited cell in the cellValue text box.
-                                String value;
-                                this.spreadsheetPanel1.GetValue(col, row, out value);
-                                cellValue.Text = "" + value;
-                            }
 
-                            int colDependent, rowDependent;
+                            List<String> names = new List<String>(); //list of names of a cell's dependents
 
-                            String dependCells = names[0] + ", ";
-                            //Update all the dependent cells.
-                            for (int i = 1; i < names.Count; i++)
+                            try
                             {
-                                dependCells = dependCells + names[i] + ", ";
-                                m = r.Match(names[i]);
-                                if (m.Success)
+                                //Setting contents of a cell and adding all its dependents to the names list.
+                                foreach (String s in sheet.SetContentsOfCell("" + colName[col] + (row + 1), part2))
                                 {
-                                    colDependent = colName.IndexOf("" + m.Groups[1], 0);
-                                    rowDependent = Int32.Parse("" + m.Groups[2]) - 1;
-
-                                    //Display FromulaError if the value of the dependent cell is FormulaError.
-                                    if (sheet.GetCellValue(names[i]) is FormulaError)
-                                    {
-                                        er = (FormulaError)(sheet.GetCellValue(names[i]));
-                                        cellValue.Text = "Error: " + er.Reason;
-                                        this.spreadsheetPanel1.SetValue(colDependent, rowDependent, "FormulaError");
-                                    }
-                                    //Display the dependent cell value if it is not FormulaError.
-                                    else this.spreadsheetPanel1.SetValue(colDependent, rowDependent, (sheet.GetCellValue(names[i])).ToString());
+                                    names.Add(s);
                                 }
 
+                                //Display error message if the value is a FormulaError.
+                                FormulaError er;
+                                if (sheet.GetCellValue("" + colName[col] + (row + 1)) is FormulaError)
+                                {
+                                    er = (FormulaError)(sheet.GetCellValue("" + colName[col] + (row + 1)));
+                                    cellValue.Text = "Error: " + er.Reason;
+                                    //set the cell's value to a FormulaError
+                                    this.spreadsheetPanel1.SetValue(col, row, "FormulaError");
+                                }
+                                //Display a cell's value if it is not a FormulaError.
+                                else
+                                {
+                                    this.spreadsheetPanel1.SetValue(col, row, (sheet.GetCellValue("" + colName[col] + (row + 1)).ToString()));
+
+                                    //Displaying the value of edited cell in the cellValue text box.
+                                    String value;
+                                    this.spreadsheetPanel1.GetValue(col, row, out value);
+                                    cellValue.Text = "" + value;
+                                }
+
+                                int colDependent, rowDependent;
+
+                                String dependCells = names[0] + ", ";
+                                //Update all the dependent cells.
+                                for (int i = 1; i < names.Count; i++)
+                                {
+                                    dependCells = dependCells + names[i] + ", ";
+                                    m = r.Match(names[i]);
+                                    if (m.Success)
+                                    {
+                                        colDependent = colName.IndexOf("" + m.Groups[1], 0);
+                                        rowDependent = Int32.Parse("" + m.Groups[2]) - 1;
+
+                                        //Display FromulaError if the value of the dependent cell is FormulaError.
+                                        if (sheet.GetCellValue(names[i]) is FormulaError)
+                                        {
+                                            er = (FormulaError)(sheet.GetCellValue(names[i]));
+                                            cellValue.Text = "Error: " + er.Reason;
+                                            this.spreadsheetPanel1.SetValue(colDependent, rowDependent, "FormulaError");
+                                        }
+                                        //Display the dependent cell value if it is not FormulaError.
+                                        else this.spreadsheetPanel1.SetValue(colDependent, rowDependent, (sheet.GetCellValue(names[i])).ToString());
+                                    }
+
+                                }
+                                changedCells.Text = dependCells;
+
+
                             }
-                            changedCells.Text = dependCells;
-
+                            catch (Exception ex)
+                            {
+                                cellValue.Text = ex.Message;
+                            }
 
                         }
-                        catch (Exception ex)
-                        {
-                            cellValue.Text = ex.Message;
-                        }
-
                     }
                 }
                 

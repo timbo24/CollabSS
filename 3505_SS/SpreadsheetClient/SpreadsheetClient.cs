@@ -89,11 +89,23 @@ namespace SS
         /// Send a line of text to the server.
         /// </summary>
         /// <param name="line"></param>
-        public void SendMessage(String line)
+        public void CreateMessage(String line)
         {
             if (socket != null)
             {
                 socket.BeginSend("CREATE" + (Char)27 + line + "\n", (e, p) => { }, null);
+            }
+        }
+
+        /// <summary>
+        /// Send a line of text to the server.
+        /// </summary>
+        /// <param name="line"></param>
+        public void OpenMessage(String line)
+        {
+            if (socket != null)
+            {
+                socket.BeginSend("OPEN" + (Char)27 + line + "\n", (e, p) => { }, null);
             }
         }
 
@@ -126,7 +138,6 @@ namespace SS
         /// </summary>
         private void LineReceived(String s, Exception e, object p)
         {
-            Console.WriteLine("WE'RE FUCKING HERE");
             if (!(e == null))
             {
                 ServerCrashedLineEvent("Connection to Boggle Server has been lost"); //e.Message
@@ -148,22 +159,23 @@ namespace SS
                     IncomingLineEvent(s);
                     break;
                 case "UPDATE":
-                    bool newss = (tokens.Length == 2);
-
-                    if (newss)
+                    EditLineEvent(s);
+                    break;
+                case "LOAD":
+                    OpenNewLineEvent(s);
+                    if (tokens.Length > 2)
                     {
-                        OpenNewLineEvent(s);
-                    }
-                    else
-                    {
+                        Thread.Sleep(2000);
                         EditLineEvent(s);
                     }
+                    break;
+                case "ERROR":
+                    Console.WriteLine("WE DONE FUCKED UP");
                     break;
                 default:
                     IncomingLineEvent(s);
                     break;
             }
-            Console.WriteLine("WE LISTEN AGAIN");
             socket.BeginReceive(LineReceived, null);
         }
 

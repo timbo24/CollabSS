@@ -192,7 +192,10 @@ std::string server::load(std::string name)
 	{
 		std::string col1(row[0]);
 		std::string col2(row[1]);
-		load_msg += static_cast<char>(27) + col1 + static_cast<char>(27) + col2;
+		load_msg += static_cast<char>(27);
+	        load_msg += col1;
+		load_msg += static_cast<char>(27);
+		load_msg += col2;
 	}
 
 	//we don't want the last \\e so return the length -2

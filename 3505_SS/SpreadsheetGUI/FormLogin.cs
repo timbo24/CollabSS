@@ -92,7 +92,7 @@ namespace SS
                
 
                 // Send the word
-                model.SendMessage(OpenNew.Text);
+                model.CreateMessage(OpenNew.Text);
 
                 //Make all the boxes invisible except for ConnectAgain button.
                 BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = false; }));
@@ -199,26 +199,22 @@ namespace SS
                     Console.WriteLine("Input string for a version number is not a sequence of digits.");
                 }
 
-                Console.WriteLine("WE DO GET HERE THOUGH");
-
-
+                //run the new form on a new thread
                 Thread oThread = new Thread(new ThreadStart( () => {  Application.EnableVisualStyles();
-               // Application.SetCompatibleTextRenderingDefault(false);
-                // Start an application context and run one form inside it
-                DemoApplicationContext appContext = DemoApplicationContext.getAppContext();
-                appContext.RunForm(new Form1(host, port, model, vn));
-                Application.Run(appContext);
+                    // Application.SetCompatibleTextRenderingDefault(false);
+                    // Start an application context and run one form inside it
+                    DemoApplicationContext appContext = DemoApplicationContext.getAppContext();
+                    appContext.RunForm(new Form1(host, port, model, vn));
+                    Application.Run(appContext);
 
-            }));
+                }));
 
                 // Start the thread
                 oThread.Start();
-
-                Console.WriteLine("WE SHOULD NOW CALLBACK");
- 
-                              
             }
         }
+
+      
 
         /// <summary>
         /// Disconnect the client when "disconnect button is pressed".
@@ -229,6 +225,30 @@ namespace SS
             model.Quit();
             MessageBox.Show("Disconnected from\r\nBoggle Server.");
         }
+
+        private void EnterExisting_Click(object sender, EventArgs e)
+        {
+            // Send the word
+            model.OpenMessage(OpenExisting.Text);
+
+            //Make all the boxes invisible except for ConnectAgain button.
+            BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = false; }));
+            SSList.Invoke(new Action(() => { SSList.Visible = false; }));
+            label2.Invoke(new Action(() => { label2.Visible = false; }));
+            EnterNew.Invoke(new Action(() => { EnterNew.Visible = false; }));
+            OpenNew.Invoke(new Action(() => { OpenNew.Visible = false; }));
+            label6.Invoke(new Action(() => { label6.Visible = false; }));
+            OpenExisting.Invoke(new Action(() => { OpenExisting.Visible = false; }));
+            EnterExisting.Invoke(new Action(() => { EnterExisting.Visible = false; }));
+            connectAgain.Invoke(new Action(() => { connectAgain.Visible = true; }));
+            NameTextBox.Invoke(new Action(() => { NameTextBox.Visible = false; }));
+            IPAddrBox.Invoke(new Action(() => { IPAddrBox.Visible = false; }));
+            ConnectButton.Invoke(new Action(() => { ConnectButton.Visible = false; }));
+            label1.Invoke(new Action(() => { label1.Visible = false; }));
+            label3.Invoke(new Action(() => { label3.Visible = false; }));
+        }
+
+        
     }
 
     public class LoadForm

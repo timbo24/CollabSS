@@ -212,6 +212,7 @@
             this.EnterExisting.Text = "Enter Name";
             this.EnterExisting.UseVisualStyleBackColor = true;
             this.EnterExisting.Visible = false;
+            this.EnterExisting.Click += new System.EventHandler(this.EnterExisting_Click);
             // 
             // connectAgain
             // 
