@@ -98,6 +98,7 @@
             this.SSList.Multiline = true;
             this.SSList.Name = "SSList";
             this.SSList.ReadOnly = true;
+            this.SSList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.SSList.Size = new System.Drawing.Size(156, 138);
             this.SSList.TabIndex = 4;
             this.SSList.Visible = false;
