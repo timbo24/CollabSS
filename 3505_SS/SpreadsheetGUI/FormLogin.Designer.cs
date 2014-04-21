@@ -45,6 +45,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.EnterExisting = new System.Windows.Forms.Button();
             this.connectAgain = new System.Windows.Forms.Button();
+            this.SSNewName = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // NameTextBox
@@ -105,7 +106,7 @@
             // 
             // EnterNew
             // 
-            this.EnterNew.Location = new System.Drawing.Point(156, 314);
+            this.EnterNew.Location = new System.Drawing.Point(156, 345);
             this.EnterNew.Name = "EnterNew";
             this.EnterNew.Size = new System.Drawing.Size(73, 23);
             this.EnterNew.TabIndex = 5;
@@ -155,7 +156,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 288);
+            this.label2.Location = new System.Drawing.Point(12, 309);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(138, 15);
             this.label2.TabIndex = 27;
@@ -166,7 +167,7 @@
             // 
             this.OpenNew.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.OpenNew.Location = new System.Drawing.Point(156, 286);
+            this.OpenNew.Location = new System.Drawing.Point(156, 309);
             this.OpenNew.Name = "OpenNew";
             this.OpenNew.Size = new System.Drawing.Size(154, 20);
             this.OpenNew.TabIndex = 28;
@@ -187,7 +188,7 @@
             // 
             this.OpenExisting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.OpenExisting.Location = new System.Drawing.Point(498, 283);
+            this.OpenExisting.Location = new System.Drawing.Point(498, 309);
             this.OpenExisting.Name = "OpenExisting";
             this.OpenExisting.Size = new System.Drawing.Size(156, 20);
             this.OpenExisting.TabIndex = 30;
@@ -197,7 +198,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(328, 288);
+            this.label6.Location = new System.Drawing.Point(328, 309);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(164, 15);
             this.label6.TabIndex = 31;
@@ -206,7 +207,7 @@
             // 
             // EnterExisting
             // 
-            this.EnterExisting.Location = new System.Drawing.Point(498, 309);
+            this.EnterExisting.Location = new System.Drawing.Point(498, 345);
             this.EnterExisting.Name = "EnterExisting";
             this.EnterExisting.Size = new System.Drawing.Size(73, 23);
             this.EnterExisting.TabIndex = 32;
@@ -226,12 +227,29 @@
             this.connectAgain.Visible = false;
             this.connectAgain.Click += new System.EventHandler(this.connectAgain_Click);
             // 
+            // SSNewName
+            // 
+            this.SSNewName.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SSNewName.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.SSNewName.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.SSNewName.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SSNewName.Location = new System.Drawing.Point(15, 280);
+            this.SSNewName.Multiline = true;
+            this.SSNewName.Name = "SSNewName";
+            this.SSNewName.ReadOnly = true;
+            this.SSNewName.Size = new System.Drawing.Size(639, 23);
+            this.SSNewName.TabIndex = 34;
+            this.SSNewName.Visible = false;
+            // 
             // FormLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.ClientSize = new System.Drawing.Size(721, 420);
+            this.Controls.Add(this.SSNewName);
             this.Controls.Add(this.connectAgain);
             this.Controls.Add(this.EnterExisting);
             this.Controls.Add(this.label6);
@@ -275,6 +293,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button EnterExisting;
         private System.Windows.Forms.Button connectAgain;
+        private System.Windows.Forms.TextBox SSNewName;
     }
 }
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace SS
 {
@@ -89,8 +90,16 @@ namespace SS
          //           IPAddrBox.Invoke(new Action(() => { IPAddrBox.Text = "Invalid hostname\r\n"; }));
           //      }
 
-               
+            string ssname = OpenNew.Text;
+            if (!ValidName(ssname))
+            {
+                SSNewName.Invoke(new Action(() => { SSNewName.Visible = true; }));
+                SSNewName.Invoke(new Action(() => { SSNewName.Text = "Entered name is invalid. A name should start with a letter and have only letters and numbers. Please try again." + "\r\n"; }));
+                return;
+            }
 
+            else
+            {
                 // Send the word
                 model.CreateMessage(OpenNew.Text);
 
@@ -109,10 +118,10 @@ namespace SS
                 ConnectButton.Invoke(new Action(() => { ConnectButton.Visible = false; }));
                 label1.Invoke(new Action(() => { label1.Visible = false; }));
                 label3.Invoke(new Action(() => { label3.Visible = false; }));
+                SSNewName.Invoke(new Action(() => { SSNewName.Visible = false; }));
 
-                // Clear the textbox
-               // OpenNew.Text = "";
-
+                
+            }
             
                
         }
@@ -246,6 +255,26 @@ namespace SS
             ConnectButton.Invoke(new Action(() => { ConnectButton.Visible = false; }));
             label1.Invoke(new Action(() => { label1.Visible = false; }));
             label3.Invoke(new Action(() => { label3.Visible = false; }));
+            SSNewName.Invoke(new Action(() => { SSNewName.Visible = false; }));
+        }
+
+        /// <summary>
+        /// Checks if the name is not null and if it starts with 1 or more letters, followed by one or more numbers.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private bool ValidName(String name)
+        {
+
+            if (name == null)
+                return false;
+            Regex r;
+            Match m;
+            r = new Regex(@"^([a-zA-Z]+)([a-zA-Z1-9]\d*)$");
+            m = r.Match(name);
+            if (m.Success)
+                return true;
+            else return false;
         }
 
         
