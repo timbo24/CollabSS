@@ -48,7 +48,7 @@ namespace SS
            // model.OpenNewLineEvent += OpenNewSS;
 
             
-            sheet = new Spreadsheet(isValid, convertToUpper, "ps6");
+            sheet = new Spreadsheet(isValid, convertToUpper, "0");
 
             spreadsheetPanel1.SelectionChanged += displaySelection;
             spreadsheetPanel1.SetSelection(0, 0);
@@ -161,6 +161,23 @@ namespace SS
                         Console.WriteLine("Input string for a version number is not a sequence of digits.");
                     }
 
+		    //______________________________________________________________________Start Mark's Edits
+		    //If the message is a sync, clear the sheet
+                        if (tokens[0] == "SYNC")
+                        {
+                            this.sheet = new Spreadsheet(isValid, convertToUpper, vnumber);
+                            this.spreadsheetPanel1.Clear();
+                        }
+
+                        //get the client version number as an int
+                        int cvnum = Convert.ToInt32(sheet.Version);
+
+                        //Check the version number.
+                        if ((vnum != (1+cvnum)) && tokens[0] != "SYNC")
+			{
+                            model.SendMessageSync("RESYNC");
+			}
+/*
                      //Check the version number.
                         if (version!=vnum)
                             model.SendMessageSync("RESYNC");
@@ -168,6 +185,15 @@ namespace SS
                         else
                         {
                             version++;
+*/
+
+
+		    
+
+		    else
+		    {
+		    	sheet.Version = vnumber;	 
+		    //______________________________________________________________________________End Mark's Edits   
 
                     for (int k = 2; k < tokens.Length - 1; k += 2)
                     {
@@ -258,6 +284,7 @@ namespace SS
                         }
                         
                     }
+		    }
                 }
                 
             }
