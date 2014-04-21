@@ -240,6 +240,21 @@ void server::update(std::string ssname, std::string cell, std::string contents)
 	}
 	else
 	{
+		size_t pos = 0;
+		while (pos < contents.length() && contents.find('\\', pos) != string::npos)
+		{
+			pos = contents.find('\\', pos);
+			contents.insert(pos, "\\");
+			pos += 2;
+		}
+
+		pos = 0;
+		while (pos < contents.length() && contents.find('"', pos) != string::npos)
+		{
+			pos = contents.find('"', pos);
+			contents.insert(pos, "\\");
+			pos += 2;
+		}
 
 		//update the database with new cell contents
 		sql_update  = "INSERT into Cell (ssname, cell, contents) VALUES ( \"" + ssname +   "\"," + 
