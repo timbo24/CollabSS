@@ -48,7 +48,7 @@ namespace SS
            // model.OpenNewLineEvent += OpenNewSS;
 
             
-            sheet = new Spreadsheet(isValid, convertToUpper, "0");
+            sheet = new Spreadsheet(isValid, convertToUpper, "ps6");
 
             spreadsheetPanel1.SelectionChanged += displaySelection;
             spreadsheetPanel1.SetSelection(0, 0);
@@ -147,7 +147,7 @@ namespace SS
             {
                 string[] tokens = line.Split((Char)27);
                // cellValue.Invoke(new Action(() => { cellValue.Text = line + "\r\n"; }));
-                if (tokens[0] == "UPDATE" || tokens[0] == "LOAD")
+                if (tokens[0] == "UPDATE" || tokens[0] == "LOAD" || tokens[0] == "SYNC")
                 {
                     string vnumber = tokens[1];
                     int vnum = 0;
@@ -170,13 +170,13 @@ namespace SS
                         }
 
                         //get the client version number as an int
-                        int cvnum = Convert.ToInt32(sheet.Version);
+                        //int cvnum = Convert.ToInt32(sheet.Version);
 
                         //Check the version number.
-                        if ((vnum != (1+cvnum)) && tokens[0] != "SYNC")
-			{
+                        if ((vnum != (1+version)) && tokens[0] != "SYNC")
+			            {
                             model.SendMessageSync("RESYNC");
-			}
+			            }
 /*
                      //Check the version number.
                         if (version!=vnum)
@@ -192,7 +192,7 @@ namespace SS
 
 		    else
 		    {
-		    	sheet.Version = vnumber;	 
+		    	version = vnum;	 
 		    //______________________________________________________________________________End Mark's Edits   
 
                     for (int k = 2; k < tokens.Length - 1; k += 2)
@@ -283,7 +283,7 @@ namespace SS
 
                         }
                         
-                    }
+                    
 		    }
                 }
                 

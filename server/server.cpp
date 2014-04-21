@@ -99,8 +99,6 @@ void server::populate_sessions()
 
 		sessions_.insert( std::pair<std::string, spreadsheet_session_ptr>(row[0],new_session));
 	}
-
-
 }
 
 
@@ -240,6 +238,7 @@ void server::update(std::string ssname, std::string cell, std::string contents)
 	}
 	else
 	{
+		//Escape both " and \ characters so they don't interfere with MySQL query
 		size_t pos = 0;
 		while (pos < contents.length() && contents.find('\\', pos) != string::npos)
 		{

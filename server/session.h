@@ -32,7 +32,6 @@ class spreadsheet_session
 		bool undo_empty();
 	private:
 		std::set<participant_ptr> participants_;
-
 		server* server_;
 		enum { max_recent_msgs = 100 };
 		message_queue recent_msgs_;

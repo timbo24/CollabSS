@@ -87,14 +87,40 @@ void spreadsheet_editor::deliver(const std::string& msg)
 	}
 }
 
+
+
+/* callback function after a write to a client, pops messages from the message_queue
+ * and calls asyncwrite again if there are more messages
+ * */
+void spreadsheet_editor::handle_write(const boost::system::error_code& error)
+{
+	if (!error)
+	{
+		std::cout<<"\n\nGET'S CALLED\n\n"<<std::endl;
+		mtx.lock();
+		write_msgs_.pop_front();
+		mtx.unlock();
+		if (!write_msgs_.empty())
+		{
+			boost::asio::async_write(socket_,
+			    boost::asio::buffer(write_msgs_.front(),
+			      write_msgs_.front().length()),
+			    boost::bind(&spreadsheet_editor::handle_write, shared_from_this(),
+			      boost::asio::placeholders::error));
+		}
+		std::cout<<"\n\nGET'S CALLED\n\n"<<std::endl;
+	}
+	else
+	{
+	}
+}
+
 /* callback for strings read in from clients
  * if there is an error, the client is removed from
  * the session
  * */
 void spreadsheet_editor::handle_read(const boost::system::error_code& error)
 {
-
-
 	if (!error)
 	{
 		mtx.lock();
@@ -112,40 +138,16 @@ void spreadsheet_editor::handle_read(const boost::system::error_code& error)
 	{
 
 		std::cout << error.message() << std::endl;
-		//session_.leave(shared_from_this());
 	}
 }
 
 
-/* callback function after a write to a client, pops messages from the message_queue
- * and calls asyncwrite again if there are more messages
- * */
-void spreadsheet_editor::handle_write(const boost::system::error_code& error)
-{
-	if (!error)
-	{
-		write_msgs_.pop_front();
-		if (!write_msgs_.empty())
-		{
-			boost::asio::async_write(socket_,
-			    boost::asio::buffer(write_msgs_.front(),
-			      write_msgs_.front().length()),
-			    boost::bind(&spreadsheet_editor::handle_write, shared_from_this(),
-			      boost::asio::placeholders::error));
-		}
-	}
-	else
-	{
-		//session_.leave(shared_from_this());
-	}
-}
 
 
 void spreadsheet_editor::incoming_message(std::string message)
 {
-	//trim the endline from the string
-	std::cout<<"incoming: " << message<< std::endl;
 
+	//trim the endline from the string
 	size_t pos = 0;
 	char delimiter = static_cast<char>(27);
 
@@ -159,7 +161,6 @@ void spreadsheet_editor::incoming_message(std::string message)
 	//resquest a login by providing a password
 	if(token == "PASSWORD")
 	{
-		std::cout<<"\n\n1\n\n"<<std::endl;
 		if (message == PASSWORD)
 		{
 			outm = "FILELIST";
@@ -174,6 +175,8 @@ void spreadsheet_editor::incoming_message(std::string message)
 			}
 
 			outm += "\n";
+
+			std::cout<<"**\n**\nOUTGOING       : " + outm + "\n**\n**"<<std::endl;
 			
 			deliver(outm);
 		}
@@ -186,11 +189,10 @@ void spreadsheet_editor::incoming_message(std::string message)
 	//Open SS request, if one does not exist, error is sent back
 	else if(token == "OPEN")
 	{
-		std::cout<<"\n\n2\n\n"<<std::endl;
 
 		if (server_->spreadsheet_exists(message))
 		{
-			outm = "LOAD";
+			outm = "UPDATE";
 			outm += static_cast<char>(27);
 
 			//set the session for this editor
@@ -214,13 +216,11 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		if (server_->spreadsheet_exists(message))
 		{
-			std::cout<<"\n\n3\n\n"<<std::endl;
 			outm = "ERROR\n";
 		}
 		else
 		{
-			std::cout<<"\n\n8\n\n"<<std::endl;
-			outm = "LOAD";
+			outm = "UPDATE";
 			outm += static_cast<char>(27);
 
 			//add the spreadsheet and set is the member spreadsheet
@@ -229,6 +229,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 			session_->join(shared_from_this());
 
 			outm += boost::lexical_cast<std::string>(session_->get_version()) + "\n";
+
 		}
 
 
@@ -236,7 +237,6 @@ void spreadsheet_editor::incoming_message(std::string message)
 	}
 	else if(token == "ENTER")
 	{
-		std::cout<<"\n\n4\n\n"<<std::endl;
 
 		pos = 0;
 		pos = message.find(delimiter);
@@ -249,6 +249,10 @@ void spreadsheet_editor::incoming_message(std::string message)
 		//Circular dependency check
 		if (session_->circular_check(cell, message))
 		{
+			session_->register_old(cell);
+
+			server_->update(session_->get_name(), cell, message);
+
 			outm = "UPDATE";
 		        outm += static_cast<char>(27);
 			outm += boost::lexical_cast<std::string>(session_->get_version());
@@ -256,10 +260,6 @@ void spreadsheet_editor::incoming_message(std::string message)
 			outm += cell;
 			outm += static_cast<char>(27);
 			outm += message + "\n";
-
-			session_->register_old(cell);
-
-			server_->update(session_->get_name(), cell, message);
 
 			session_->deliver(outm);
 		}
@@ -276,7 +276,6 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 	  //code is pulled directly from load, LOAD replaced with SYNC in the message
 	  //-------------------------------------------
-		std::cout<<"\n\n2\n\n"<<std::endl;
 
 		if (server_->spreadsheet_exists(message))
 		{
@@ -305,25 +304,11 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		if (!session_->undo_empty())
 		{
+
 			outm = session_->undo();
-			std::string temp = outm;
 
-			pos = 0;
-			pos = temp.find(delimiter);
-			temp.erase(0, pos + 1);
-
-			pos = temp.find(delimiter);
-			temp.erase(0, pos + 1);
-
-			pos = temp.find(delimiter);
-			std::string cell = temp.substr(0, pos);
-			temp.erase(0, pos + 1);
-
-
-			server_->update(session_->get_name(), cell, temp);
 			session_->deliver(outm);
 		}
-		//TODO
 		
 	}
 

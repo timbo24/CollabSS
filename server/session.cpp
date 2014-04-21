@@ -55,9 +55,6 @@ std::string spreadsheet_session::get_name()
 void spreadsheet_session::join(participant_ptr prt)
 {
 	participants_.insert(prt);
-	/*std::for_each(recent_msgs_.begin(), recent_msgs_.end(),
-		boost::bind(&participant::deliver, prt, _1));
-		*/
 }
 
 /* remove a participant from the session
@@ -111,6 +108,7 @@ void spreadsheet_session::register_old(std::string cell)
 
 	undo_stack_.push(to_push);
 
+
 }
 
 
@@ -127,19 +125,29 @@ bool spreadsheet_session::undo_empty()
  */
 std::string spreadsheet_session::undo()
 {
-	version_++;
+
+	char delimiter = static_cast<char>(27);
+
+	std::string update = undo_stack_.top();
+	undo_stack_.pop();
+	std::string temp = update;
+
+	temp.erase(0,1);
+	size_t pos = 0;
+	pos = temp.find(delimiter);
+	std::string cell = temp.substr(0,pos);
+
+	temp.erase(0, pos + 1);
+
+	server_->update(name_, cell, temp);
 
 	//save the top element
 	std::string to_return = "UPDATE";
 	to_return += static_cast<char>(27);
 	to_return += boost::lexical_cast<std::string>(version_);
-	to_return += std::string(undo_stack_.top());
+	to_return += update;
 	to_return += "\n";
-
-	//pop the stack
-	undo_stack_.pop();
 
 	//return the element
 	return to_return;
-  
 }
