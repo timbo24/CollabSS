@@ -208,6 +208,9 @@ namespace SS
                 case "ERROR":
                     Console.WriteLine("WE DONE ...");
                     break;
+                case "SYNC":
+     
+
                 default:
                     IncomingLineEvent(s);
                     break;

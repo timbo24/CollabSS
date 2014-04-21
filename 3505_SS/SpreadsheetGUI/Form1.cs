@@ -161,14 +161,17 @@ namespace SS
                         Console.WriteLine("Input string for a version number is not a sequence of digits.");
                     }
 
-                    for (int k = 2; k < tokens.Length - 1; k += 2)
-                    {
-                        //Check the version number.
-                        if (false)
+                     //Check the version number.
+                        if (version!=vnum)
                             model.SendMessageSync("RESYNC");
                         //If the version number is as expected:
                         else
                         {
+                            version++;
+
+                    for (int k = 2; k < tokens.Length - 1; k += 2)
+                    {
+                       
                             string part1 = tokens[k];
                             string part2 = tokens[k+1];
                             // cellValue.Invoke(new Action(() => { cellValue.Text = part1+part2 + "\r\n"; }));
@@ -253,6 +256,7 @@ namespace SS
                             }
 
                         }
+                        
                     }
                 }
                 
