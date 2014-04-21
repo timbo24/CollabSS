@@ -1,4 +1,5 @@
 
+#include <boost/lexical_cast.hpp>
 #include "Circles/CircleChecker.h"
 #include <string>
 #include <algorithm>
@@ -29,8 +30,6 @@ spreadsheet_session::spreadsheet_session(std::string name, server* server)
 	  server_(server),
 	  checker_()
 {
-	 UndoStack = new std::stack<std::string>();
-
 }
 
 /* get current version for a spreadseet
@@ -93,49 +92,54 @@ void spreadsheet_session::deliver(const std::string& msg)
  *
  *Parameter is a list of variable names to register the old value of.
  */
-void spreadsheet_session::registerOld(std::set<std::string> cells, std::string sheet)
+void spreadsheet_session::register_old(std::string cell)
 {
-  //variable to store the final update command to push
-  std::string toPush = "";
-  
-  //query the old contents of each cell
-  for (auto addIt = cells.begin() ; addIt != cells.end() ; ++ addIt)
-  {
+	//variable to store the final update command to push
+	std::string to_push = "";
 
-	  std::string contents = server_->get_old(sheet, *addIt);
+	//query the old contents of each cell
 
-    //create an sql select statement
-     
-    //now append the cell name and contents to the string
-    toPush += static_cast<char>(27) + *addIt + static_cast<char>(27) + contents;
-    
-  }
-  
+	std::string contents = server_->get_old(name_, cell);
 
-  toPush += "\n";
 
-    UndoStack->push(toPush);
+	//now append the cell name and contents to the string
+	to_push += static_cast<char>(27);
+	to_push += cell;
+	to_push += static_cast<char>(27);
+	to_push += contents;
+
+
+	undo_stack_.push(to_push);
 
 }
 
 
 
+bool spreadsheet_session::undo_empty()
+{
+	return undo_stack_.empty();
+}
 
 /*Returns a string that can be used as a spreadsheet update to undo the last change made to the spreadsheet.
  *
  *This change should not have registerOld called on it like a normal spreadsheet update or you will just 
  *keep looping back over the same changes.
  */
-std::string spreadsheet_session::undo(std::string version)
+std::string spreadsheet_session::undo()
 {
-  //save the top element
-  std::string toReturn = "UPDATE\e" + version;
-  toReturn += std::string(UndoStack->top());
+	version_++;
 
-  //pop the stack
-  UndoStack->pop();
+	//save the top element
+	std::string to_return = "UPDATE";
+	to_return += static_cast<char>(27);
+	to_return += boost::lexical_cast<std::string>(version_);
+	to_return += std::string(undo_stack_.top());
+	to_return += "\n";
 
-  //return the element
-  return toReturn;
+	//pop the stack
+	undo_stack_.pop();
+
+	//return the element
+	return to_return;
   
 }

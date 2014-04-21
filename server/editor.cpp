@@ -257,6 +257,8 @@ void spreadsheet_editor::incoming_message(std::string message)
 			outm += static_cast<char>(27);
 			outm += message + "\n";
 
+			session_->register_old(cell);
+
 			server_->update(session_->get_name(), cell, message);
 
 			session_->deliver(outm);
@@ -273,6 +275,31 @@ void spreadsheet_editor::incoming_message(std::string message)
 	else if(token == "RESYNC")
 	{
 		//TODO resync
+	}
+	else if(token == "UNDO")
+	{
+		if (!session_->undo_empty())
+		{
+			outm = session_->undo();
+			std::string temp = outm;
+
+			pos = 0;
+			pos = temp.find(delimiter);
+			temp.erase(0, pos + 1);
+
+			pos = temp.find(delimiter);
+			temp.erase(0, pos + 1);
+
+			pos = temp.find(delimiter);
+			std::string cell = temp.substr(0, pos);
+			temp.erase(0, pos + 1);
+
+
+			server_->update(session_->get_name(), cell, temp);
+			session_->deliver(outm);
+		}
+		//TODO
+		
 	}
 
 	else

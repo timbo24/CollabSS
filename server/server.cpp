@@ -232,11 +232,21 @@ spreadsheet_session* server::add_spreadsheet(std::string name)
  * */
 void server::update(std::string ssname, std::string cell, std::string contents)
 {
-	//update the database with new cell contents
-	std::string sql_update  = "INSERT into Cell (ssname, cell, contents) VALUES ( \"" + ssname +   "\"," + 
-		                                                                     "\"" + cell +     "\"," +
-										     "\"" + contents + "\")" +
-				   "ON DUPLICATE KEY UPDATE contents = \"" + contents + "\"";
+	std::string sql_update = "";
+	if (trim(contents) == "")
+	{
+		sql_update  = "DELETE from Cell WHERE ssname = \"" + ssname + "\"" +
+		                                                         " and cell = \"" + cell + "\"";
+	}
+	else
+	{
+
+		//update the database with new cell contents
+		sql_update  = "INSERT into Cell (ssname, cell, contents) VALUES ( \"" + ssname +   "\"," + 
+											     "\"" + cell +     "\"," +
+											     "\"" + contents + "\")" +
+					   "ON DUPLICATE KEY UPDATE contents = \"" + contents + "\"";
+	}
 
 	if ( mysql_query (connection_, sql_update.c_str()) )
 	{
@@ -254,7 +264,7 @@ void server::update(std::string ssname, std::string cell, std::string contents)
  * */
 std::string server::get_old(std::string sheet, std::string cellname)
 {
-    std::string undo_query = "SELECT contents FROM cell WHERE ssname = '" + sheet + "' AND cell = '" + cellname + "'";
+    std::string undo_query = "SELECT contents FROM Cell WHERE ssname = '" + sheet + "' AND cell = '" + cellname + "'";
 
     //variable to store the old cell contents
     std::string contents = "";
@@ -282,6 +292,10 @@ std::string server::get_old(std::string sheet, std::string cellname)
 	{
 	  contents = resultRow[0];
 	}
+    }
+    else
+    {
+	    contents += "  ";
     }
 
     return contents;

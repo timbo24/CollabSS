@@ -27,8 +27,9 @@ class spreadsheet_session
 		void increment_version();
 		std::string get_name();
 		bool circular_check(std::string cell, std::string contents);
-		std::string undo(std::string version);
-		void registerOld(std::set<std::string> cells, std::string sheet);
+		std::string undo();
+		void register_old(std::string cell);
+		bool undo_empty();
 	private:
 		std::set<participant_ptr> participants_;
 
@@ -38,7 +39,7 @@ class spreadsheet_session
 		int version_;
 		std::string name_;
 		CircleChecker checker_;
-		std::stack<std::string> *UndoStack;
+		std::stack<std::string> undo_stack_;
 };
 
 
