@@ -158,6 +158,18 @@ namespace SS
         }
 
         /// <summary>
+        /// Send a Disconnect command to the server.
+        /// </summary>
+        /// <param name="line"></param>
+        public void DisconnectRequest(String line)
+        {
+            if (socket != null)
+            {
+                socket.BeginSend(line, (e, p) => { }, null);
+            }
+        }
+
+        /// <summary>
         /// Deal with an arriving line of text.
         /// </summary>
         private void LineReceived(String s, Exception e, object p)

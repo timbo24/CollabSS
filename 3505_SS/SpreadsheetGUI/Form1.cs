@@ -411,12 +411,14 @@ namespace SS
 
                                     case DialogResult.No:
                                         e.Cancel = true;
+                                        model.DisconnectRequest("DISCONNECT\n");
                                         return;
                                 }
                                 
                             }
                             break;
                         case DialogResult.No:
+                            model.DisconnectRequest("DISCONNECT\n");
                             return;
                         case DialogResult.Cancel:
                             e.Cancel = true;
