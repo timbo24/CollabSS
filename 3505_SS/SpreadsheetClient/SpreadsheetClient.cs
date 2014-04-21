@@ -134,10 +134,22 @@ namespace SS
         }
 
         /// <summary>
-        /// Send a line of text to the server.
+        /// Send an UNDO command to the server.
         /// </summary>
         /// <param name="line"></param>
         public void SendUndo(String line)
+        {
+            if (socket != null)
+            {
+                socket.BeginSend(line, (e, p) => { }, null);
+            }
+        }
+
+        /// <summary>
+        /// Send a Save command to the server.
+        /// </summary>
+        /// <param name="line"></param>
+        public void SaveRequest(String line)
         {
             if (socket != null)
             {
