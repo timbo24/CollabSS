@@ -145,36 +145,30 @@ namespace SS
         {
             if ((!(line == null)))
             {
-                if (line.StartsWith("INVALID"))
-                {
-                  BigTextBox.Invoke(new Action(() => { BigTextBox.Visible=true; }));
-                  BigTextBox.Invoke(new Action(() => { BigTextBox.Text = "Entered password is invalid. Please try again." + "\r\n"; }));
-                }
-                else if (line.StartsWith("FILELIST"))
-                {
-                                        
-                    String files = "";
-                    for (int i = 10; i < line.Length; i++)
-                    {
-                        if (line[i].Equals('\\'))
-                        {
-                            files += "\r\n";
-                            i++;
-                        }
-                        else files += line[i];
-                    }
+			    string[] tokens = line.Split((Char)27);
+			    switch (tokens[0])
+			    {
+				    case "INVALID":
+					    BigTextBox.Invoke(new Action(() => { BigTextBox.Visible=true; }));
+					    BigTextBox.Invoke(new Action(() => { BigTextBox.Text = "Entered password is invalid. Please try again." + "\r\n"; }));
+					    break;
+				    case "FILELIST":
+					    string files = "";
+					    for (int i = 1; i < tokens.Length; i++)
+					    {
+						    files += tokens[i] + "\r\n";
+					    }
+                        SSList.Text = files;
 
-                    SSList.Text = files;
-
-                    BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = false; }));
-                    SSList.Invoke(new Action(() => { SSList.Visible = true; }));
-                    label2.Invoke(new Action(() => { label2.Visible = true; }));
-                    EnterNew.Invoke(new Action(() => { EnterNew.Visible = true; }));
-                    OpenNew.Invoke(new Action(() => { OpenNew.Visible = true; }));
-                    label6.Invoke(new Action(() => { label6.Visible = true; }));
-                    OpenExisting.Invoke(new Action(() => { OpenExisting.Visible = true; }));
-                    EnterExisting.Invoke(new Action(() => { EnterExisting.Visible = true; }));
-
+                        BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = false; }));
+                        SSList.Invoke(new Action(() => { SSList.Visible = true; }));
+                        label2.Invoke(new Action(() => { label2.Visible = true; }));
+                        EnterNew.Invoke(new Action(() => { EnterNew.Visible = true; }));
+                        OpenNew.Invoke(new Action(() => { OpenNew.Visible = true; }));
+                        label6.Invoke(new Action(() => { label6.Visible = true; }));
+                        OpenExisting.Invoke(new Action(() => { OpenExisting.Visible = true; }));
+                        EnterExisting.Invoke(new Action(() => { EnterExisting.Visible = true; }));
+                        break;
                 }
                    
                // Thread.Sleep(500); 
@@ -192,33 +186,35 @@ namespace SS
         {
             if (!(line == null))
             {
-                int i = 7;
-                int vn=0;
-                string _version="";
-                for (i = 7; i < line.Length; i++)
-                    if (line[i].Equals('\\'))
-                        break;
-                    else _version += line[i];
+                string[] tokens = line.Split((Char)27);
 
-                
+                int vn=0;
+
                 try
                 {
-                    vn = Convert.ToInt32(_version);
+                    vn = Convert.ToInt32(tokens[1]);
                 }
                 catch 
                 {
                     Console.WriteLine("Input string for a version number is not a sequence of digits.");
                 }
 
+                Console.WriteLine("WE DO GET HERE THOUGH");
 
-               // model.Quit();               
-                Application.EnableVisualStyles();
+
+                Thread oThread = new Thread(new ThreadStart( () => {  Application.EnableVisualStyles();
                // Application.SetCompatibleTextRenderingDefault(false);
                 // Start an application context and run one form inside it
                 DemoApplicationContext appContext = DemoApplicationContext.getAppContext();
-                
                 appContext.RunForm(new Form1(host, port, model, vn));
                 Application.Run(appContext);
+
+            }));
+
+                // Start the thread
+                oThread.Start();
+
+                Console.WriteLine("WE SHOULD NOW CALLBACK");
  
                               
             }

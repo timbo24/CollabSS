@@ -60,13 +60,13 @@ namespace SS
                 TcpClient client = new TcpClient(hostname, port);
                 socket = new StringSocket(client.Client, UTF8Encoding.Default);
                 isConnected = true;
-                socket.BeginSend("PASSWORD\\e" + name + "\n", (e, p) => { }, null);
+                socket.BeginSend("PASSWORD" + (Char)27 + name + "\n", (e, p) => { }, null);
                 Thread.Sleep(200);
                 socket.BeginReceive(LineReceived, null);
             }
             else
             {
-                socket.BeginSend("PASSWORD\\e" + name + "\n", (e, p) => { }, null);
+                socket.BeginSend("PASSWORD"+ (Char)27 + name + "\n", (e, p) => { }, null);
                 Thread.Sleep(200);
                 socket.BeginReceive(LineReceived, null);
             }
@@ -93,7 +93,7 @@ namespace SS
         {
             if (socket != null)
             {
-                socket.BeginSend("CREATE\\e" +line + "\n", (e, p) => { }, null);
+                socket.BeginSend("CREATE" + (Char)27 + line + "\n", (e, p) => { }, null);
             }
         }
 
@@ -105,7 +105,7 @@ namespace SS
         {
             if (socket != null)
             {
-                socket.BeginSend("ENTER"+ (char)27 + line + "\n", (e, p) => { }, null);
+                socket.BeginSend(line, (e, p) => { }, null);
             }
         }
 
@@ -126,47 +126,44 @@ namespace SS
         /// </summary>
         private void LineReceived(String s, Exception e, object p)
         {
+            Console.WriteLine("WE'RE FUCKING HERE");
             if (!(e == null))
             {
                 ServerCrashedLineEvent("Connection to Boggle Server has been lost"); //e.Message
                 return;
             }
-            // If it is null, or starts with IGNORE, simply return
-            if (s == null || s.StartsWith("IGNORING")) //&&(IncomingLineEvent != null))
+
+            string[] tokens = s.Split((Char)27);
+
+               // If it is null, or starts with IGNORE, simply return
+            if (s == null || tokens[0] == "IGNORING") //&&(IncomingLineEvent != null))
             {
                 Thread.Sleep(200);
                 return;
             }
 
-            
+            switch (tokens[0])
+            {
+                case "FILELIST":
+                    IncomingLineEvent(s);
+                    break;
+                case "UPDATE":
+                    bool newss = (tokens.Length == 2);
 
-            if (s.StartsWith("FILELIST"))
-            {
-                //StartLineEvent(board, opponentName);
-                IncomingLineEvent(s);
-            }
-            else if (s.StartsWith("UPDATE"))
-            {
-                bool newss=true;
-                int i = 7;
-                for (i=7; i<s.Length; i++)
-                    if ((s[i].Equals('\\'))&&(s[i+1].Equals('e')))
-                    { 
-                        newss=false;
-                        break;
+                    if (newss)
+                    {
+                        OpenNewLineEvent(s);
                     }
-
-               if(newss)
-                OpenNewLineEvent(s);
-                else 
-                EditLineEvent(s);
+                    else
+                    {
+                        EditLineEvent(s);
+                    }
+                    break;
+                default:
+                    IncomingLineEvent(s);
+                    break;
             }
-
-            else
-            {
-                IncomingLineEvent(s);
-            }
-
+            Console.WriteLine("WE LISTEN AGAIN");
             socket.BeginReceive(LineReceived, null);
         }
 

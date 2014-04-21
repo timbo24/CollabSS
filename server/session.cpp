@@ -107,7 +107,7 @@ void spreadsheet_session::registerOld(std::set<std::string> cells, std::string s
     //create an sql select statement
      
     //now append the cell name and contents to the string
-    toPush += "\e" + *addIt + "\e" + contents;
+    toPush += static_cast<char>(27) + *addIt + static_cast<char>(27) + contents;
     
   }
   

@@ -68,7 +68,6 @@ server::server(boost::asio::io_service& io_service,
 	{
 		std::cout << "DB Connection Failed\n";
 	}
-	std::cout<<"WE GOT HERE 3"<<std::endl;
 
 	begin_accept();
 }
@@ -86,7 +85,6 @@ void server::populate_sessions()
 
 	if ( mysql_query (connection_, sql_query.c_str()) )
 	{
-		std::cout << mysql_error(connection_) << std::endl;
 		mysql_close (connection_);
 		std::cout << "Database connection closed." << std::endl;
 	}
@@ -194,7 +192,7 @@ std::string server::load(std::string name)
 	{
 		std::string col1(row[0]);
 		std::string col2(row[1]);
-		load_msg += "\e" + col1 + "\e" + col2;
+		load_msg += static_cast<char>(27) + col1 + static_cast<char>(27) + col2;
 	}
 
 	//we don't want the last \\e so return the length -2

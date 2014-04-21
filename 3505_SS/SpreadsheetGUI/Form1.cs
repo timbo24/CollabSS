@@ -145,18 +145,12 @@ namespace SS
         {
             if (!(line == null))
             {
+                string[] tokens = line.Split((Char)27);
                // cellValue.Invoke(new Action(() => { cellValue.Text = line + "\r\n"; }));
-                if (line.StartsWith("UPDATE"))
+                if (tokens[0] == "UPDATE")
                 {
+                    string vnumber = tokens[1];
                     int vnum = 0;
-                    string vnumber = "";
-                    int j = 7;
-                    while (!(line[j].Equals((char)27)))
-                    {
-                        vnumber += line[j];
-                        j++;
-                    }
-                    
                    
                     try
                     {
@@ -167,35 +161,16 @@ namespace SS
                         Console.WriteLine("Input string for a version number is not a sequence of digits.");
                     }
 
-                    //Check the version number.
-                    if (version != vnum - 1)
-                        model.SendMessageSync("RESYNC");
+                    cellValue.Text = tokens[2] + tokens[3];
 
+                    //Check the version number.
+                    if (false)
+                        model.SendMessageSync("RESYNC");
                     //If the version number is as expected:
                     else
                     {
-                        string part1 = "";
-                        string part2 = "";
-                        bool escape = false;
-
-                        j++;
-                        while (j<line.Length-1)
-                        {
-                          if ((!(line[j].Equals((char)27)) && (!escape)))
-                                part1 += line[j];
-                            else if (line[j].Equals((char)27))
-                            {
-                                escape = true;
-
-                            }
-                            else
-                            {
-                                part2 += line[j];
-                            }
-
-                          j++;
-
-                        }
+                        string part1 = tokens[2];
+                        string part2 = tokens[3];
                         // cellValue.Invoke(new Action(() => { cellValue.Text = part1+part2 + "\r\n"; }));
                         //  sheet.SetContentsOfCell(part1, part2);
 
@@ -327,7 +302,7 @@ namespace SS
                     
               //  }
                // cellValue.Invoke(new Action(() => { cellValue.Text = col+row + "\r\n"; }));
-                model.SendMessageEdit(version + (char)27 + cellName + (char)27 + cellContent.Text);
+                model.SendMessageEdit("ENTER" + (Char)27 + version + (Char)27 + cellName + (Char)27 + cellContent.Text+ "\n");
             }
         }
 

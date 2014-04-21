@@ -47,7 +47,6 @@ spreadsheet_editor::spreadsheet_editor(boost::asio::io_service& io_service, serv
 	: socket_(io_service),
 	  server_(server)
 {
-	std::cout<<"WE GOT HERE 8"<<std::endl;
 }
 
 /* returns member socket
@@ -69,7 +68,6 @@ void spreadsheet_editor::start()
 				      boost::bind(&spreadsheet_editor::handle_read, 
 						  shared_from_this(), 
 						  boost::asio::placeholders::error));
-	std::cout<<"WE GET HERE 2"<<std::endl;
 }
 
 /* called to write to a client
@@ -148,54 +146,51 @@ void spreadsheet_editor::incoming_message(std::string message)
 	//trim the endline from the string
 	std::cout<<"incoming: " << message<< std::endl;
 
-	trim(message);
-
 	size_t pos = 0;
-	std::string delimiter = "\e";
+	char delimiter = static_cast<char>(27);
 
 	pos = message.find(delimiter);
 	std::string token = message.substr(0, pos);
 
-	message.erase(0, pos + delimiter.length());
+	message.erase(0, pos + 1);
 
 	std::string outm = "";
 
 	//resquest a login by providing a password
 	if(token == "PASSWORD")
 	{
+		std::cout<<"\n\n1\n\n"<<std::endl;
 		if (message == PASSWORD)
 		{
 			outm = "FILELIST";
 
+			//pull the full spreadsheey map from the server
 			std::map<std::string, spreadsheet_session_ptr> sessions = server_->get_spreadsheets();
 
-			std::cout<<"List of spreadsheets: "<<std::endl;
-			
+			//populate message with the names of all aailable spreadsheets
 			for (auto i = sessions.begin(); i != sessions.end(); ++i)
 			{
-				outm += "\e" + i->first;
-				std::cout<<i->first<<std::endl;
+				outm += static_cast<char>(27) + i->first;
 			}
 
 			outm += "\n";
 			
-			std::cout<<"outgoing: " << outm << std::endl;
 			deliver(outm);
 		}
 		else
 		{
 			outm = "INVALID\n";
-			std::cout<<"outgoing: " << outm << std::endl;
 			deliver(outm);
 		}
 	}
 	//Open SS request, if one does not exist, error is sent back
 	else if(token == "OPEN")
 	{
+		std::cout<<"\n\n2\n\n"<<std::endl;
 
 		if (server_->spreadsheet_exists(message))
 		{
-			outm = "UPDATE\e";
+			outm = "UPDATE" + static_cast<char>(27);
 
 			//set the session for this editor
 			session_ = server_->get_spreadsheet(message);
@@ -209,7 +204,6 @@ void spreadsheet_editor::incoming_message(std::string message)
 			outm = "ERROR\n";
 		}
 
-		std::cout<<"outgoing: " << outm << std::endl;
 
 		deliver(outm);
 	}
@@ -219,11 +213,14 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		if (server_->spreadsheet_exists(message))
 		{
+			std::cout<<"\n\n3\n\n"<<std::endl;
 			outm = "ERROR\n";
 		}
 		else
 		{
-			outm = "UPDATE\e";
+			std::cout<<"\n\n8\n\n"<<std::endl;
+			outm = "UPDATE";
+			outm += static_cast<char>(27);
 
 			//add the spreadsheet and set is the member spreadsheet
 			session_ = server_->add_spreadsheet(message);
@@ -233,44 +230,53 @@ void spreadsheet_editor::incoming_message(std::string message)
 			outm += boost::lexical_cast<std::string>(session_->get_version()) + "\n";
 		}
 
-		std::cout<<"outgoing: " << outm << std::endl;
 
 		deliver(outm);
 	}
 	else if(token == "ENTER")
 	{
-		size_t pos = 0;
-		std::string delimiter = "\e";
+		std::cout<<"\n\n4\n\n"<<std::endl;
+
+		pos = 0;
+		pos = message.find(delimiter);
+		message.erase(0, pos + 1);
 
 		pos = message.find(delimiter);
-
-		message.erase(0, pos + delimiter.length());
-
-		pos = message.find(delimiter);
-
 		std::string cell = message.substr(0, pos);
-
-		message.erase(0, pos + delimiter.length());
+		message.erase(0, pos + 1);
 
 		//Circular dependency check
 		if (session_->circular_check(cell, message))
 		{
-
-			outm = "UPDATE\e" + boost::lexical_cast<std::string>(session_->get_version()) + "\e" +
-					     cell + "\e" + message + "\n";
+			outm = "UPDATE";
+		        outm += static_cast<char>(27);
+			outm += boost::lexical_cast<std::string>(session_->get_version());
+			outm += static_cast<char>(27);
+			outm += cell;
+			outm += static_cast<char>(27);
+			outm += message + "\n";
 
 			server_->update(session_->get_name(), cell, message);
 
-			std::cout<<"outgoing: " << outm << std::endl;
 			session_->deliver(outm);
 		}
 		else 
 		{
-			outm = "ERROR\ecircular dependency\n";
-			std::cout<<"outgoing: " << outm << std::endl;
+			outm = "ERROR";
+			outm += static_cast<char>(27); 
+			outm += "circular dependency\n";
 
 			deliver(outm);
 		}
+	}
+	else if(token == "RESYNC")
+	{
+		//TODO resync
+	}
+
+	else
+	{
+		std::cout<<"**\n**\nMESSAGE READ ERROR\n**\n**"<<std::endl;
 	}
 
 
