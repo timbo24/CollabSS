@@ -342,25 +342,12 @@ namespace SS
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Text = "saving ...";
-            String file = this.sheet.filePath;
-            if (file == null)
-            { 
-                DialogResult result = saveFileDialog1.ShowDialog();
-
-                if (result == DialogResult.OK)
-                {
-
-                    file = saveFileDialog1.FileName;
-                    sheet.filePath = file;
-
-                }
-                //Else, if a user entered "Cancel", return to the form.
-                else return;
-            }
-            //Make an XML file out of the form.
-            sheet.Save(file);
+          
             Thread.Sleep(300);
-            this.Text = file;
+         
+
+            model.SaveRequest("SAVE" + (Char)27 + version + "\n");
+            this.Text = "";
 
         }
 
@@ -399,7 +386,7 @@ namespace SS
         /// </summary>
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            String file;
+           // String file;
             if (sheet.Changed)
             {
                 //If a user said cancel while in the save dialog box, we need to keep asking him if he still wants to save.
@@ -414,14 +401,19 @@ namespace SS
 
                         case DialogResult.Yes:
                             {
-                                DialogResult result = saveFileDialog1.ShowDialog();
-                                if (result == DialogResult.OK)
+                               
+                                model.SaveRequest("SAVE" + (Char)27 + version + "\n");
+                                switch (MessageBox.Show("Do you still want to exit?", "Spreadsheet Utility",
+                       MessageBoxButtons.YesNo, MessageBoxIcon.Warning))
                                 {
-                                    file = saveFileDialog1.FileName;
+                                    case DialogResult.Yes:
+                                        return;
 
-                                    sheet.Save(file);
-                                    isCanceled = false;
+                                    case DialogResult.No:
+                                        e.Cancel = true;
+                                        return;
                                 }
+                                
                             }
                             break;
                         case DialogResult.No:
