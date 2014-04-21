@@ -307,7 +307,10 @@ namespace SS
             }
         }
 
-      
+        private void undo_Click(object sender, EventArgs e)
+        {
+            model.SendUndo("UNDO" + (Char)27 + version + "\n");
+        }
 
         /// <summary>
         /// Checks if a given name is a valid cell name - starts with a letter, followed by one or 2 digits.
@@ -489,6 +492,8 @@ namespace SS
         {
 
         }
+
+       
 
        
 

@@ -134,6 +134,18 @@ namespace SS
         }
 
         /// <summary>
+        /// Send a line of text to the server.
+        /// </summary>
+        /// <param name="line"></param>
+        public void SendUndo(String line)
+        {
+            if (socket != null)
+            {
+                socket.BeginSend(line, (e, p) => { }, null);
+            }
+        }
+
+        /// <summary>
         /// Deal with an arriving line of text.
         /// </summary>
         private void LineReceived(String s, Exception e, object p)
@@ -170,7 +182,7 @@ namespace SS
                     }
                     break;
                 case "ERROR":
-                    Console.WriteLine("WE DONE FUCKED UP");
+                    Console.WriteLine("WE DONE ...");
                     break;
                 default:
                     IncomingLineEvent(s);
