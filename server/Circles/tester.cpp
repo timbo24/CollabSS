@@ -121,28 +121,28 @@ cout << (t->GetDependents("c")).size() << endl;
   (c->NotCircular(one, two));
 
   std::string three = "B1";
-  std::string four = "=D1";
+  std::string four = "=C1";
 
   //cout <<  << endl;
   (c->NotCircular(three, four));
 
-  std::string five = "A1";
-  std::string six = "=3+C1+a1+G1";
+  std::string five = "C1";
+  std::string six = "=3++G1";
 
   cout << (c->NotCircular(five, six))  << endl;
 
-  std::string seven = "B1";
-  std::string eight = "=3* (Z1)+ F1 + G1";
+  std::string seven = "G1";
+  std::string eight = "=3* F1 + 1";
 
   cout << (c->NotCircular(seven, eight))  << endl;
 
-  std::string nine = "G1";
-  std::string ten = "=3* (Q1)+ W1 + B1";
+  std::string nine = "F1";
+  std::string ten = "=3* W1 +1";
 
   cout << (c->NotCircular(nine, ten))  << endl;
 
-std::string nine1 = "Q1";
-  std::string ten1 = "=3* (G1)+ W1 + Y1";
+std::string nine1 = "W1";
+  std::string ten1 = "=3* (B1)";
 
   cout << (c->NotCircular(nine1, ten1))  << endl;
   

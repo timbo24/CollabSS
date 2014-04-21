@@ -274,7 +274,32 @@ void spreadsheet_editor::incoming_message(std::string message)
 	}
 	else if(token == "RESYNC")
 	{
-		//TODO resync
+	  //code is pulled directly from load, LOAD replaced with SYNC in the message
+	  //-------------------------------------------
+		std::cout<<"\n\n2\n\n"<<std::endl;
+
+		if (server_->spreadsheet_exists(message))
+		{
+			outm = "SYNC";
+			outm += static_cast<char>(27);
+
+			//set the session for this editor
+			session_ = server_->get_spreadsheet(message);
+			session_->join(shared_from_this());
+
+			//load the current spreadsheet
+			outm += server_->load(message) + "\n";
+		}
+		else
+		{
+			outm = "ERROR\n";
+		}
+
+
+		deliver(outm);
+		//------------------------------------------------------
+	  
+		
 	}
 	else if(token == "UNDO")
 	{
