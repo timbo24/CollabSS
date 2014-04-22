@@ -167,13 +167,13 @@ namespace SS
                     }
                     catch
                     {
-                        Console.WriteLine("Input string for a version number is not a sequence of digits.");
+                        //Console.WriteLine("Input string for a version number is not a sequence of digits.");
                     }
 
                     if (tokens.Length < 5)
                     {
-                        Console.WriteLine("Client Version: " + version);
-                        Console.WriteLine("Server Version: " + vnumber);
+                        //Console.WriteLine("Client Version: " + version);
+                        //Console.WriteLine("Server Version: " + vnumber);
                     }
 
 		    //______________________________________________________________________Start Mark's Edits
