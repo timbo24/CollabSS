@@ -26,11 +26,12 @@ namespace SS
         {
             InitializeComponent();
             model = new SpreadsheetClient();
-            
-                model.IncomingLineEvent += MessageReceived;
-                model.ServerCrashedLineEvent += CrashedReceived;
-                model.OpenNewLineEvent += OpenNewSS;
-                model.CloseLoginEvent += CloseForm;
+
+            model.IncomingLineEvent += MessageReceived;
+            model.ServerCrashedLineEvent += CrashedReceived;
+            model.OpenNewLineEvent += OpenNewSS;
+            model.CloseLoginEvent += CloseForm;
+            model.ErrorLineEvent += ErrorReceived;
         }
 
        
@@ -41,6 +42,32 @@ namespace SS
         private void CrashedReceived(string error)
         {
             BigTextBox.Invoke(new Action(() => { BigTextBox.Text += error + "\r\n"; }));
+            //Thread.Sleep(500); 
+        }
+
+        /// <summary>
+        /// Prints an error message when server sends an error message.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ErrorReceived(string error)
+        {
+            BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = true; }));
+            SSList.Invoke(new Action(() => { SSList.Visible = true; }));
+            label2.Invoke(new Action(() => { label2.Visible = true; }));
+            EnterNew.Invoke(new Action(() => { EnterNew.Visible = true; }));
+            OpenNew.Invoke(new Action(() => { OpenNew.Visible = true; }));
+            label6.Invoke(new Action(() => { label6.Visible = true; }));
+            OpenExisting.Invoke(new Action(() => { OpenExisting.Visible = true; }));
+            EnterExisting.Invoke(new Action(() => { EnterExisting.Visible = true; }));
+            connectAgain.Invoke(new Action(() => { connectAgain.Visible = false; }));
+            NameTextBox.Invoke(new Action(() => { NameTextBox.Visible = true; }));
+            IPAddrBox.Invoke(new Action(() => { IPAddrBox.Visible = true; }));
+            ConnectButton.Invoke(new Action(() => { ConnectButton.Visible = true; }));
+            label1.Invoke(new Action(() => { label1.Visible = true; }));
+            label3.Invoke(new Action(() => { label3.Visible = true; }));
+
+            SSNewName.Invoke(new Action(() => { SSNewName.Visible = true; }));
+            SSNewName.Invoke(new Action(() => { SSNewName.Text += error + "\r\n"; }));
             //Thread.Sleep(500); 
         }
 

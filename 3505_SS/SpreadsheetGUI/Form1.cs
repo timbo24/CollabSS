@@ -49,7 +49,7 @@ namespace SS
             model.EditLineEvent += MessageReceived;
             model.ServerCrashedLineEvent += CloseSpreadsheet;
            // model.OpenNewLineEvent += OpenNewSS;
-            model.ErrorEvent += DisplayError;
+            model.ErrorLineEvent += DisplayError;
             
             sheet = new Spreadsheet(isValid, convertToUpper, "ps6");
 
