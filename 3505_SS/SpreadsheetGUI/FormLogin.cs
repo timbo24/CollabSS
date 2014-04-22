@@ -66,8 +66,12 @@ namespace SS
             label1.Invoke(new Action(() => { label1.Visible = true; }));
             label3.Invoke(new Action(() => { label3.Visible = true; }));
 
-            SSNewName.Invoke(new Action(() => { SSNewName.Visible = true; }));
-            SSNewName.Invoke(new Action(() => { SSNewName.Text += error + "\r\n"; }));
+            string[] tokens = error.Split((Char)27);
+            if (tokens.Length > 1)
+            {
+                SSNewName.Invoke(new Action(() => { SSNewName.Visible = true; }));
+                SSNewName.Invoke(new Action(() => { SSNewName.Text += tokens[1] + "\r\n"; }));
+            }
             //Thread.Sleep(500); 
         }
 
