@@ -167,7 +167,6 @@ std::string server::load(std::string name)
 {
 	std::string load_msg = "";
 
-	sessions_[name]->increment_version();
 	//first append the version #
 	std::string version = boost::lexical_cast<std::string>(sessions_[name]->get_version());
 	load_msg += version;
