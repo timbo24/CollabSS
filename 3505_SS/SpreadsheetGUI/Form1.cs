@@ -49,7 +49,7 @@ namespace SS
             model.EditLineEvent += MessageReceived;
             model.ServerCrashedLineEvent += CloseSpreadsheet;
            // model.OpenNewLineEvent += OpenNewSS;
-
+            model.ErrorEvent += DisplayError;
             
             sheet = new Spreadsheet(isValid, convertToUpper, "ps6");
 
@@ -534,6 +534,13 @@ namespace SS
 
         }
 
+        private void DisplayError(string s)
+        {
+             string[] tokens = s.Split((Char) 27);
+             if (tokens.Length > 1)
+                 cellValue.Text = tokens[1];
+
+        }
        
 
        

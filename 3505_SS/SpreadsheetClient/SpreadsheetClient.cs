@@ -24,6 +24,7 @@ namespace SS
         public event Action<String> ServerCrashedLineEvent;
         public event Action<String> EditLineEvent;
         public event Action<String> CloseLoginEvent;
+        public event Action<String> ErrorEvent;
         /// <summary>
         /// For synchronizing receives
         /// </summary>
@@ -223,7 +224,7 @@ namespace SS
                     }
                     break;
                 case "ERROR":
-                    Console.WriteLine("WE DONE ...");
+                    ErrorEvent(s);
                     break;
                 case "SYNC":
                     EditLineEvent(s);

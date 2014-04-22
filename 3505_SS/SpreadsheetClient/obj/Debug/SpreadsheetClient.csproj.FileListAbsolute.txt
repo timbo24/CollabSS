@@ -16,3 +16,9 @@ X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetClient\bin\Debug\StringSocket.dll
 X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetClient\obj\Debug\SpreadsheetClient.csprojResolveAssemblyReference.cache
 X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetClient\obj\Debug\SpreadsheetClient.dll
 X:\Documents\CS3505\Malloc\3505_SS\SpreadsheetClient\obj\Debug\SpreadsheetClient.pdb
+X:\cs3505\gitFolder\Malloc\3505_SS\SpreadsheetClient\bin\Debug\SpreadsheetClient.dll
+X:\cs3505\gitFolder\Malloc\3505_SS\SpreadsheetClient\bin\Debug\SpreadsheetClient.pdb
+X:\cs3505\gitFolder\Malloc\3505_SS\SpreadsheetClient\bin\Debug\StringSocket.dll
+X:\cs3505\gitFolder\Malloc\3505_SS\SpreadsheetClient\obj\Debug\SpreadsheetClient.csprojResolveAssemblyReference.cache
+X:\cs3505\gitFolder\Malloc\3505_SS\SpreadsheetClient\obj\Debug\SpreadsheetClient.dll
+X:\cs3505\gitFolder\Malloc\3505_SS\SpreadsheetClient\obj\Debug\SpreadsheetClient.pdb
