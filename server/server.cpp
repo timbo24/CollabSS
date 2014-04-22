@@ -1,3 +1,8 @@
+/*Online Spreadsheet Server for team Malloc written by 
+ *Tim Knutson 
+ *Modeled after http://www.boost.org/doc/libs/1_35_0/doc/html/boost_asio/example/chat/chat_server.cpp
+ */
+
 #include <string>
 #include <algorithm>
 #include <cstdlib>

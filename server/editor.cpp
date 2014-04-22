@@ -1,3 +1,8 @@
+/*Online Spreadsheet Server for team Malloc written by 
+ *Tim Knutson 
+ *
+ */
+
 
 #include <boost/lexical_cast.hpp>
 #include <string>
