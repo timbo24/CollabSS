@@ -160,8 +160,12 @@ namespace SS
                     {
                         Console.WriteLine("Input string for a version number is not a sequence of digits.");
                     }
-                    Console.WriteLine("Client Version: " + version);
-                    Console.WriteLine("Server Version: " + vnumber);
+
+                    if (tokens.Length < 5)
+                    {
+                        Console.WriteLine("Client Version: " + version);
+                        Console.WriteLine("Server Version: " + vnumber);
+                    }
 
 		    //______________________________________________________________________Start Mark's Edits
 		    //If the message is a sync, clear the sheet
