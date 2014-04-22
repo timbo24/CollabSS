@@ -67,11 +67,9 @@ server::server(boost::asio::io_service& io_service,
 	populate_sessions();
 	if (connection_)
 	{
-	  //	std::cout << "DB Connection Succeeded\n";
 	}
 	else
 	{
-	  //	std::cout << "DB Connection Failed\n";
 	}
 
 	begin_accept();
