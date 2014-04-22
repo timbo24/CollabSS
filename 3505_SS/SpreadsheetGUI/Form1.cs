@@ -293,17 +293,6 @@ namespace SS
             }
         }
 
-       
-        /// <summary>
-        /// Deals with the New menu
-        /// </summary>
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // Tell the application context to run the form on the same
-            // thread as the other forms.
-            DemoApplicationContext.getAppContext().RunForm(new Form1(IpAddress, port, model, version));
-        }
-
         /// <summary>
         ///  Deals with the Close menu
         /// </summary>
@@ -378,40 +367,10 @@ namespace SS
             this.Text = "saving ...";
           
             Thread.Sleep(300);
-         
 
             model.SaveRequest("SAVE" + (Char)27 + version + "\n");
             this.Text = "";
 
-        }
-
-        /// <summary>
-        /// Creates a spreadsheet from a specified XML file and displays the sheet in a Form.
-        /// </summary>
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            String file;
-           
-            DialogResult result = openFileDialog1.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                file = openFileDialog1.FileName;
-
-                //Try to create a spreadsheet from the file and run the form.
-                try
-                {
-                    Spreadsheet newSheet = new Spreadsheet(file, isValid, convertToUpper, "ps6");
-                    
-                    DemoApplicationContext.getAppContext().RunForm(new Form1(newSheet));
-                    
-                }
-                //Catch any errors while opening the file and creating the spreadsheet.
-                catch (SpreadsheetReadWriteException rw)
-                {
-                    MessageBox.Show(rw.Message);
-                }
-            }
         }
 
         /// <summary>
@@ -430,7 +389,6 @@ namespace SS
                     case DialogResult.No:
                         model.CloseLogin();
                         return;
-                        break;
                 }
                 // String file;
                 if (sheet.Changed)
@@ -472,28 +430,6 @@ namespace SS
                         }
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Opens SaveAs dialog; user chooses a name for the file and saves it. He is asked to confirm to overwrite a file or create a new one.
-        /// </summary>
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            String file;
-            
-            DialogResult result = saveFileDialog1.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-
-
-                file = saveFileDialog1.FileName;
-                
-                sheet.Save(file);
-
-                this.Text = file;
-
             }
         }
 
