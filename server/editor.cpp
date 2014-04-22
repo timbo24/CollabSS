@@ -138,7 +138,6 @@ void spreadsheet_editor::handle_read(const boost::system::error_code& error)
 	else
 	{
 
-		std::cout << error.message() << std::endl;
 	}
 }
 
@@ -263,8 +262,6 @@ void spreadsheet_editor::incoming_message(std::string message)
 
 			server_->update(session_->get_name(), cell, message);
 
-			std::cout<<"VERSION: " + boost::lexical_cast<std::string>(session_->get_version())<<std::endl;
- 
 			outm = "UPDATE";
 		        outm += static_cast<char>(27);
 			outm += boost::lexical_cast<std::string>(session_->get_version());
@@ -306,7 +303,6 @@ void spreadsheet_editor::incoming_message(std::string message)
 		}
 
 
-		std::cout<<"RESYNC CALLED        : " + outm<<std::endl;
 		deliver(outm);
 		//------------------------------------------------------
 	  

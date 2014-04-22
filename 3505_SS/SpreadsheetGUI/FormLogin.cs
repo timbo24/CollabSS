@@ -51,24 +51,25 @@ namespace SS
         /// <param name="obj"></param>
         private void ErrorReceived(string error)
         {
-            BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = true; }));
-            SSList.Invoke(new Action(() => { SSList.Visible = true; }));
-            label2.Invoke(new Action(() => { label2.Visible = true; }));
-            EnterNew.Invoke(new Action(() => { EnterNew.Visible = true; }));
-            OpenNew.Invoke(new Action(() => { OpenNew.Visible = true; }));
-            label6.Invoke(new Action(() => { label6.Visible = true; }));
-            OpenExisting.Invoke(new Action(() => { OpenExisting.Visible = true; }));
-            EnterExisting.Invoke(new Action(() => { EnterExisting.Visible = true; }));
-            connectAgain.Invoke(new Action(() => { connectAgain.Visible = false; }));
-            NameTextBox.Invoke(new Action(() => { NameTextBox.Visible = true; }));
-            IPAddrBox.Invoke(new Action(() => { IPAddrBox.Visible = true; }));
-            ConnectButton.Invoke(new Action(() => { ConnectButton.Visible = true; }));
-            label1.Invoke(new Action(() => { label1.Visible = true; }));
-            label3.Invoke(new Action(() => { label3.Visible = true; }));
-
             string[] tokens = error.Split((Char)27);
-            if (tokens.Length > 1)
+            if (tokens[1].StartsWith("Invalid"))
             {
+                BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = true; }));
+                SSList.Invoke(new Action(() => { SSList.Visible = true; }));
+                label2.Invoke(new Action(() => { label2.Visible = true; }));
+                EnterNew.Invoke(new Action(() => { EnterNew.Visible = true; }));
+                OpenNew.Invoke(new Action(() => { OpenNew.Visible = true; }));
+                label6.Invoke(new Action(() => { label6.Visible = true; }));
+                OpenExisting.Invoke(new Action(() => { OpenExisting.Visible = true; }));
+                EnterExisting.Invoke(new Action(() => { EnterExisting.Visible = true; }));
+                connectAgain.Invoke(new Action(() => { connectAgain.Visible = false; }));
+                NameTextBox.Invoke(new Action(() => { NameTextBox.Visible = true; }));
+                IPAddrBox.Invoke(new Action(() => { IPAddrBox.Visible = true; }));
+                ConnectButton.Invoke(new Action(() => { ConnectButton.Visible = true; }));
+                label1.Invoke(new Action(() => { label1.Visible = true; }));
+                label3.Invoke(new Action(() => { label3.Visible = true; }));
+
+            
                 SSNewName.Invoke(new Action(() => { SSNewName.Visible = true; }));
                 SSNewName.Invoke(new Action(() => { SSNewName.Text += tokens[1] + "\r\n"; }));
             }
