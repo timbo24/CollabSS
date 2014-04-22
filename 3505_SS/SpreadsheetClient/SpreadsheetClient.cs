@@ -200,14 +200,13 @@ namespace SS
                     if (load)
                     {
                         OpenNewLineEvent(s);
+                        Thread.Sleep(2000);
                         load = false;
                     }
                     if (tokens.Length > 2)
                     {
-                        Thread.Sleep(2000);
                         EditLineEvent(s);
                     }
-                    EditLineEvent(s);
                     break;
                 case "ERROR":
                     Console.WriteLine("WE DONE ...");

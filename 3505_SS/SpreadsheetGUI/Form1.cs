@@ -160,7 +160,8 @@ namespace SS
                     {
                         Console.WriteLine("Input string for a version number is not a sequence of digits.");
                     }
-                    Console.WriteLine("Version: " + version);
+                    Console.WriteLine("Client Version: " + version);
+                    Console.WriteLine("Server Version: " + vnumber);
 
 		    //______________________________________________________________________Start Mark's Edits
 		    //If the message is a sync, clear the sheet
@@ -174,17 +175,14 @@ namespace SS
                         //int cvnum = Convert.ToInt32(sheet.Version);
 
                         //Check the version number.
-                        if (tokens.Length < 5)
+                        if (tokens.Length < 5 && vnum != (1 + version) && tokens[0] != "SYNC")
 			            {
-                            if (vnum != (1 + version) && tokens[0] != "SYNC")
-                            {
                                 model.SendMessageSync("RESYNC");
-                            }
-                            //Console.WriteLine("sent a resync request");
 			            }
 		                else
 		                {
-		    	            version = vnum;	 
+		    	            version = vnum;	
+ 
 		                //______________________________________________________________________________End Mark's Edits   
 
                                 for (int k = 2; k < tokens.Length - 1; k += 2)

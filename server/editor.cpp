@@ -224,6 +224,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 
 			session_->join(shared_from_this());
 
+			session_->increment_version();
 			outm += boost::lexical_cast<std::string>(session_->get_version()) + "\n";
 
 		}
@@ -245,6 +246,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 		//Circular dependency check
 		if (session_->circular_check(cell, message))
 		{
+			session_->increment_version();
 			session_->register_old(cell);
 
 			server_->update(session_->get_name(), cell, message);
@@ -302,6 +304,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		if (!session_->undo_empty())
 		{
+			session_->increment_version();
 
 			outm = session_->undo();
 

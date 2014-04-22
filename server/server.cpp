@@ -167,6 +167,7 @@ std::string server::load(std::string name)
 {
 	std::string load_msg = "";
 
+	sessions_[name]->increment_version();
 	//first append the version #
 	std::string version = boost::lexical_cast<std::string>(sessions_[name]->get_version());
 	load_msg += version;
@@ -269,7 +270,6 @@ void server::update(std::string ssname, std::string cell, std::string contents)
 		std::cout << "Database connection closed." << std::endl;
 	}
 
-	sessions_[ssname]->increment_version();
 }
 
 /*
