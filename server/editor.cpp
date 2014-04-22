@@ -74,10 +74,8 @@ void spreadsheet_editor::start()
  * */
 void spreadsheet_editor::deliver(const std::string& msg)
 {
-	mtx.lock();
 	bool write_in_progress = !write_msgs_.empty();
 	write_msgs_.push_back(msg);
-	mtx.unlock();
 	if (!write_in_progress)
 	{
 		boost::asio::async_write(socket_,
@@ -98,9 +96,7 @@ void spreadsheet_editor::handle_write(const boost::system::error_code& error)
 {
 	if (!error)
 	{
-		mtx.lock();
 		write_msgs_.pop_front();
-		mtx.unlock();
 		if (!write_msgs_.empty())
 		{
 			boost::asio::async_write(socket_,
