@@ -200,7 +200,12 @@ void spreadsheet_editor::incoming_message(std::string message)
 		}
 		else
 		{
-			outm = "ERROR\n";
+		        outm = "ERROR";
+			outm += static_cast<char>(27); 
+			outm += "Invalid spreadsheet\n";
+
+			deliver(outm);
+			//outm = "ERROR\n";
 		}
 
 
@@ -212,7 +217,13 @@ void spreadsheet_editor::incoming_message(std::string message)
 	{
 		if (server_->spreadsheet_exists(message))
 		{
-			outm = "ERROR\n";
+
+		        outm = "ERROR";
+			outm += static_cast<char>(27); 
+			outm += "File name already exists\n";
+
+			deliver(outm);
+			//	outm = "ERROR\n";
 		}
 		else
 		{
@@ -267,7 +278,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 		{
 			outm = "ERROR";
 			outm += static_cast<char>(27); 
-			outm += "circular dependency\n";
+			outm += "Circular dependency\n";
 
 			deliver(outm);
 		}
