@@ -34,6 +34,9 @@ CircleChecker::~CircleChecker()
 	*/
 	bool CircleChecker::NotCircular(std::string cell, std::string form)
 	{
+	  
+	  
+
 		//set for tracking all the nodes we have visited while checking dependency.  
 		//This set will be used to keep from repreating visits as well as adding dependency 
 		//if the function returns true.
@@ -112,6 +115,12 @@ CircleChecker::~CircleChecker()
 		if (s[0] != '=')
 		{
 			return toReturn;
+		}
+
+		//make the string upper case
+		for (int i = 0 ; i < s.length() ; i++)
+		{
+		  s[i] = toupper(s[i]);
 		}
 
 		//store the variables from the parsed string

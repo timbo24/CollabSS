@@ -142,7 +142,7 @@ cout << (t->GetDependents("c")).size() << endl;
   cout << (c->NotCircular(nine, ten))  << endl;
 
 std::string nine1 = "W1";
-  std::string ten1 = "=3* (B1)";
+  std::string ten1 = "=3* (b1)";
 
   cout << (c->NotCircular(nine1, ten1))  << endl;
   

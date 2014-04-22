@@ -24,3 +24,16 @@ X:\Documents\CS3505\Malloc\3505_SS\MyTest\bin\x86\Debug\Formula.xml
 X:\Documents\CS3505\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.csprojResolveAssemblyReference.cache
 X:\Documents\CS3505\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.exe
 X:\Documents\CS3505\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.pdb
+X:\cs3505\gitFolder\Malloc\3505_SS\MyTest\bin\x86\Debug\MyTest.exe.config
+X:\cs3505\gitFolder\Malloc\3505_SS\MyTest\bin\x86\Debug\MyTest.exe
+X:\cs3505\gitFolder\Malloc\3505_SS\MyTest\bin\x86\Debug\MyTest.pdb
+X:\cs3505\gitFolder\Malloc\3505_SS\MyTest\bin\x86\Debug\DependencyGraph.dll
+X:\cs3505\gitFolder\Malloc\3505_SS\MyTest\bin\x86\Debug\Formula.dll
+X:\cs3505\gitFolder\Malloc\3505_SS\MyTest\bin\x86\Debug\Spreadsheet.dll
+X:\cs3505\gitFolder\Malloc\3505_SS\MyTest\bin\x86\Debug\Spreadsheet.pdb
+X:\cs3505\gitFolder\Malloc\3505_SS\MyTest\bin\x86\Debug\Spreadsheet.xml
+X:\cs3505\gitFolder\Malloc\3505_SS\MyTest\bin\x86\Debug\DependencyGraph.xml
+X:\cs3505\gitFolder\Malloc\3505_SS\MyTest\bin\x86\Debug\Formula.xml
+X:\cs3505\gitFolder\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.csprojResolveAssemblyReference.cache
+X:\cs3505\gitFolder\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.exe
+X:\cs3505\gitFolder\Malloc\3505_SS\MyTest\obj\x86\Debug\MyTest.pdb
