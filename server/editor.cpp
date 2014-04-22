@@ -307,6 +307,10 @@ void spreadsheet_editor::incoming_message(std::string message)
 	  
 		
 	}
+	else if(token == "DISCONNECT")
+	{
+		socket_.close();
+	}
 	else if(token == "UNDO")
 	{
 		if (!session_->undo_empty())
@@ -319,10 +323,8 @@ void spreadsheet_editor::incoming_message(std::string message)
 		}
 		
 	}
-
 	else
 	{
-	  //	std::cout<<"**\n**\nMESSAGE READ ERROR\n**\n**"<<std::endl;
 	}
 
 

@@ -15,7 +15,7 @@ namespace SS
     {
         private SpreadsheetClient model;
         private string host = "localhost";
-        private int port = 2000;
+        private int port = 2500;
         
         /// <summary>
         /// For synchronizing receives

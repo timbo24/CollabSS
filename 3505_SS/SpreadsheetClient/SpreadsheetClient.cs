@@ -184,8 +184,7 @@ namespace SS
         private void LineReceived(String s, Exception e, object p)
         {
             if (!(e == null))
-            {
-                ServerCrashedLineEvent("Connection to Boggle Server has been lost"); //e.Message
+            { //e.Message
                 return;
             }
 
