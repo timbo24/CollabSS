@@ -23,6 +23,7 @@ namespace SS
         public event Action<String> OpenNewLineEvent;
         public event Action<String> ServerCrashedLineEvent;
         public event Action<String> EditLineEvent;
+        public event Action<String> CloseLoginEvent;
         /// <summary>
         /// For synchronizing receives
         /// </summary>
@@ -123,6 +124,11 @@ namespace SS
             }
         }
 
+        public void CloseLogin()
+        {
+            CloseLoginEvent("");
+        }
+
         /// <summary>
         /// Send a line of text to the server.
         /// </summary>
@@ -185,11 +191,14 @@ namespace SS
                // If it is null, or starts with IGNORE, simply return
             if (s == null) //&&(IncomingLineEvent != null))
             {
+                ServerCrashedLineEvent("Connection to Boggle Server has been lost");
                 Thread.Sleep(200);
                 return;
             }
 
-            string[] tokens = s.Split((Char)27);
+            string[] tokens = { "" };
+            if (!(s == null))
+                tokens = s.Split((Char)27);
 
             if (tokens[0] == "IGNORING")
             {

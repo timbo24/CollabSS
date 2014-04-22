@@ -30,6 +30,8 @@ namespace SS
         /// </summary>
         private Spreadsheet sheet;
 
+        private bool crashed = false;
+
        
         private string IpAddress="localhost";
         private int port=2500;
@@ -45,6 +47,7 @@ namespace SS
          //   model = new SpreadsheetClient();
          //   model.IncomingLineEvent += MessageReceived;
             model.EditLineEvent += MessageReceived;
+            model.ServerCrashedLineEvent += CloseSpreadsheet;
            // model.OpenNewLineEvent += OpenNewSS;
 
             
@@ -62,6 +65,12 @@ namespace SS
         //        model.Connect(IpAddress, port, "password");
            //     connected = true;
            // }
+        }
+
+        private void CloseSpreadsheet(string s)
+        {
+            crashed = true;
+            Close();
         }
 
         /// <summary>
@@ -411,43 +420,56 @@ namespace SS
         /// </summary>
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-           // String file;
-            if (sheet.Changed)
+            if (crashed)
             {
-                //If a user said cancel while in the save dialog box, we need to keep asking him if he still wants to save.
-                //We do the loop while the user keeps saying cancel.
-                Boolean isCanceled = true;
-                while (isCanceled)
+                switch (MessageBox.Show("The Server has crashed would you like to connect again?", "Spreadsheet Utility",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning))
                 {
-                    switch (MessageBox.Show("Would you like to save your changes?", "Spreadsheet Utility",
-                        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning))
+                    case DialogResult.Yes:
+                        return;
+                    case DialogResult.No:
+                        model.CloseLogin();
+                        return;
+                        break;
+                }
+                // String file;
+                if (sheet.Changed)
+                {
+                    //If a user said cancel while in the save dialog box, we need to keep asking him if he still wants to save.
+                    //We do the loop while the user keeps saying cancel.
+                    Boolean isCanceled = true;
+                    while (isCanceled)
                     {
+                        switch (MessageBox.Show("Would you like to save your changes?", "Spreadsheet Utility",
+                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning))
+                        {
 
 
-                        case DialogResult.Yes:
-                            {
-                               
-                                model.SaveRequest("SAVE" + (Char)27 + version + "\n");
-                                switch (MessageBox.Show("Do you still want to exit?", "Spreadsheet Utility",
-                       MessageBoxButtons.YesNo, MessageBoxIcon.Warning))
+                            case DialogResult.Yes:
                                 {
-                                    case DialogResult.Yes:
-                                        return;
 
-                                    case DialogResult.No:
-                                        e.Cancel = true;
-                                        model.DisconnectRequest("DISCONNECT\n");
-                                        return;
+                                    model.SaveRequest("SAVE" + (Char)27 + version + "\n");
+                                    switch (MessageBox.Show("Do you still want to exit?", "Spreadsheet Utility",
+                           MessageBoxButtons.YesNo, MessageBoxIcon.Warning))
+                                    {
+                                        case DialogResult.Yes:
+                                            return;
+
+                                        case DialogResult.No:
+                                            e.Cancel = true;
+                                            model.DisconnectRequest("DISCONNECT\n");
+                                            return;
+                                    }
+
                                 }
-                                
-                            }
-                            break;
-                        case DialogResult.No:
-                            model.DisconnectRequest("DISCONNECT\n");
-                            return;
-                        case DialogResult.Cancel:
-                            e.Cancel = true;
-                            return;
+                                break;
+                            case DialogResult.No:
+                                model.DisconnectRequest("DISCONNECT\n");
+                                return;
+                            case DialogResult.Cancel:
+                                e.Cancel = true;
+                                return;
+                        }
                     }
                 }
             }

@@ -30,6 +30,7 @@ namespace SS
                 model.IncomingLineEvent += MessageReceived;
                 model.ServerCrashedLineEvent += CrashedReceived;
                 model.OpenNewLineEvent += OpenNewSS;
+                model.CloseLoginEvent += CloseForm;
         }
 
        
@@ -41,6 +42,11 @@ namespace SS
         {
             BigTextBox.Invoke(new Action(() => { BigTextBox.Text += error + "\r\n"; }));
             //Thread.Sleep(500); 
+        }
+
+        private void CloseForm(string s)
+        {
+            Close();
         }
 
    

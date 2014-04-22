@@ -188,6 +188,7 @@ std::string server::load(std::string name)
 
 	while (((row = mysql_fetch_row(res_set)) != NULL))
 	{
+		sessions_[name]->circular_check(row[0], row[1]);
 		std::string col1(row[0]);
 		std::string col2(row[1]);
 		load_msg += static_cast<char>(27);
@@ -331,6 +332,8 @@ void server::getInput()
   mysql_close (this->connection_);
   std::cout << "Database connection closed." << std::endl;
   std::cout<<"Closing server"<<std::endl;
+  io_service_.stop();
+	  acceptor_.close();
 
   // Exits the program
   std::exit(EXIT_SUCCESS);
