@@ -25,7 +25,7 @@
  * make changes to a spreadsheet
  * */
 spreadsheet_session::spreadsheet_session(std::string name, server* server)
-	: version_(0),
+	: version_(10),
 	  name_(name),
 	  server_(server),
 	  checker_()

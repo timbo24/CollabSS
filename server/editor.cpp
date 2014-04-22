@@ -96,7 +96,6 @@ void spreadsheet_editor::handle_write(const boost::system::error_code& error)
 {
 	if (!error)
 	{
-		std::cout<<"\n\nGET'S CALLED\n\n"<<std::endl;
 		mtx.lock();
 		write_msgs_.pop_front();
 		mtx.unlock();
@@ -108,7 +107,6 @@ void spreadsheet_editor::handle_write(const boost::system::error_code& error)
 			    boost::bind(&spreadsheet_editor::handle_write, shared_from_this(),
 			      boost::asio::placeholders::error));
 		}
-		std::cout<<"\n\nGET'S CALLED\n\n"<<std::endl;
 	}
 	else
 	{
@@ -176,8 +174,6 @@ void spreadsheet_editor::incoming_message(std::string message)
 
 			outm += "\n";
 
-			std::cout<<"**\n**\nOUTGOING       : " + outm + "\n**\n**"<<std::endl;
-			
 			deliver(outm);
 		}
 		else
@@ -192,7 +188,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 
 		if (server_->spreadsheet_exists(message))
 		{
-			outm = "UPDATE";
+			outm = "LOAD";
 			outm += static_cast<char>(27);
 
 			//set the session for this editor
@@ -220,7 +216,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 		}
 		else
 		{
-			outm = "UPDATE";
+			outm = "LOAD";
 			outm += static_cast<char>(27);
 
 			//add the spreadsheet and set is the member spreadsheet
@@ -253,6 +249,8 @@ void spreadsheet_editor::incoming_message(std::string message)
 
 			server_->update(session_->get_name(), cell, message);
 
+			std::cout<<"VERSION: " + boost::lexical_cast<std::string>(session_->get_version())<<std::endl;
+ 
 			outm = "UPDATE";
 		        outm += static_cast<char>(27);
 			outm += boost::lexical_cast<std::string>(session_->get_version());
@@ -274,20 +272,19 @@ void spreadsheet_editor::incoming_message(std::string message)
 	}
 	else if(token == "RESYNC")
 	{
+
 	  //code is pulled directly from load, LOAD replaced with SYNC in the message
 	  //-------------------------------------------
 
-		if (server_->spreadsheet_exists(message))
+		if (server_->spreadsheet_exists(session_->get_name()))
 		{
 			outm = "SYNC";
 			outm += static_cast<char>(27);
 
 			//set the session for this editor
-			session_ = server_->get_spreadsheet(message);
-			session_->join(shared_from_this());
 
 			//load the current spreadsheet
-			outm += server_->load(message) + "\n";
+			outm += server_->load(session_->get_name()) + "\n";
 		}
 		else
 		{
@@ -295,6 +292,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 		}
 
 
+		std::cout<<"RESYNC CALLED        : " + outm<<std::endl;
 		deliver(outm);
 		//------------------------------------------------------
 	  

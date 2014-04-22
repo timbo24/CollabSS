@@ -209,8 +209,8 @@ namespace SS
                     Console.WriteLine("WE DONE ...");
                     break;
                 case "SYNC":
-     
-
+                    EditLineEvent(s);
+                    break;
                 default:
                     IncomingLineEvent(s);
                     break;
