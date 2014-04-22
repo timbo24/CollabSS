@@ -62,11 +62,11 @@ server::server(boost::asio::io_service& io_service,
 	populate_sessions();
 	if (connection_)
 	{
-		std::cout << "DB Connection Succeeded\n";
+	  //	std::cout << "DB Connection Succeeded\n";
 	}
 	else
 	{
-		std::cout << "DB Connection Failed\n";
+	  //	std::cout << "DB Connection Failed\n";
 	}
 
 	begin_accept();
@@ -86,7 +86,7 @@ void server::populate_sessions()
 	if ( mysql_query (connection_, sql_query.c_str()) )
 	{
 		mysql_close (connection_);
-		std::cout << "Database connection closed." << std::endl;
+		//	std::cout << "Database connection closed." << std::endl;
 	}
 
 	// Get the result of the query
@@ -178,9 +178,9 @@ std::string server::load(std::string name)
 	std::string sql_query  = "SELECT cell, contents FROM Cell WHERE ssname = \"" + name+ "\"";
 	if ( mysql_query (connection_, sql_query.c_str()) )
 	{
-		std::cout << mysql_error(connection_) << std::endl;
+	  //	std::cout << mysql_error(connection_) << std::endl;
 		mysql_close (connection_);
-		std::cout << "Database connection closed." << std::endl;
+		//	std::cout << "Database connection closed." << std::endl;
 	}
 
 	res_set = mysql_store_result(connection_);
@@ -212,9 +212,9 @@ spreadsheet_session* server::add_spreadsheet(std::string name)
 
 	if ( mysql_query (connection_, sql_update.c_str()) )
 	{
-		std::cout << mysql_error(connection_) << std::endl;
+	  //	std::cout << mysql_error(connection_) << std::endl;
 		mysql_close (connection_);
-		std::cout << "Database connection closed." << std::endl;
+		//	std::cout << "Database connection closed." << std::endl;
 	}
 
 	//add this sessions to the list
@@ -265,9 +265,9 @@ void server::update(std::string ssname, std::string cell, std::string contents)
 
 	if ( mysql_query (connection_, sql_update.c_str()) )
 	{
-		std::cout << mysql_error(connection_) << std::endl;
+	  //	std::cout << mysql_error(connection_) << std::endl;
 		mysql_close (connection_);
-		std::cout << "Database connection closed." << std::endl;
+		//	std::cout << "Database connection closed." << std::endl;
 	}
 
 }
@@ -286,9 +286,9 @@ std::string server::get_old(std::string sheet, std::string cellname)
     //if there was an error, do something
     if ( mysql_query (connection_, undo_query.c_str()) )
     {
-		std::cout << mysql_error(connection_) << std::endl;
+      //	std::cout << mysql_error(connection_) << std::endl;
 		mysql_close (connection_);
-		std::cout << "Database connection closed." << std::endl;
+		//		std::cout << "Database connection closed." << std::endl;
 	    //TODO fill in if query fails or DB disconnect
     }
 
@@ -330,8 +330,8 @@ void server::getInput()
     }
 
   mysql_close (this->connection_);
-  std::cout << "Database connection closed." << std::endl;
-  std::cout<<"Closing server"<<std::endl;
+  // std::cout << "Database connection closed." << std::endl;
+  // std::cout<<"Closing server"<<std::endl;
   io_service_.stop();
 	  acceptor_.close();
 
@@ -360,7 +360,7 @@ int main(int argc, char* argv[])
 
 		if (!con)
 		{
-			std::cout << "Mysql Initialization Failed";
+		  //	std::cout << "Mysql Initialization Failed";
 			return 1;
 		}
 
@@ -375,7 +375,7 @@ int main(int argc, char* argv[])
 		//start the server
 		server_ptr svr(new server(io_service, endpoint, con));
 
-		std::cout<<"Server up and running..."<<std::endl;
+		//	std::cout<<"Server up and running..."<<std::endl;
 
 		//boost::thread* inputThread = new boost::thread(boost::bind(&server::getInput, svr));
 		boost::thread inputThread(&server::getInput, svr);

@@ -242,7 +242,7 @@ namespace SS
                 }
                 catch 
                 {
-                    Console.WriteLine("Input string for a version number is not a sequence of digits.");
+                    //Console.WriteLine("Input string for a version number is not a sequence of digits.");
                 }
 
                 //run the new form on a new thread

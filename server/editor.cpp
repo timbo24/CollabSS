@@ -322,7 +322,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 
 	else
 	{
-		std::cout<<"**\n**\nMESSAGE READ ERROR\n**\n**"<<std::endl;
+	  //	std::cout<<"**\n**\nMESSAGE READ ERROR\n**\n**"<<std::endl;
 	}
 
 
