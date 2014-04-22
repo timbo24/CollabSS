@@ -54,7 +54,7 @@ namespace SS
             string[] tokens = error.Split((Char)27);
             if (tokens[1].StartsWith("Invalid"))
             {
-                BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = true; }));
+                BigTextBox.Invoke(new Action(() => { BigTextBox.Visible = false; }));
                 SSList.Invoke(new Action(() => { SSList.Visible = true; }));
                 label2.Invoke(new Action(() => { label2.Visible = true; }));
                 EnterNew.Invoke(new Action(() => { EnterNew.Visible = true; }));
