@@ -182,15 +182,20 @@ namespace SS
                 return;
             }
 
-            string[] tokens = s.Split((Char)27);
-
                // If it is null, or starts with IGNORE, simply return
-            if (s == null || tokens[0] == "IGNORING") //&&(IncomingLineEvent != null))
+            if (s == null) //&&(IncomingLineEvent != null))
             {
                 Thread.Sleep(200);
                 return;
             }
 
+            string[] tokens = s.Split((Char)27);
+
+            if (tokens[0] == "IGNORING")
+            {
+                Thread.Sleep(200);
+                return;
+            }
             switch (tokens[0])
             {
                 case "FILELIST":
