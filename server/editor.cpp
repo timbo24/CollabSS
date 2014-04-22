@@ -188,7 +188,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 
 		if (server_->spreadsheet_exists(message))
 		{
-			outm = "LOAD";
+			outm = "UPDATE";
 			outm += static_cast<char>(27);
 
 			//set the session for this editor
@@ -216,7 +216,7 @@ void spreadsheet_editor::incoming_message(std::string message)
 		}
 		else
 		{
-			outm = "LOAD";
+			outm = "UPDATE";
 			outm += static_cast<char>(27);
 
 			//add the spreadsheet and set is the member spreadsheet

@@ -16,6 +16,8 @@ namespace SS
         // made yet, this is null.
         private StringSocket socket;
 
+        private bool load = true;
+
         // Register for this event to be motified when a line of text arrives.
         public event Action<String> IncomingLineEvent;
         public event Action<String> OpenNewLineEvent;
@@ -195,15 +197,17 @@ namespace SS
                     IncomingLineEvent(s);
                     break;
                 case "UPDATE":
-                    EditLineEvent(s);
-                    break;
-                case "LOAD":
-                    OpenNewLineEvent(s);
+                    if (load)
+                    {
+                        OpenNewLineEvent(s);
+                        load = false;
+                    }
                     if (tokens.Length > 2)
                     {
                         Thread.Sleep(2000);
                         EditLineEvent(s);
                     }
+                    EditLineEvent(s);
                     break;
                 case "ERROR":
                     Console.WriteLine("WE DONE ...");
