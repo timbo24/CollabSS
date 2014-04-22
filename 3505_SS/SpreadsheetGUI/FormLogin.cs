@@ -28,7 +28,7 @@ namespace SS
             model = new SpreadsheetClient();
 
             model.IncomingLineEvent += MessageReceived;
-            model.ServerCrashedLineEvent += CrashedReceived;
+            model.ServerCrashedLineEvent += CloseForm;
             model.OpenNewLineEvent += OpenNewSS;
             model.CloseLoginEvent += CloseForm;
             model.ErrorLineEvent += ErrorReceived;
@@ -270,7 +270,7 @@ namespace SS
         {
             // Disconnect
             model.Quit();
-            MessageBox.Show("Disconnected from\r\nBoggle Server.");
+            MessageBox.Show("Disconnected from\r\nSpreadsheet Server.");
         }
 
         private void EnterExisting_Click(object sender, EventArgs e)
