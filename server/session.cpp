@@ -5,7 +5,7 @@
 
 
 #include <boost/lexical_cast.hpp>
-#include "Circles/CircleChecker.h"
+#include "circles/CircleChecker.h"
 #include <string>
 #include <algorithm>
 #include <cstdlib>

@@ -4,7 +4,7 @@
 
 #include "editor.h"
 #include "server.h"
-#include "Circles/CircleChecker.h"
+#include "circles/CircleChecker.h"
 
 class participant;
 class server;
