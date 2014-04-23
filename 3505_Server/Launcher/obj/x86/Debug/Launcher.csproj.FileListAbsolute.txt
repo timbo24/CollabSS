@@ -1,8 +1,0 @@
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\Launcher\bin\Debug\Launcher.exe
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\Launcher\bin\Debug\Launcher.pdb
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\Launcher\bin\Debug\ChatServer.exe
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\Launcher\bin\Debug\StringSocket.dll
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\Launcher\bin\Debug\ChatServer.pdb
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\Launcher\obj\x86\Debug\Launcher.csprojResolveAssemblyReference.cache
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\Launcher\obj\x86\Debug\Launcher.exe
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\Launcher\obj\x86\Debug\Launcher.pdb

@@ -1,8 +1,0 @@
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\ChatServer\bin\Debug\ChatServer.exe
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\ChatServer\bin\Debug\ChatServer.pdb
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\ChatServer\bin\Debug\StringSocket.dll
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\ChatServer\obj\Debug\BoggleServer.csprojResolveAssemblyReference.cache
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\ChatServer\obj\Debug\ChatServer.exe
-C:\Users\Tanya\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\ChatServer\obj\Debug\ChatServer.pdb
-C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\ChatServer\obj\Debug\ChatServer.exe
-C:\Users\Eliza\Documents\Visual Studio 2012\Projects\Malloc\3505_Server\ChatServer\obj\Debug\ChatServer.pdb
